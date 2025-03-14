@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hackathon EDU Login</title>
+    <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+
+    <div class="container">
+        <h2>Welcome to Hackathon EDU</h2>
+        <button class="btn btn-primary" onclick="openPopup('signin')">Sign In</button>
+        <button class="btn btn-secondary" onclick="openPopup('signup')">Sign Up</button>
+    </div>
+
+    <!-- Popup Overlay -->
+    <div id="popupOverlay" class="overlay" onclick="closeAllPopups()"></div>
+
+    <!-- Sign In Popup -->
+    <div id="signinPopup" class="popup">
+        <button class="close" onclick="closePopup('signin')">X</button>
+        <h3>Sign In</h3>
+        <input type="email" placeholder="Email">
+        <input type="password" placeholder="Password">
+        <button class="btn btn-primary">Login</button>
+    </div>
+
+    <!-- Sign Up Popup -->
+    <div id="signupPopup" class="popup">
+        <button class="close" onclick="closePopup('signup')">X</button>
+        <h3>Sign Up</h3>
+        <input type="text" placeholder="Full Name">
+        <input type="email" placeholder="Email">
+        <input type="password" placeholder="Password">
+        <button class="btn btn-secondary">Register</button>
+    </div>
+
+    <script src="js/scripts.js"></script>
+</body>
+</html>
