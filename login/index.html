@@ -10,16 +10,17 @@
 
     <div class="container">
         <h2>Welcome to Hackathon EDU</h2>
-        <button class="btn btn-primary" onclick="openPopup('signin')">Sign In</button>
-        <button class="btn btn-secondary" onclick="openPopup('signup')">Sign Up</button>
+        <!-- Buttons to open the respective popups -->
+        <button class="btn btn-primary" onclick="openPopup('signinPopup')">Sign In</button>
+        <button class="btn btn-secondary" onclick="openPopup('signupPopup')">Sign Up</button>
     </div>
 
-    <!-- Popup Overlay -->
+    <!-- Background overlay to focus user attention when a popup is open -->
     <div id="popupOverlay" class="overlay" onclick="closeAllPopups()"></div>
 
     <!-- Sign In Popup -->
     <div id="signinPopup" class="popup">
-        <button class="close" onclick="closePopup('signin')">X</button>
+        <button class="close" onclick="closePopup('signinPopup')">X</button>
         <h3>Sign In</h3>
         <input type="email" placeholder="Email">
         <input type="password" placeholder="Password">
@@ -28,7 +29,7 @@
 
     <!-- Sign Up Popup -->
     <div id="signupPopup" class="popup">
-        <button class="close" onclick="closePopup('signup')">X</button>
+        <button class="close" onclick="closePopup('signupPopup')">X</button>
         <h3>Sign Up</h3>
         <input type="text" placeholder="Full Name">
         <input type="email" placeholder="Email">

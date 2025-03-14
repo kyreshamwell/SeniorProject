@@ -1,3 +1,4 @@
+/* Basic styling for the body */
 body {
     font-family: Arial, sans-serif;
     text-align: center;
@@ -5,9 +6,13 @@ body {
     padding: 0;
     background-color: #f4f4f4;
 }
+
+/* Centering the buttons */
 .container {
     margin-top: 100px;
 }
+
+/* General button styles */
 .btn {
     padding: 10px 20px;
     font-size: 16px;
@@ -16,8 +21,12 @@ body {
     margin: 10px;
     border-radius: 5px;
 }
+
+/* Specific button colors */
 .btn-primary { background-color: #007BFF; color: white; }
 .btn-secondary { background-color: #28A745; color: white; }
+
+/* Hide popups by default */
 .popup {
     display: none;
     position: fixed;
@@ -31,12 +40,16 @@ body {
     width: 300px;
     z-index: 10;
 }
+
+/* Styling for inputs */
 .popup input {
     display: block;
     width: 90%;
     padding: 8px;
     margin: 10px 0;
 }
+
+/* Close button inside the popup */
 .close {
     background: red;
     color: white;
@@ -45,6 +58,8 @@ body {
     cursor: pointer;
     float: right;
 }
+
+/* Overlay to blur background when a popup is open */
 .overlay {
     display: none;
     position: fixed;
