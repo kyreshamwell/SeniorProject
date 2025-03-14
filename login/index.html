@@ -2,41 +2,78 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Hackathon EDU Login</title>
-    <link rel="stylesheet" href="css/styles.css">
+    <title>Hackathon EDU </title>
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>">
+    <link rel="stylesheet" href="login.css">
 </head>
 <body>
-
     <div class="container">
-        <h2>Welcome to Hackathon EDU</h2>
-        <!-- Buttons to open the respective popups -->
-        <button class="btn btn-primary" onclick="openPopup('signinPopup')">Sign In</button>
-        <button class="btn btn-secondary" onclick="openPopup('signupPopup')">Sign Up</button>
+        <div class="form-box login">
+            <form action=""></form>
+                <h1>Login</h1>
+                <div class="input-box">
+                    <input type="text" placeholder="Username" required>
+                    <i class="bx bxs-user"></i>
+                </div>
+                <div class="input-box">
+                    <input type="password" placeholder="Password" required>
+                    <i class="bx bxs-lock-alt"></i>
+                </div>
+                <div class="forgot-link">
+                    <a href="#">Forgot Password?</a>
+                </div>
+                <button type="submit" class="btn">Login</button>
+                <p>or login with social</p>
+                <div class="social-icons">
+                    <a href="#"><i class="bx bxl-google"></i></a>
+                    <a href="#"><i class="bx bxl-github"></i></a>
+                    <a href="#"><i class="bx bxl-linkedin"></i></a>
+                </div>
+            </form>
+        </div>
+
+        <div class="form-box register">
+            <form action=""></form>
+                <h1>Registration</h1>
+                <div class="input-box">
+                    <input type="text" placeholder="Username" required>
+                    <i class="bx bxs-user"></i>
+                </div>
+                <div class="input-box">
+                    <input type="email" placeholder="Email" required>
+                    <i class="bx bxs-envelope"></i>
+                </div>
+                <div class="input-box">
+                    <input type="password" placeholder="Password" required>
+                    <i class="bx bxs-lock-alt"></i>
+                </div>
+                <button type="submit" class="btn">Register</button>
+                <p>or register with social</p>
+                <div class="social-icons">
+                    <a href="#"><i class="bx bxl-google"></i></a>
+                    <a href="#"><i class="bx bxl-github"></i></a>
+                    <a href="#"><i class="bx bxl-linkedin"></i></a>
+                </div>
+            </form>
+        </div>
+
+        <div class="toggle-box">
+            <div class="toggle-panel toggle-left">
+                <h1>Hello, Welcome!</h1>
+                <p>Don't have an account?</p>
+                <button class="btn register-btn">Register</button>
+            </div>
+            <div class="toggle-panel toggle-right">
+                <h1>Welcome Back!</h1>
+                <p>Already have an account?</p>
+                <button class="btn login-btn">Login</button>
+            </div>
+        </div>
     </div>
+    
 
-    <!-- Background overlay to focus user attention when a popup is open -->
-    <div id="popupOverlay" class="overlay" onclick="closeAllPopups()"></div>
-
-    <!-- Sign In Popup -->
-    <div id="signinPopup" class="popup">
-        <button class="close" onclick="closePopup('signinPopup')">X</button>
-        <h3>Sign In</h3>
-        <input type="email" placeholder="Email">
-        <input type="password" placeholder="Password">
-        <button class="btn btn-primary">Login</button>
-    </div>
-
-    <!-- Sign Up Popup -->
-    <div id="signupPopup" class="popup">
-        <button class="close" onclick="closePopup('signupPopup')">X</button>
-        <h3>Sign Up</h3>
-        <input type="text" placeholder="Full Name">
-        <input type="email" placeholder="Email">
-        <input type="password" placeholder="Password">
-        <button class="btn btn-secondary">Register</button>
-    </div>
-
-    <script src="js/scripts.js"></script>
+    <script src="login.js"></script>
 </body>
 </html>

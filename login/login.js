@@ -1,26 +1,11 @@
-/**
- * Opens the specified popup and displays the overlay.
- * @param {string} id - The ID of the popup to be opened.
- */
-function openPopup(id) {
-    document.getElementById(id).style.display = 'block';
-    document.getElementById('popupOverlay').style.display = 'block';
-}
+const container = document.querySelector('.container');
+const registerBtn = document.querySelector('.register-btn');
+const loginBtn = document.querySelector('.login-btn');
 
-/**
- * Closes the specified popup and hides the overlay.
- * @param {string} id - The ID of the popup to be closed.
- */
-function closePopup(id) {
-    document.getElementById(id).style.display = 'none';
-    document.getElementById('popupOverlay').style.display = 'none';
-}
+registerBtn.addEventListener('click', () => {
+    container.classList.add("active");
+});
 
-/**
- * Closes all popups and hides the overlay.
- */
-function closeAllPopups() {
-    document.getElementById('signinPopup').style.display = 'none';
-    document.getElementById('signupPopup').style.display = 'none';
-    document.getElementById('popupOverlay').style.display = 'none';
-}
+loginBtn.addEventListener('click', () => {
+    container.classList.remove("active");
+});
