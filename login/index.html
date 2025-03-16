@@ -10,11 +10,12 @@
 </head>
 <body>
     <div class="container">
+        <!-- Login Form -->
         <div class="form-box login">
-            <form action=""></form>
+            <form id="loginForm">
                 <h1>Login</h1>
                 <div class="input-box">
-                    <input type="text" placeholder="Username" required>
+                    <input type="text" placeholder="Email" required>
                     <i class="bx bxs-user"></i>
                 </div>
                 <div class="input-box">
@@ -22,9 +23,9 @@
                     <i class="bx bxs-lock-alt"></i>
                 </div>
                 <div class="forgot-link">
-                    <a href="#">Forgot Password?</a>
+                    <a href="password-reset/forgot-password.html">Forgot Password?</a> <!-- ✅ Correct path -->
                 </div>
-                <button type="submit" class="btn">Login</button>
+                <button type="submit" class="btn" id="loginSubmit">Login</button> <!-- ✅ Ensure it's a submit button -->
                 <p>or login with social</p>
                 <div class="social-icons">
                     <a href="#"><i class="bx bxl-google"></i></a>
@@ -34,11 +35,12 @@
             </form>
         </div>
 
+        <!-- Register Form -->
         <div class="form-box register">
-            <form action=""></form>
+            <form id="registerForm">
                 <h1>Registration</h1>
                 <div class="input-box">
-                    <input type="text" placeholder="Username" required>
+                    <input type="text" placeholder="Full Name" required>
                     <i class="bx bxs-user"></i>
                 </div>
                 <div class="input-box">
@@ -49,7 +51,7 @@
                     <input type="password" placeholder="Password" required>
                     <i class="bx bxs-lock-alt"></i>
                 </div>
-                <button type="submit" class="btn">Register</button>
+                <button type="submit" class="btn" id="registerSubmit">Register</button> <!-- ✅ Ensure it's a submit button -->
                 <p>or register with social</p>
                 <div class="social-icons">
                     <a href="#"><i class="bx bxl-google"></i></a>
