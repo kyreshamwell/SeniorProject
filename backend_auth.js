@@ -1,4 +1,4 @@
-require('dotenv').config(); // ✅ Load environment variables from .env
+require('dotenv').config(); // ✅ Load environment variables
 
 const mongoose = require('mongoose');
 const express = require('express');
@@ -12,15 +12,27 @@ const app = express();
 app.use(express.json());
 app.use(cors());
 
-app.use(express.static(path.join(__dirname, 'public')));
-// ✅ Serve static files (CSS, JS, images)
-app.use('/login', express.static(path.join(__dirname, 'login'), {  
-    setHeaders: (res, filePath) => {  
-        if (filePath.endsWith('.css')) {  
-            res.setHeader('Content-Type', 'text/css');  
-        }  
-    }
-}));
+const PORT = process.env.PORT || 5001;
+
+// ✅ Serve Static Files Correctly
+app.use('/login', express.static(path.join(__dirname, 'login'))); 
+app.use('/password-reset', express.static(path.join(__dirname, 'login', 'password-reset')));
+
+// ✅ Serve index.html correctly
+app.get('/', (req, res) => {
+    res.sendFile(path.join(__dirname, 'login', 'index.html'));
+});
+
+// ✅ Fix MIME type issue for CSS & JS
+app.get('/login/login.css', (req, res) => {
+    res.setHeader('Content-Type', 'text/css');
+    res.sendFile(path.join(__dirname, 'login', 'login.css'));
+});
+
+app.get('/login/login.js', (req, res) => {
+    res.setHeader('Content-Type', 'application/javascript');
+    res.sendFile(path.join(__dirname, 'login', 'login.js'));
+});
 
 // ✅ Debugging Step: Check if .env is loading correctly
 console.log("🛠 DEBUG: MONGO_URI is:", process.env.MONGO_URI);
@@ -104,7 +116,7 @@ app.post("/forgot-password", async (req, res) => {
         user.resetTokenExpiry = Date.now() + 15 * 60 * 1000; // 15 minutes expiry
         await user.save();
 
-        const resetLink = `http://localhost:5001/password-reset/reset-password.html?token=${resetToken}`;
+        const resetLink = `http://localhost:${PORT}/login/password-reset/reset-password.html?token=${resetToken}`;
         console.log("🔗 Reset Password Link:", resetLink);
 
         res.json({ message: "Password reset link generated!", resetLink });
@@ -137,9 +149,27 @@ app.post("/reset-password", async (req, res) => {
     }
 });
 
-// ✅ Serve Static Files
-app.use('/password-reset', express.static(path.join(__dirname, 'password-reset')));
+// ✅ Serve static files for the "home" directory
+app.use('/home', express.static(path.join(__dirname, 'home')));
 
-// ✅ Start Server
-const PORT = process.env.PORT || 5001;
-app.listen(PORT, () => console.log(`🚀 Server running on port ${PORT}`));
+// ✅ Serve home.html explicitly
+app.get('/home/home.html', (req, res) => {
+    res.sendFile(path.join(__dirname, 'home', 'home.html'));
+});
+
+// ✅ Fix MIME type issues for home.css & home.js
+app.get('/home/home.css', (req, res) => {
+    res.setHeader('Content-Type', 'text/css');
+    res.sendFile(path.join(__dirname, 'home', 'home.css'));
+});
+
+app.get('/home/home.js', (req, res) => {
+    res.setHeader('Content-Type', 'application/javascript');
+    res.sendFile(path.join(__dirname, 'home', 'home.js'));
+});
+
+
+// ✅ Start the server
+app.listen(PORT, '0.0.0.0', () => {
+    console.log(`🚀 Server running at http://10.122.136.115:${PORT}`);
+});

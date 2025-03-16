@@ -73,21 +73,15 @@ registerForm?.addEventListener('submit', async (event) => {
     }
 });
 
-// ✅ Login User
-loginForm?.addEventListener('submit', async (event) => {
+// ✅ Login User (Modify this in login.js)
+loginForm.addEventListener('submit', async (event) => {
     event.preventDefault();
-    console.log("🚀 Login button clicked!");
+    console.log("Login button clicked!");
 
-    // ✅ Capture correct input fields
-    const email = loginForm.querySelector('input[placeholder="Email"]').value.trim();
-    const password = loginForm.querySelector('input[placeholder="Password"]').value.trim();
+    const email = loginForm.querySelector('input[placeholder="Email"]').value;
+    const password = loginForm.querySelector('input[placeholder="Password"]').value;
 
-    if (!email || !password) {
-        alert("❌ Email and Password are required.");
-        return;
-    }
-
-    console.log("📤 Sending login data:", { email, password });
+    console.log("Sending login data:", { email, password });
 
     try {
         const response = await fetch('http://localhost:5001/login', {
@@ -97,19 +91,19 @@ loginForm?.addEventListener('submit', async (event) => {
         });
 
         const data = await response.json();
-        console.log("✅ Server Response:", data);
+        console.log("Server Response:", data);
 
         if (response.ok) {
             localStorage.setItem('token', data.token);
             localStorage.setItem('role', data.role);
 
-            // ✅ Redirect to home page after login
+            // ✅ Redirect to home.html after successful login
             window.location.href = '/home/home.html';
         } else {
-            alert(`❌ Error: ${data.error}`);
+            alert(`Error: ${data.error}`);
         }
     } catch (error) {
-        console.error('❌ Login error:', error);
-        alert('❌ An error occurred during login.');
+        console.error('Login error:', error);
+        alert('An error occurred during login.');
     }
 });
