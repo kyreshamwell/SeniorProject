@@ -29,8 +29,8 @@ if (registerBtn && loginBtn) {
     console.error("❌ Register/Login toggle buttons not found!");
 }
 
-const SERVER_URL = "http://10.122.136.115:5001";  // 🔥 Use your local network IP
-// const SERVER_URL = "http://localhost:5001";  // 🔥 Use localhost for local testing
+// const SERVER_URL = "http://10.122.136.115:5001";  // 🔥 Use your local network IP
+const SERVER_URL = "http://localhost:5001";  // 🔥 Use localhost for local testing
 
 // ✅ Register User
 registerForm?.addEventListener('submit', async (event) => {

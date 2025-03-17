@@ -171,5 +171,5 @@ app.get('/home/home.js', (req, res) => {
 
 // ✅ Start the server
 app.listen(PORT, '0.0.0.0', () => {
-    console.log(`🚀 Server running at http://10.122.136.115:${PORT}`);
+    console.log(`🚀 Server running at http://localhost:${PORT}`);
 });
