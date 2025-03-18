@@ -82,7 +82,3 @@ http://<your-local-ip>:5001 or http://localhost:5001
 ---
 
 This guide will ensure that all team members can properly set up and collaborate on the project.
-
-
-MONGO_URI=mongodb+srv://kyresham:WxJ6XHnvSZI0w8rd@cluster0.v0qm7.mongodb.net/hackathonDB?retryWrites=true&w=majority
-JWT_SECRET=your-secret-key
