@@ -4,26 +4,55 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Hackathon EDU - Home</title>
-    <link rel="stylesheet" href="home.css"> <!-- Link to home.css -->
+    <link rel="stylesheet" href="home.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" integrity="sha512-9usAa10IRO0HhonpyAIVpjrylPvoDwiPUiKdWk5t3PyolY1cOd4DSE0Ga+ri4AuTroPR5aQvXU9xC6qOPnzFeg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
 </head>
 <body>
-    <!-- Navigation Bar -->
-    <nav>
-        <div class="logo">Hackathon EDU</div>
-        <ul>
-            <li><a href="#">Team Info</a></li>
-            <li><a href="#">Events</a></li>
-            <li><a href="#">Check-in</a></li>
-            <li><a href="#">Discord</a></li>
-            <li><a href="#">Contact</a></li>
-            <li><button id="logoutButton" class="btn logout-btn">Sign Out</button></li> <!-- ✅ Moved inside the nav -->
-        </ul>
-    </nav>
+    
+    <section class="services-section">
+        <h2>Menu</h2>
+        <div class="services-grid">
+            <div class="service-item">
+                <div class="service-icon"><i class="fas fa-users"></i></div>
+                <p></p>
+                <h3>Team Info</h3>
+                <p>Short Description</p>
+                <a href="#" class="read-more">Team Info</a>
+            </div>
+            <div class="service-item">
+                <div class="service-icon"><i class="fas fa-calendar-alt"></i></div>
+                <h3>Calendar & Timer</h3>
+                <p>Short Description</p>
+                <a href="#" class="read-more">Calendar & Timer</a>
+            </div>
+            <div class="service-item">
+                <div class="service-icon"><i class="fas fa-check-square"></i></div>
+                <h3>Check-in</h3>
+                <p>Short Description</p>
+                <a href="#" class="read-more">Check-in</a>
+            </div>
+            <div class="service-item">
+                <div class="service-icon"><i class="fas fa-upload"></i></div> 
+                <h3>Project Submission</h3>
+                <p>Short Description</p>
+                <a href="#" class="read-more">Project Submission</a>
+            </div>
+            <div class="service-item">
+                <div class="service-icon"><i class="fab fa-discord"></i></div>
+                <h3>Discord</h3>
+                <p>Short Description</p>
+                <a href="#" class="read-more">Discord</a>
+            </div>
+            <div class="service-item">
+                <div class="service-icon"><i class="fas fa-envelope"></i></div>
+                <h3>Contact Us</h3>
+                <p>Short Description</p>
+                <a href="#" class="read-more">Contact Us</a>
+            </div>
+        </div>
+    </section>
+
     <script src="home.js"></script>
 
-
 </body>
-<footer>
-    For any questions, please email youremail@address.edu or ask (Enter Persons Name Here).
-</footer>
 </html>
