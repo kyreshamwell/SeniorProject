@@ -83,3 +83,4 @@ http://<your-local-ip>:5001 or http://localhost:5001
 
 This guide will ensure that all team members can properly set up and collaborate on the project.
 
+git fetch origin - to see changes from everyone else 
