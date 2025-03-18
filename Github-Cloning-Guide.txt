@@ -1,0 +1,84 @@
+**Team Setup Guide**
+
+### 1️⃣ Clone the Repository
+To start working on the project, clone the GitHub repository:
+```
+git clone <your-repository-url>
+```
+Then, navigate into the project directory:
+```
+cd <your-repository-folder>
+```
+
+### 2️⃣ Install Dependencies
+Ensure you have Node.js installed. Then, install the required packages:
+```
+npm install
+```
+
+### 3️⃣ Setup Environment Variables
+Create a `.env` file in the root directory:
+```
+touch .env
+```
+Open `.env` and add the following:
+```
+MONGO_URI=<your-mongodb-connection-string>
+JWT_SECRET=<your-secret-key>
+
+Need to get this information from me so that you will be able to login to Mongodb 
+```
+**Note:** Do not share these credentials publicly.
+
+### 4️⃣ Start the Server
+Run the backend server using:
+```
+npx nodemon backend_auth.js
+```
+or
+```
+node backend_auth.js
+```
+
+### 5️⃣ Git Commands for Collaboration
+
+#### Fetch and Pull Latest Changes:
+Before starting work, always pull the latest changes from the main branch:
+```
+git pull origin main
+```
+
+#### Add and Commit Changes:
+After making updates, add and commit your changes:
+```
+git add .
+git commit -m "Your commit message here"
+```
+
+#### Push Changes to GitHub:
+Push your committed changes to the main branch:
+```
+git push origin main
+```
+
+After finishing the feature, create a **Pull Request** to merge it into `main`.
+
+### 6️⃣ Running the Project on Other Devices
+If you want to run the project on another device, ensure your server is listening on `0.0.0.0` in `backend_auth.js`:
+```js
+app.listen(PORT, '0.0.0.0', () => {
+    console.log(`🚀 Server running at http://<your-local-ip>:${PORT}`);
+});
+```
+Find your local IP with:
+```
+ipconfig (Windows) | ifconfig (Mac/Linux)
+```
+Then access it on another device via:
+```
+http://<your-local-ip>:5001 or http://localhost:5001
+```
+
+---
+
+This guide will ensure that all team members can properly set up and collaborate on the project.

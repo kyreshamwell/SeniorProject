@@ -34,8 +34,8 @@ app.get('/login/login.js', (req, res) => {
     res.sendFile(path.join(__dirname, 'login', 'login.js'));
 });
 
-// ✅ Debugging Step: Check if .env is loading correctly
-console.log("🛠 DEBUG: MONGO_URI is:", process.env.MONGO_URI);
+// // ✅ Debugging Step: Check if .env is loading correctly
+// console.log("🛠 DEBUG: MONGO_URI is:", process.env.MONGO_URI);
 
 // ✅ Ensure MongoDB URI is defined
 const mongoURI = process.env.MONGO_URI;
