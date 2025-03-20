@@ -14,6 +14,8 @@ const app = express();
 app.use(express.json());
 app.use(cors());
 
+app.use('/my-favicon', express.static(path.join(__dirname, 'my-favicon')));
+
 const PORT = process.env.PORT || 5001;
 
 // ✅ Serve Static Files Correctly
