@@ -17,13 +17,13 @@ app.use(cors());
 const PORT = process.env.PORT || 5001;
 
 // ✅ Serve Static Files Correctly
-app.use('/login', express.static(path.join(__dirname, 'login'))); 
+// app.use('/login', express.static(path.join(__dirname, 'login'))); 
 app.use('/password-reset', express.static(path.join(__dirname, 'login', 'password-reset')));
 
 // ✅ Serve index.html correctly
-app.get('/', (req, res) => {
-    res.sendFile(path.join(__dirname, 'login', 'index.html'));
-});
+// app.get('/', (req, res) => {
+//     res.sendFile(path.join(__dirname, 'login', 'index.html'));
+// });
 
 // ✅ Fix MIME type issue for CSS & JS
 app.get('/login/login.css', (req, res) => {
@@ -155,12 +155,12 @@ app.post("/reset-password", async (req, res) => {
 });
 
 // ✅ Serve static files for the "home" directory
-app.use('/home', express.static(path.join(__dirname, 'home')));
+// app.use('/home', express.static(path.join(__dirname, 'home')));
 
 // ✅ Serve home.html explicitly
-app.get('/home/home.html', (req, res) => {
-    res.sendFile(path.join(__dirname, 'home', 'home.html'));
-});
+// app.get('/home/home.html', (req, res) => {
+//     res.sendFile(path.join(__dirname, 'home', 'home.html'));
+// });
 
 // ✅ Fix MIME type issues for home.css & home.js
 app.get('/home/home.css', (req, res) => {
@@ -176,5 +176,5 @@ app.get('/home/home.js', (req, res) => {
 
 // ✅ Start the server
 app.listen(PORT, '0.0.0.0', () => {
-    console.log(`🚀 Server running at https://senior-project-delta.vercel.app`);
+    console.log(`🚀 Server running at ${SERVER_URL}`);
 });

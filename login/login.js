@@ -29,10 +29,9 @@ if (registerBtn && loginBtn) {
     console.error("❌ Register/Login toggle buttons not found!");
 }
 
-// const SERVER_URL = "http://10.122.136.115:5001";  // 🔥 Use your local network IP
-// const SERVER_URL = "http://localhost:5001";  // 🔥 Use localhost for local testing
-// const SERVER_URL = "https://senior-project-delta.vercel.app";  // 🔥 Replace with your actual server URL
-const SERVER_URL = "https://seniorproject-jkm4.onrender.com";  // 🔥 Your backend URL
+// Define separate URLs for backend (API) and frontend (static pages)
+const BACKEND_URL = "https://seniorproject-jkm4.onrender.com";  // API calls to Render
+const FRONTEND_URL = "https://senior-project-delta.vercel.app";    // Static site on Vercel
 
 // ✅ Register User
 registerForm?.addEventListener('submit', async (event) => {
@@ -52,7 +51,7 @@ registerForm?.addEventListener('submit', async (event) => {
     console.log("📤 Sending registration data:", { name, email, password });
 
     try {
-        const response = await fetch(`${SERVER_URL}/register`, {
+        const response = await fetch(`${BACKEND_URL}/register`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ name, email, password })
@@ -108,7 +107,7 @@ loginForm?.addEventListener('submit', async (event) => {
             localStorage.setItem('role', data.role);
 
             // ✅ Redirect to home.html after successful login
-            window.location.href = `${SERVER_URL}/home/home.html`;
+            window.location.href = `${FRONTEND_URL}/home/home.html`;
         } else {
             alert(`❌ Error: ${data.error}`);
         }
