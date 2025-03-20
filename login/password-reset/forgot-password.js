@@ -3,6 +3,8 @@ document.getElementById('forgotPasswordForm').addEventListener('submit', async (
     console.log("🚀 Forgot Password form submitted!");
 
     const email = document.getElementById('email').value.trim();
+    const BACKEND_URL = "https://seniorproject-jkm4.onrender.com"; // Define this at the top
+
 
     if (!email) {
         alert("❌ Please enter your email.");
@@ -12,7 +14,7 @@ document.getElementById('forgotPasswordForm').addEventListener('submit', async (
     console.log("📤 Sending Forgot Password request for email:", email);
 
     try {
-        const response = await fetch('http://localhost:5001/forgot-password', {
+        const response = await fetch(`${BACKEND_URL}/forgot-password`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ email })

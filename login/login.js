@@ -93,7 +93,7 @@ loginForm?.addEventListener('submit', async (event) => {
     console.log("📤 Sending login data:", { email, password });
 
     try {
-        const response = await fetch(`${SERVER_URL}/login`, {  // 🔥 Use the correct SERVER_URL
+        const response = await fetch(`${BACKEND_URL}/login`, {  // 🔥 Use the correct SERVER_URL
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ email, password })

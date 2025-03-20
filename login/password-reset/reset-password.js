@@ -15,8 +15,10 @@ document.addEventListener("DOMContentLoaded", () => {
             return;
         }
 
+        const BACKEND_URL = "https://seniorproject-jkm4.onrender.com"; // Add this constant at the top
+
         try {
-            const response = await fetch("http://localhost:5001/reset-password", {
+            const response = await fetch(`${BACKEND_URL}/reset-password`, {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({ token, password: newPassword }),
@@ -38,6 +40,6 @@ document.addEventListener("DOMContentLoaded", () => {
     });
 
     document.getElementById('backToLogin').addEventListener('click', function() {
-        window.location.href = "/login/index.html";  // ✅ This should match where index.html is
+        window.location.href = "/index.html";  // ✅ This should match where index.html is
     });
 });
