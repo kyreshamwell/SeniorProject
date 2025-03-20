@@ -7,6 +7,8 @@ const jwt = require('jsonwebtoken');
 const cors = require('cors');
 const crypto = require('crypto');
 const path = require('path');
+const SERVER_URL = "https://seniorproject-jkm4.onrender.com";  // 🔥 Your backend URL
+
 
 const app = express();
 app.use(express.json());
@@ -117,7 +119,8 @@ app.post("/forgot-password", async (req, res) => {
         await user.save();
 //  senior-project-delta.vercel.app
         // const resetLink = `http://localhost:${PORT}/login/password-reset/reset-password.html?token=${resetToken}`;
-        const resetLink = `https://senior-project-delta.vercel.app/login/password-reset/reset-password.html?token=${resetToken}`;
+        // const resetLink = `https://https://seniorproject-jkm4.onrender.com/login/password-reset/reset-password.html?token=${resetToken}`;
+        const resetLink = `${SERVER_URL}/login/password-reset/reset-password.html?token=${resetToken}`;
 
         console.log("🔗 Reset Password Link:", resetLink);
 

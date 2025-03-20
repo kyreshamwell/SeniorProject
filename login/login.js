@@ -31,7 +31,8 @@ if (registerBtn && loginBtn) {
 
 // const SERVER_URL = "http://10.122.136.115:5001";  // 🔥 Use your local network IP
 // const SERVER_URL = "http://localhost:5001";  // 🔥 Use localhost for local testing
-const SERVER_URL = "https://senior-project-delta.vercel.app";  // 🔥 Replace with your actual server URL
+// const SERVER_URL = "https://senior-project-delta.vercel.app";  // 🔥 Replace with your actual server URL
+const SERVER_URL = "https://seniorproject-jkm4.onrender.com";  // 🔥 Your backend URL
 
 // ✅ Register User
 registerForm?.addEventListener('submit', async (event) => {
