@@ -115,8 +115,10 @@ app.post("/forgot-password", async (req, res) => {
         user.resetToken = resetToken;
         user.resetTokenExpiry = Date.now() + 15 * 60 * 1000; // 15 minutes expiry
         await user.save();
+//  senior-project-delta.vercel.app
+        // const resetLink = `http://localhost:${PORT}/login/password-reset/reset-password.html?token=${resetToken}`;
+        const resetLink = `https://senior-project-delta.vercel.app/login/password-reset/reset-password.html?token=${resetToken}`;
 
-        const resetLink = `http://localhost:${PORT}/login/password-reset/reset-password.html?token=${resetToken}`;
         console.log("🔗 Reset Password Link:", resetLink);
 
         res.json({ message: "Password reset link generated!", resetLink });
@@ -171,5 +173,5 @@ app.get('/home/home.js', (req, res) => {
 
 // ✅ Start the server
 app.listen(PORT, '0.0.0.0', () => {
-    console.log(`🚀 Server running at http://localhost:${PORT}`);
+    console.log(`🚀 Server running at https://senior-project-delta.vercel.app`);
 });
