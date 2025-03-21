@@ -156,13 +156,6 @@ app.post("/reset-password", async (req, res) => {
     }
 });
 
-// ✅ Serve static files for the "home" directory
-// app.use('/home', express.static(path.join(__dirname, 'home')));
-
-// ✅ Serve home.html explicitly
-// app.get('/home/home.html', (req, res) => {
-//     res.sendFile(path.join(__dirname, 'home', 'home.html'));
-// });
 
 // ✅ Fix MIME type issues for home.css & home.js
 app.get('/home/home.css', (req, res) => {
