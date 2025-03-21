@@ -14,7 +14,7 @@ document.getElementById('forgotPasswordForm').addEventListener('submit', async (
     console.log("📤 Sending Forgot Password request for email:", email);
 
     try {
-        const response = await fetch(`${BACKEND_URL}/forgot-password`, {
+        const response = await fetch(`${BACKEND_URL}/password-reset/forgot-password`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ email })
