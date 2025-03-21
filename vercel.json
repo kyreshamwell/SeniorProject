@@ -1,5 +1,7 @@
 {
     "rewrites": [
-      { "source": "/", "destination": "/login/index.html" } 
+      { "source": "/", "destination": "/login/index.html" },
+      { "source": "/password-reset/forgot-password.html", "destination": "/login/password-reset/forgot-password.html" },
+      { "source": "/password-reset/reset-password.html", "destination": "/login/password-reset/reset-password.html" }
     ]
   }
