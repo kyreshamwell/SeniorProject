@@ -122,7 +122,7 @@ app.post("/forgot-password", async (req, res) => {
 //  senior-project-delta.vercel.app
         // const resetLink = `http://localhost:${PORT}/login/password-reset/reset-password.html?token=${resetToken}`;
         // const resetLink = `https://https://seniorproject-jkm4.onrender.com/login/password-reset/reset-password.html?token=${resetToken}`;
-        const resetLink = `${SERVER_URL}/login/password-reset/reset-password.html?token=${resetToken}`;
+        const resetLink = `${SERVER_URL}/password-reset/reset-password.html?token=${resetToken}`;
 
         console.log("🔗 Reset Password Link:", resetLink);
 
