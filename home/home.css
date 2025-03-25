@@ -1,4 +1,58 @@
-/* Services Section */
+body {
+    font-family: sans-serif;
+    margin: 0;
+    padding: 0;
+    background-image: url('C:/Users/Bjsmi/Downloads/background2.jpg'); 
+    background-size: cover;
+    background-position: center;
+    color: white; 
+    position: relative; 
+}
+
+nav {
+    background-color: #23449c;
+    color: white;
+    padding: 15px 20px;
+    text-align: center;
+}
+
+.nav-content {
+    display: flex;
+    justify-content: space-between; 
+    align-items: center;
+    width: 100%; 
+    box-sizing: border-box; 
+}
+
+.user-info {
+    display: flex;
+    align-items: center;
+}
+
+.user-info i {
+    font-size: 2em;
+    margin-right: 10px;
+}
+
+.sign-out {
+    background-color: gold;
+    color: black;
+    border: none;
+    padding: 8px 15px;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.sign-out:hover {
+    background-color: #ffc107;
+}
+
+.title {
+    font-size: 1.8em;
+    font-weight: bold;
+}
+
+
 .services-section {
     padding: 50px 20px;
     text-align: center;
@@ -7,7 +61,7 @@
 .services-section h2 {
     margin-bottom: 30px;
     font-size: 2.5em;
-    color: #23449c; /* Keep your existing heading color */
+    color: #23449c; 
 }
 
 .services-grid {
@@ -20,46 +74,54 @@
 
 .service-item {
     padding: 20px;
-    border-radius: 10px; /* Rounded corners */
+    border-radius: 10px; 
     text-align: center;
     transition: transform 0.3s ease;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Subtle shadow */
-    position: relative; /* Needed for absolute positioning of white box */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); 
+    position: relative; 
 }
 
 .service-item:hover {
     transform: translateY(-5px);
 }
 
-.service-item::before { /* Colored background */
+.service-item::before { 
     content: '';
     position: absolute;
     top: 0;
     left: 0;
     right: 0;
-    height: 30px; /* Adjust height as needed */
-    border-radius: 10px 10px 0 0; /* Rounded top corners */
+    height: 30px; 
+    border-radius: 10px 10px 0 0; 
 }
 
-.service-item:nth-child(odd)::before { /* Odd boxes: gold */
+.service-item:nth-child(odd)::before { 
     background-color: gold;
 }
 
-.service-item:nth-child(even)::before { /* Even boxes: blue */
-    background-color: #23449c; /* Use your existing blue */
+.service-item:nth-child(even)::before { 
+    background-color: #23449c;
 }
 
-.service-content { /* White content area */
+.service-item {
+    background-color: white; 
+}
+
+.service-content {
+    background-color: white; 
+}
+
+.service-content { 
     background-color: white;
-    padding: 60px 20px 20px; /* Increased top padding */
-    border-radius: 0 0 10px 10px; /* Rounded bottom corners */
+    padding: 60px 20px 20px; 
+    border-radius: 0 0 10px 10px; 
 }
 
 .service-icon {
     font-size: 2.5em;
-    color: #23449c; /* Keep your existing icon color */
+    color: #23449c; 
     margin-bottom: 15px;
-    margin-top: 20px; /* Added margin-top */
+    margin-top: 20px; 
 }
 
 .service-item h3 {
@@ -76,7 +138,7 @@
 .read-more {
     display: inline-block;
     padding: 10px 20px;
-    background-color: #23449c; /* Keep your existing button color */
+    background-color: #23449c; 
     color: white;
     text-decoration: none;
     border-radius: 5px;
