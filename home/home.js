@@ -5,9 +5,9 @@ document.addEventListener("DOMContentLoaded", () => {
         logoutButton.addEventListener("click", () => {
             console.log("Logging out..."); // Debugging
 
-            localStorage.setItem('token', data.token);
-            localStorage.setItem('role', data.role);
-            localStorage.setItem('username', data.username);
+            localStorage.setItem('token');
+            localStorage.setItem('role');
+            localStorage.setItem('username');
             // ✅ Remove authentication data
             localStorage.removeItem("token");
             localStorage.removeItem("username");
