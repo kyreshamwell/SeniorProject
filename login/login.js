@@ -56,19 +56,17 @@ registerForm?.addEventListener('submit', async (event) => {
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ name, email, password })
         });
-
-        res.json({ token, role: user.role, username: user.username });
-
-        const data = await response.json();
+    
+        const data = await response.json();  // This is correct
         console.log("✅ Server Response:", data);
-
+    
         if (response.ok) {
             alert('✅ Registration successful! You can now log in.');
             
-            // ✅ Automatically switch back to the login form
+            // Switch back to the login form
             container.classList.remove("active");
-
-            // ✅ Clear input fields
+    
+            // Clear input fields
             registerForm.reset();
         } else {
             alert(`❌ Error: ${data.error}`);
@@ -107,8 +105,9 @@ registerForm?.addEventListener('submit', async (event) => {
         if (response.ok) {
             localStorage.setItem('token', data.token);
             localStorage.setItem('role', data.role);
-
-            // ✅ Redirect to home.html after successful login
+            localStorage.setItem('username', data.username);  // Save the username
+        
+            // Redirect to home page
             window.location.href = `${FRONTEND_URL}/home/home.html`;
         } else {
             alert(`❌ Error: ${data.error}`);

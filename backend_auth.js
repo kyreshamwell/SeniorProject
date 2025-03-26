@@ -96,9 +96,9 @@ app.post("/login", async (req, res) => {
             return res.status(401).json({ error: "Invalid email or password" });
         }
 
-        const token = jwt.sign({ userId: user._id, role: user.role }, process.env.JWT_SECRET, { expiresIn: "1h" });
-
-        res.json({ token, role: user.role });
+        const token = jwt.sign({ userId: user._id, role: user.role, username: user.username }, process.env.JWT_SECRET, { expiresIn: "1h" });
+        res.json({ token, role: user.role, username: user.username });
+        
     } catch (error) {
         console.error("❌ Login Error:", error);
         res.status(500).json({ error: "Server error. Please try again." });
