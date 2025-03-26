@@ -48,13 +48,13 @@ registerForm?.addEventListener('submit', async (event) => {
         return;
     }
 
-    console.log("📤 Sending registration data:", { name, email, password });
+    console.log("📤 Sending registration data:", { username, email, password });
 
     try {
         const response = await fetch(`${BACKEND_URL}/register`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ name, email, password })
+            body: JSON.stringify({ username, email, password })
         });
     
         const data = await response.json();  // This is correct
