@@ -57,6 +57,8 @@ registerForm?.addEventListener('submit', async (event) => {
             body: JSON.stringify({ name, email, password })
         });
 
+        res.json({ token, role: user.role, username: user.username });
+
         const data = await response.json();
         console.log("✅ Server Response:", data);
 
@@ -117,4 +119,3 @@ registerForm?.addEventListener('submit', async (event) => {
     }
 });
 
-res.json({ token, role: user.role, username: user.username });
