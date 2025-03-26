@@ -39,11 +39,11 @@ registerForm?.addEventListener('submit', async (event) => {
     console.log("🚀 Register button clicked!");
 
     // ✅ Capture correct input fields
-    const name = registerForm.querySelector('input[placeholder="Full Name"]').value.trim();
+    const username = registerForm.querySelector('input[placeholder="Full Name"]').value.trim();
     const email = registerForm.querySelector('input[placeholder="Email"]').value.trim();
     const password = registerForm.querySelector('input[placeholder="Password"]').value.trim();
 
-    if (!name || !email || !password) {
+    if (!username || !email || !password) {
         alert("❌ All fields are required.");
         return;
     }
