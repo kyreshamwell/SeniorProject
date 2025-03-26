@@ -19,10 +19,16 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 });
 
+function capitalize(str) {
+    if (!str) return "";
+    return str.charAt(0).toUpperCase() + str.slice(1);
+  }
+
 document.addEventListener("DOMContentLoaded", () => {
     const username = localStorage.getItem('username');
     if (username) {
-      document.getElementById('usernameDisplay').textContent = `Welcome, ${username}!`;
+        const displayName = username ? capitalize(username) : "Guest";
+        document.getElementById('usernameDisplay').textContent = `Welcome, ${displayName}!`;
     } else {
       document.getElementById('usernameDisplay').textContent = "Welcome, Guest!";
     }
