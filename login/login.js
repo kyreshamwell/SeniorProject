@@ -77,8 +77,8 @@ registerForm?.addEventListener('submit', async (event) => {
     }
 });
 
-// ✅ Login User
-loginForm?.addEventListener('submit', async (event) => {
+    // ✅ Login User
+    loginForm?.addEventListener('submit', async (event) => {
     event.preventDefault();
     console.log("🚀 Login button clicked!");
 
@@ -116,3 +116,5 @@ loginForm?.addEventListener('submit', async (event) => {
         alert('❌ An error occurred during login.');
     }
 });
+
+res.json({ token, role: user.role, username: user.username });

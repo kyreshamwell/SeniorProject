@@ -1,12 +1,16 @@
 document.addEventListener("DOMContentLoaded", () => {
-    const logoutButton = document.getElementById("logoutButton");
+    const logoutButton = document.getElementById("signoutButton");
 
     if (logoutButton) {
         logoutButton.addEventListener("click", () => {
             console.log("Logging out..."); // Debugging
 
+            localStorage.setItem('token', data.token);
+            localStorage.setItem('role', data.role);
+            localStorage.setItem('username', data.username);
             // ✅ Remove authentication data
             localStorage.removeItem("token");
+            localStorage.removeItem("username");
             localStorage.removeItem("role");
 
             // ✅ Redirect to login page
@@ -14,3 +18,14 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     }
 });
+
+document.addEventListener("DOMContentLoaded", () => {
+    const username = localStorage.getItem('username');
+    if (username) {
+      document.getElementById('usernameDisplay').textContent = `Welcome, ${username}!`;
+    } else {
+      document.getElementById('usernameDisplay').textContent = "Welcome, Guest!";
+    }
+  });
+
+
