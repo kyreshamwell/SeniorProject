@@ -59,6 +59,7 @@ const UserSchema = new mongoose.Schema({
     email: { type: String, required: true, unique: true },
     password: { type: String, required: true },
     role: { type: String, default: "student" },
+    team: { type: String, default: "N/A" },  // New team field
     resetToken: { type: String, default: null },
     resetTokenExpiry: { type: Number, default: null }
 });
@@ -98,7 +99,7 @@ app.post("/login", async (req, res) => {
 
         const token = jwt.sign({ userId: user._id, role: user.role, username: user.username }, process.env.JWT_SECRET, { expiresIn: "1h" });
         res.json({ token, role: user.role, username: user.username });
-        
+
     } catch (error) {
         console.error("❌ Login Error:", error);
         res.status(500).json({ error: "Server error. Please try again." });
@@ -152,6 +153,44 @@ app.post("/reset-password", async (req, res) => {
         res.json({ message: "Password successfully reset! You can now log in." });
     } catch (error) {
         console.error("❌ Reset Password Error:", error);
+        res.status(500).json({ error: "Server error. Please try again." });
+    }
+});
+
+
+app.post("/team-signup", async (req, res) => {
+    const { teamName, userName, members } = req.body; // members should be an array
+
+    if (!teamName || !userName || !Array.isArray(members)) {
+        return res.status(400).json({ error: "Missing required fields" });
+    }
+
+    try {
+        // Create a unique list of usernames (current user + additional members)
+        const allUsernames = [userName, ...members];
+        const uniqueUsernames = [...new Set(allUsernames)];
+
+        // Ensure all provided usernames exist in the database
+        const users = await User.find({ username: { $in: uniqueUsernames } });
+        if (users.length !== uniqueUsernames.length) {
+            return res.status(400).json({ error: "One or more usernames do not exist." });
+        }
+
+        // Ensure none of these users have been assigned a team yet
+        const alreadyAssigned = users.filter(user => user.team !== "N/A");
+        if (alreadyAssigned.length > 0) {
+            return res.status(400).json({ error: "One or more users are already assigned to a team." });
+        }
+
+        // Update the team field for all users
+        await User.updateMany(
+            { username: { $in: uniqueUsernames } },
+            { $set: { team: teamName } }
+        );
+
+        res.json({ message: "Team signup successful!", team: teamName });
+    } catch (error) {
+        console.error("Team signup error:", error);
         res.status(500).json({ error: "Server error. Please try again." });
     }
 });

@@ -1,11 +1,10 @@
 /* General Page Styling */
 body {
     font-family: Arial, sans-serif;
-    background-color: #f4f4f9;
+    background-color: #e9ecef;  /* Neutral light background */
     margin: 0;
     padding: 0;
     display: flex;
-    flex-direction: column;
     align-items: center;
     justify-content: center;
     height: 100vh;
@@ -13,67 +12,80 @@ body {
 
 /* Container */
 .container {
-    background: gold;
-    padding: 20px;
+    background-color: #23449c;  /* Blue background */
+    padding: 30px;
     width: 400px;
-    border-radius: 20px;
+    border-radius: 10px;
     box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
-    text-align: center;
+    text-align: center;         /* Center text within container */
+    color: #fff;                /* White text for contrast */
 }
 
 /* Title */
 h2 {
     margin-bottom: 20px;
-    color: #333;
+    color: #fff;
 }
 
-/* Labels & Inputs */
+/* Labels */
 label {
     display: block;
     font-weight: bold;
     margin: 10px 0 5px;
+    text-align: center;
 }
 
+/* Inputs */
 input {
-    width: 100%;
+    width: 90%;
     padding: 10px;
     border: 1px solid #ccc;
     border-radius: 5px;
-    margin-bottom: 10px;
+    margin-bottom: 15px;
+    font-size: 14px;
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
 }
 
-/* Member Inputs */
+/* Members Div */
 #members {
     margin-top: 10px;
 }
 
 /* Buttons */
 button {
-    width: 100%;
+    width: 90%;
     padding: 10px;
-    margin: 5px 0;
+    margin: 5px auto;
     border: none;
     border-radius: 5px;
     cursor: pointer;
     font-size: 16px;
+    transition: opacity 0.2s ease-in-out;
+    display: block;
 }
 
+/* Button Colors */
+/* Robust Green for "Add Member" */
 #addMember {
-    background-color: #4CAF50;
-    color: white;
+    background-color: #28a745;  
+    color: #fff;
 }
 
+/* Robust Red for "Remove Member" */
 #removeMember {
-    background-color: #ff6666;
-    color: white;
+    background-color: #dc3545;  
+    color: #fff;
 }
 
+/* Bold Yellow for "Confirm Team" */
 #confirmTeam {
-    background-color: #007bff;
-    color: white;
+    background-color: #ffc107;  
+    color: #fff;
 }
 
 /* Hover Effects */
 button:hover {
-    opacity: 0.8;
+    opacity: 0.9;
 }
