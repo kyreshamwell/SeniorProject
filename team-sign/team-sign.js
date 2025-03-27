@@ -74,7 +74,7 @@ function teamValidation() {
         } else {
             alert(data.message);
             // Optionally, redirect to a team info page:
-            window.location.href = "team-info.html";
+            window.location.href = "/home/home.html"; // Adjust the URL as needed
         }
     })
     .catch(error => {
