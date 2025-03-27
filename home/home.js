@@ -3,18 +3,18 @@ document.addEventListener("DOMContentLoaded", () => {
 
     if (logoutButton) {
         logoutButton.addEventListener("click", () => {
-            console.log("Logging out..."); // Debugging
+            console.log("Logging out...");
 
             localStorage.setItem('token');
             localStorage.setItem('role');
             localStorage.setItem('username');
-            // ✅ Remove authentication data
+            // Remove authentication data from localStorage
             localStorage.removeItem("token");
             localStorage.removeItem("username");
             localStorage.removeItem("role");
 
-            // ✅ Redirect to login page
-            window.location.href = "/login/index.html"; // ✅ Go up one directory, then into /login/
+            // Redirect to login page
+            window.location.href = "../login/index.html";
         });
     }
 });
