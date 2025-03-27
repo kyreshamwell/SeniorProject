@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Team Sign-Up</title>
+    <link rel="stylesheet" href="team-sign.css">
+</head>
+<body>
+    <div class="container">
+        <h2>Team Registration</h2>
+
+        <label for="teamName">Team Name:</label>
+        <input type="text" id="teamName" placeholder="Enter your team name" required>
+
+        <label for="userName">Your Username:</label>
+        <input type="text" id="userName" placeholder="Enter your username" required>
+
+        <div id="members">
+            <label for="member1">Team Member 1:</label>
+            <input type="text" id="member1" class="member-input" placeholder="Enter a username">
+        </div>
+
+        <button id="addMember">Add Member</button>
+        <button id="removeMember">Remove Member</button>
+        <button id="confirmTeam">Confirm</button>
+    </div>
+
+    <script src="team-sign.js"></script>
+</body>
+
+</html>
