@@ -9,7 +9,6 @@ const crypto = require('crypto');
 const path = require('path');
 const SERVER_URL = "https://seniorproject-jkm4.onrender.com";  // 🔥 Your backend URL
 
-
 const app = express();
 app.use(express.json());
 app.use(cors());
@@ -18,16 +17,9 @@ app.use('/my-favicon', express.static(path.join(__dirname, 'my-favicon')));
 
 const PORT = process.env.PORT || 5001;
 
-// ✅ Serve Static Files Correctly
-// app.use('/login', express.static(path.join(__dirname, 'login'))); 
+// Serve static files (for password reset)
 app.use('/password-reset', express.static(path.join(__dirname, 'login', 'password-reset')));
 
-// ✅ Serve index.html correctly
-// app.get('/', (req, res) => {
-//     res.sendFile(path.join(__dirname, 'login', 'index.html'));
-// });
-
-// ✅ Fix MIME type issue for CSS & JS
 app.get('/login/login.css', (req, res) => {
     res.setHeader('Content-Type', 'text/css');
     res.sendFile(path.join(__dirname, 'login', 'login.css'));
@@ -38,35 +30,54 @@ app.get('/login/login.js', (req, res) => {
     res.sendFile(path.join(__dirname, 'login', 'login.js'));
 });
 
-// // ✅ Debugging Step: Check if .env is loading correctly
-// console.log("🛠 DEBUG: MONGO_URI is:", process.env.MONGO_URI);
-
-// ✅ Ensure MongoDB URI is defined
+// Ensure MongoDB URI is defined
 const mongoURI = process.env.MONGO_URI;
 if (!mongoURI) {
     console.error("❌ ERROR: MONGO_URI is undefined. Make sure .env is loaded!");
-    process.exit(1); // Stop server if MongoDB URI is missing
+    process.exit(1);
 }
 
-// ✅ Connect to MongoDB
+// Connect to MongoDB
 mongoose.connect(mongoURI, { useNewUrlParser: true, useUnifiedTopology: true })
     .then(() => console.log("✅ MongoDB Connected"))
     .catch(err => console.error("❌ MongoDB Connection Error:", err));
 
-// ✅ User Schema
+// User Schema with a default team value ("N/A")
 const UserSchema = new mongoose.Schema({
     username: { type: String, required: true },
     email: { type: String, required: true, unique: true },
     password: { type: String, required: true },
     role: { type: String, default: "student" },
-    team: { type: String, default: "N/A" },  // New team field
+    team: { type: String, default: "N/A" },
     resetToken: { type: String, default: null },
     resetTokenExpiry: { type: Number, default: null }
 });
-
 const User = mongoose.model('User', UserSchema);
 
-// ✅ Register User
+/* ADMIN AUTHENTICATION MIDDLEWARE */
+// This middleware checks for the presence of a JWT in the Authorization header,
+// verifies it, and ensures the user's role is "admin".
+function adminAuth(req, res, next) {
+    const authHeader = req.headers.authorization;
+    if (!authHeader) {
+        return res.status(401).json({ error: "Unauthorized: No token provided" });
+    }
+    const token = authHeader.split(" ")[1];
+    try {
+        const decoded = jwt.verify(token, process.env.JWT_SECRET);
+        if (decoded.role !== "admin") {
+            return res.status(403).json({ error: "Forbidden: Admins only" });
+        }
+        req.user = decoded;
+        next();
+    } catch (error) {
+        return res.status(401).json({ error: "Invalid token" });
+    }
+}
+
+/* ROUTES */
+
+// Register User
 app.post("/register", async (req, res) => {
     const { username, email, password } = req.body;
 
@@ -87,7 +98,7 @@ app.post("/register", async (req, res) => {
     }
 });
 
-// ✅ Login User
+// Login User (returns JWT with role and username)
 app.post("/login", async (req, res) => {
     const { email, password } = req.body;
 
@@ -97,16 +108,19 @@ app.post("/login", async (req, res) => {
             return res.status(401).json({ error: "Invalid email or password" });
         }
 
-        const token = jwt.sign({ userId: user._id, role: user.role, username: user.username }, process.env.JWT_SECRET, { expiresIn: "1h" });
+        const token = jwt.sign(
+            { userId: user._id, role: user.role, username: user.username },
+            process.env.JWT_SECRET,
+            { expiresIn: "1h" }
+        );
         res.json({ token, role: user.role, username: user.username });
-
     } catch (error) {
         console.error("❌ Login Error:", error);
         res.status(500).json({ error: "Server error. Please try again." });
     }
 });
 
-// ✅ Forgot Password (Generates Reset Link)
+// Forgot Password (Generates Reset Link)
 app.post("/forgot-password", async (req, res) => {
     const { email } = req.body;
 
@@ -120,11 +134,8 @@ app.post("/forgot-password", async (req, res) => {
         user.resetToken = resetToken;
         user.resetTokenExpiry = Date.now() + 15 * 60 * 1000; // 15 minutes expiry
         await user.save();
-//  senior-project-delta.vercel.app
-        // const resetLink = `http://localhost:${PORT}/login/password-reset/reset-password.html?token=${resetToken}`;
-        // const resetLink = `https://https://seniorproject-jkm4.onrender.com/login/password-reset/reset-password.html?token=${resetToken}`;
-        const resetLink = `${SERVER_URL}/password-reset/reset-password.html?token=${resetToken}`;
 
+        const resetLink = `${SERVER_URL}/password-reset/reset-password.html?token=${resetToken}`;
         console.log("🔗 Reset Password Link:", resetLink);
 
         res.json({ message: "Password reset link generated!", resetLink });
@@ -134,13 +145,12 @@ app.post("/forgot-password", async (req, res) => {
     }
 });
 
-// ✅ Reset Password (Updates Password in MongoDB)
+// Reset Password (Updates Password in MongoDB)
 app.post("/reset-password", async (req, res) => {
     const { token, password } = req.body;
 
     try {
         const user = await User.findOne({ resetToken: token, resetTokenExpiry: { $gt: Date.now() } });
-
         if (!user) {
             return res.status(400).json({ error: "Invalid or expired reset token." });
         }
@@ -157,7 +167,7 @@ app.post("/reset-password", async (req, res) => {
     }
 });
 
-
+// Team Signup Endpoint
 app.post("/team-signup", async (req, res) => {
     const { teamName, userName, members } = req.body; // members should be an array
 
@@ -166,23 +176,19 @@ app.post("/team-signup", async (req, res) => {
     }
 
     try {
-        // Create a unique list of usernames (current user + additional members)
         const allUsernames = [userName, ...members];
         const uniqueUsernames = [...new Set(allUsernames)];
 
-        // Ensure all provided usernames exist in the database
         const users = await User.find({ username: { $in: uniqueUsernames } });
         if (users.length !== uniqueUsernames.length) {
             return res.status(400).json({ error: "One or more usernames do not exist." });
         }
 
-        // Ensure none of these users have been assigned a team yet
         const alreadyAssigned = users.filter(user => user.team !== "N/A");
         if (alreadyAssigned.length > 0) {
             return res.status(400).json({ error: "One or more users are already assigned to a team." });
         }
 
-        // Update the team field for all users
         await User.updateMany(
             { username: { $in: uniqueUsernames } },
             { $set: { team: teamName } }
@@ -195,8 +201,13 @@ app.post("/team-signup", async (req, res) => {
     }
 });
 
+// ADMIN ROUTE: Admin Dashboard (Protected Route)
+// Only users with a valid JWT containing role "admin" can access this route.
+app.get("/admin/dashboard", adminAuth, (req, res) => {
+    res.sendFile(path.join(__dirname, "admin", "admin.html"));
+});
 
-// ✅ Fix MIME type issues for home.css & home.js
+// Serve home CSS and JS
 app.get('/home/home.css', (req, res) => {
     res.setHeader('Content-Type', 'text/css');
     res.sendFile(path.join(__dirname, 'home', 'home.css'));
@@ -207,8 +218,7 @@ app.get('/home/home.js', (req, res) => {
     res.sendFile(path.join(__dirname, 'home', 'home.js'));
 });
 
-
-// ✅ Start the server
+// Start the server
 app.listen(PORT, '0.0.0.0', () => {
     console.log(`🚀 Server running at ${SERVER_URL}`);
 });
