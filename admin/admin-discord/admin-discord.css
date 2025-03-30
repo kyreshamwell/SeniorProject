@@ -1,0 +1,65 @@
+/* Admin Discord Page Styles */
+body {
+    font-family: Arial, sans-serif;
+    background-color: #23449c; /* Blue background */
+    color: gold; /* Gold text for contrast */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+    margin: 0;
+  }
+  
+  /* Ensure box-sizing is applied so elements don’t overflow */
+  *, *:before, *:after {
+    box-sizing: border-box;
+  }
+  
+  .admin-container {
+    background: #fff;  /* Use white for readability */
+    padding: 20px;
+    width: 350px;
+    border-radius: 10px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+    text-align: center;
+    color: #333;
+  }
+  
+  .admin-container h2 {
+    color: #23449c; /* Blue title */
+  }
+  
+  label {
+    display: block;
+    margin: 10px 0 5px;
+    font-weight: bold;
+  }
+  
+  input[type="url"] {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    /* box-sizing: border-box is already applied globally */
+  }
+  
+  button {
+    margin-top: 15px;
+    width: 100%;
+    padding: 10px;
+    background-color: gold;
+    border: none;
+    border-radius: 5px;
+    font-size: 16px;
+    cursor: pointer;
+  }
+  
+  button:hover {
+    opacity: 0.9;
+  }
+  
+  #message {
+    margin-top: 15px;
+    font-size: 16px;
+  }
+  
