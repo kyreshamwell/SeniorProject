@@ -1,5 +1,5 @@
 document.addEventListener("DOMContentLoaded", async () => {
-    // 1. Fetch updated user data if a token exists
+    // Fetch updated user data if a token exists
     const token = localStorage.getItem("token");
     if (token) {
       try {
@@ -10,10 +10,14 @@ document.addEventListener("DOMContentLoaded", async () => {
         });
         const data = await response.json();
         if (response.ok) {
-          // Update localStorage with the new role (or any other updated info)
+          // Update localStorage with the new role
           localStorage.setItem("role", data.role);
           console.log("Updated role:", data.role);
-          // Optionally, update the UI further here if needed
+          // Check if the user is an admin
+          if (data.role === "admin") {
+            // Display the "Back to Admin Dashboard" link
+            document.getElementById("adminLink").style.display = "block";
+          }
         } else {
           console.error("Error fetching user data:", data.error);
         }
@@ -22,21 +26,19 @@ document.addEventListener("DOMContentLoaded", async () => {
       }
     }
   
-    // 2. Signout functionality
+    // Signout functionality
     const logoutButton = document.getElementById("signoutButton");
     if (logoutButton) {
       logoutButton.addEventListener("click", () => {
         console.log("Logging out...");
-        // Remove authentication data from localStorage
         localStorage.removeItem("token");
         localStorage.removeItem("username");
         localStorage.removeItem("role");
-        // Redirect to login page
         window.location.href = "../login/index.html";
       });
     }
   
-    // 3. Display username on the home page
+    // Display username on home page
     const username = localStorage.getItem('username');
     const displayName = username ? capitalize(username) : "Guest";
     const usernameDisplay = document.getElementById('usernameDisplay');
@@ -45,7 +47,6 @@ document.addEventListener("DOMContentLoaded", async () => {
     }
   });
   
-  // Helper function to capitalize the first letter of a string
   function capitalize(str) {
     if (!str) return "";
     return str.charAt(0).toUpperCase() + str.slice(1);
