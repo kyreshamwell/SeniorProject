@@ -54,6 +54,13 @@ const UserSchema = new mongoose.Schema({
 });
 const User = mongoose.model('User', UserSchema);
 
+/* SETTINGS MODEL */
+// Settings Schema & Model (for storing Discord URL, etc.)
+const SettingsSchema = new mongoose.Schema({
+  discordURL: { type: String, default: "https://discord.gg/default" }
+});
+const Settings = mongoose.model('Settings', SettingsSchema);
+
 /* ADMIN AUTHENTICATION MIDDLEWARE */
 // This middleware checks for the presence of a JWT in the Authorization header,
 // verifies it, and ensures the user's role is "admin".
@@ -201,7 +208,42 @@ app.post("/team-signup", async (req, res) => {
     }
 });
 
-// ADMIN ROUTE: Admin Dashboard (Protected Route)
+/* SETTINGS ENDPOINTS */
+
+// GET /api/settings/discord - Returns the current Discord URL
+app.get('/api/settings/discord', async (req, res) => {
+  try {
+    let settings = await Settings.findOne({});
+    if (!settings) {
+      // If no settings exist, create one with the default value
+      settings = await Settings.create({});
+    }
+    res.json({ discordURL: settings.discordURL });
+  } catch (error) {
+    console.error("Error fetching settings:", error);
+    res.status(500).json({ error: "Server error" });
+  }
+});
+
+// POST /api/settings/discord - Updates the Discord URL
+app.post('/api/settings/discord', async (req, res) => {
+  const { discordURL } = req.body;
+  try {
+    let settings = await Settings.findOne({});
+    if (!settings) {
+      settings = await Settings.create({ discordURL });
+    } else {
+      settings.discordURL = discordURL;
+      await settings.save();
+    }
+    res.json({ message: "Discord URL updated successfully", discordURL: settings.discordURL });
+  } catch (error) {
+    console.error("Error updating Discord URL:", error);
+    res.status(500).json({ error: "Server error updating Discord URL" });
+  }
+});
+
+/* ADMIN ROUTE: Admin Dashboard (Protected Route) */
 // Only users with a valid JWT containing role "admin" can access this route.
 app.get("/admin", adminAuth, (req, res) => {
     res.sendFile(path.join(__dirname, "admin", "admin.html"));
@@ -241,7 +283,7 @@ app.get("/api/user", async (req, res) => {
       console.error("Error fetching user data:", error);
       res.status(401).json({ error: "Invalid token" });
     }
-  });
+});
   
 // Start the server
 app.listen(PORT, '0.0.0.0', () => {
