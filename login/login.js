@@ -105,11 +105,15 @@ registerForm?.addEventListener('submit', async (event) => {
         if (response.ok) {
             localStorage.setItem('token', data.token);
             localStorage.setItem('role', data.role);
-            localStorage.setItem('username', data.username);  // Save the username
-        
-            // Redirect to home page
-            window.location.href = `${FRONTEND_URL}/home/home.html`;
-        } else {
+            localStorage.setItem('username', data.username);
+            
+            if(data.role === "admin"){
+                window.location.href = `${FRONTEND_URL}/admin/admin.html`; // or your admin route URL
+            } else {
+                window.location.href = `${FRONTEND_URL}/home/home.html`;
+            }
+        }
+         else {
             alert(`❌ Error: ${data.error}`);
         }
     } catch (error) {
