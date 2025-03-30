@@ -203,7 +203,7 @@ app.post("/team-signup", async (req, res) => {
 
 // ADMIN ROUTE: Admin Dashboard (Protected Route)
 // Only users with a valid JWT containing role "admin" can access this route.
-app.get("/admin/dashboard", adminAuth, (req, res) => {
+app.get("/admin", adminAuth, (req, res) => {
     res.sendFile(path.join(__dirname, "admin", "admin.html"));
 });
 
