@@ -20,11 +20,12 @@
         </svg>
       </div>
     </a>
-    <div class="join-text">Join the Discord!</div>
-    <a href="../home/home.html">
-        <button>Back to Home Dashboard</button>
-      </a>
-  </div>
+    <div class="discord-container">
+        <div class="join-text">Join the Discord!</div>
+        <button id="backHomeButton" onclick="window.location.href='../home/home.html'">Back to Home Dashboard</button>
+        <a id="discordLink" href="#" target="_blank" class="discord-link">Join our Discord</a>
+        <div id="discordStatus"></div>
+      </div>
   <script src="discord.js"></script>
 </body>
 </html>

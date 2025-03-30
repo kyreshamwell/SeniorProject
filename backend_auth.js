@@ -260,7 +260,8 @@ app.get('/home/home.js', (req, res) => {
     res.sendFile(path.join(__dirname, 'home', 'home.js'));
 });
 
-// GET /api/user - Returns the latest user info (including role)
+/* GET /api/user - Returns the latest user info (including role) */
+// This endpoint helps refresh user data on page load
 app.get("/api/user", async (req, res) => {
     const authHeader = req.headers.authorization;
     if (!authHeader) {
