@@ -218,6 +218,31 @@ app.get('/home/home.js', (req, res) => {
     res.sendFile(path.join(__dirname, 'home', 'home.js'));
 });
 
+// GET /api/user - Returns the latest user info (including role)
+app.get("/api/user", async (req, res) => {
+    const authHeader = req.headers.authorization;
+    if (!authHeader) {
+      return res.status(401).json({ error: "No token provided" });
+    }
+    const token = authHeader.split(" ")[1];
+    try {
+      const decoded = jwt.verify(token, process.env.JWT_SECRET);
+      const user = await User.findById(decoded.userId);
+      if (!user) {
+        return res.status(404).json({ error: "User not found" });
+      }
+      res.json({
+        username: user.username,
+        role: user.role,
+        email: user.email,
+        team: user.team
+      });
+    } catch (error) {
+      console.error("Error fetching user data:", error);
+      res.status(401).json({ error: "Invalid token" });
+    }
+  });
+  
 // Start the server
 app.listen(PORT, '0.0.0.0', () => {
     console.log(`🚀 Server running at ${SERVER_URL}`);
