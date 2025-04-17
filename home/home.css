@@ -163,3 +163,18 @@ footer p {
     left: 50%;
     transform: translateX(-50%);
 }
+.button-group {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+    margin-top: 10px;
+    align-items: center;
+}
+
+.button-group .read-more {
+    flex: 1;
+    text-align: center;
+    padding: 10px 0;
+    box-sizing: border-box;
+
+}
