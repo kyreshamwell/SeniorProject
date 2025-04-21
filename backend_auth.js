@@ -358,24 +358,36 @@ app.put('/api/companies/:id', adminAuth, async (req, res) => {
   });
   
   // 5) POST /api/teams/:teamId/select-company
-  app.post('/api/teams/:teamId/select-company', adminAuth, async (req, res) => {
+  app.post('/api/teams/:teamId/select-company', async (req, res) => {
+    // 0) Verify there’s a JWT
+    const token = req.headers.authorization?.split(" ")[1];
+    if (!token) return res.status(401).json({ error: "No token provided" });
+  
+    // 1) Decode it (any valid token is fine—no role check)
+    try {
+      jwt.verify(token, process.env.JWT_SECRET);
+    } catch {
+      return res.status(401).json({ error: "Invalid token" });
+    }
+  
+    // 2) Business logic
     const { teamId }    = req.params;
     const { companyId } = req.body;
   
-    // 1) ensure slots remain
+    // 2a) Ensure slots remain
     const company = await Company.findById(companyId);
     if (!company || company.teamsAssigned >= company.maxTeams) {
-      return res.status(400).json({ error: 'No slots available' });
+      return res.status(400).json({ error: "No slots available" });
     }
   
-    // 2) assign company to team
+    // 2b) Assign company to team
     await Team.findByIdAndUpdate(teamId, { company: companyId });
   
-    // 3) increment assigned count
+    // 2c) Increment assigned count
     company.teamsAssigned++;
     await company.save();
   
-    res.json({ message: 'Company assigned to team successfully!' });
+    res.json({ message: "Company assigned to team successfully!" });
   });
   
 // Start the server
