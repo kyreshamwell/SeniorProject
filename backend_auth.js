@@ -54,6 +54,13 @@ const UserSchema = new mongoose.Schema({
 });
 const User = mongoose.model('User', UserSchema);
 
+const TeamSchema = new mongoose.Schema({
+    name: {type: String, required: true},
+    members: [{type: mongoose.Schema.Types.ObjectId, ref: 'User'}],
+    company: {type: mongoose.Schema.Types.ObjectId, ref: 'Company', defualt: null},
+})
+const Team = mongoose.model('Team', TeamSchema);
+
 /* SETTINGS MODEL */
 // Settings Schema & Model (for storing Discord URL, etc.)
 const SettingsSchema = new mongoose.Schema({
@@ -285,6 +292,23 @@ app.get("/api/user", async (req, res) => {
       res.status(401).json({ error: "Invalid token" });
     }
 });
+
+app.post('/api/teams/:teamId/select-company', adminAuth, async (req, res) => {
+    const { teamId } = req.params;
+    const { companyId } = req.body;
+
+    // 1 ensure slots remain
+    const company = await company.findById(companyId);
+    if (!company || company.teamAssigned >= company.maxTeams) {
+        return res.status(400).json({ error: "No slots available" });
+    }
+
+    await Team.findByIdAndUpdate(teamId, { company: companyId });
+
+    company.teamAssigned ++;
+    await company.save();
+    res.json({ message: "Company assigned to team successfully!" });
+})
   
 // Start the server
 app.listen(PORT, '0.0.0.0', () => {

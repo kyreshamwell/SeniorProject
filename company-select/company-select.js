@@ -4,7 +4,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     const opts = document.getElementById("options");
   
     // 1) fetch list of companies
-    const res = await fetch("https://your-backend/api/companies");
+    const res = await fetch('https://seniorproject-jkm4.onrender.com/api/companies')
     const { companies } = await res.json();
   
     // 2) render radio buttons
@@ -25,7 +25,7 @@ document.addEventListener("DOMContentLoaded", async () => {
       const choice = form.company.value;
       if (!choice) return alert("Please pick one.");
       const resp = await fetch(
-        `https://your-backend/api/teams/${localStorage.getItem("teamId")}/select-company`,
+        `https://seniorproject-jkm4.onrender.com/api/teams/${localStorage.getItem("teamId")}/select-company`,
         {
           method: "POST",
           headers: { "Content-Type": "application/json",

@@ -5,7 +5,7 @@ document.addEventListener("DOMContentLoaded", () => {
   
     async function loadCompanies() {
       tableBody.innerHTML = "";
-      const res = await fetch("https://your-backend/api/companies", {
+      const res = await fetch("https://seniorproject-jkm4.onrender.com/api/companies", {
         headers: { "Authorization": "Bearer " + localStorage.getItem("token") }
       });
       const data = await res.json();
@@ -26,7 +26,7 @@ document.addEventListener("DOMContentLoaded", () => {
     // Add new company
     form.addEventListener("submit", async e => {
       e.preventDefault();
-      await fetch("https://your-backend/api/companies", {
+      await fetch("https://seniorproject-jkm4.onrender.com/api/companies", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -45,7 +45,7 @@ document.addEventListener("DOMContentLoaded", () => {
     tableBody.addEventListener("click", async e => {
       const id = e.target.dataset.id;
       if (e.target.matches(".delete")) {
-        await fetch(`https://your-backend/api/companies/${id}`, {
+        await fetch(`https://seniorproject-jkm4.onrender.com/api/companies/${id}`, {
           method: "DELETE",
           headers: { "Authorization": "Bearer " + localStorage.getItem("token") }
         });
@@ -54,7 +54,7 @@ document.addEventListener("DOMContentLoaded", () => {
       if (e.target.matches(".edit")) {
         const newName = prompt("New company name?");
         const newMax = prompt("New max teams?");
-        await fetch(`https://your-backend/api/companies/${id}`, {
+        await fetch(`https://seniorproject-jkm4.onrender.com/api/companies/${id}`, {
           method: "PUT",
           headers: {
             "Content-Type": "application/json",
