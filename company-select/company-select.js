@@ -36,4 +36,15 @@ document.addEventListener("DOMContentLoaded", async () => {
       if (resp.ok) alert("Company assigned!");
       else alert("Error assigning company.");
     });
+
+    // Go Back button
+    document.getElementById("goBackButton").addEventListener("click", () => {
+        window.location.href = "/home/home.html";
+    });
+    
+    // Show admin link if role is admin
+    const role = localStorage.getItem("role");
+    if (role === "admin") {
+        document.getElementById("adminLink").style.display = "inline-flex";
+    }
   });
