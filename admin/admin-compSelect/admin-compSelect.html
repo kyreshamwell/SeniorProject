@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Admin: Manage Companies</title>
+  <link rel="stylesheet" href="admin-compSelect.css"/>
+</head>
+<body>
+  <nav>
+    <div class="nav-content">
+      <div id="usernameDisplay"></div>
+      <button id="signoutButton">Sign Out</button>
+    </div>
+  </nav>
+
+  <main class="admin-companies">
+    <h2>Companies</h2>
+    <form id="newCompanyForm">
+      <input type="text" id="companyName" placeholder="Name" required/>
+      <input type="number" id="companyMax" placeholder="Max Teams" min="1"/>
+      <button type="submit">Add Company</button>
+    </form>
+
+    <table id="companyTable">
+      <thead><tr><th>Name</th><th>Max</th><th>Assigned</th><th>Actions</th></tr></thead>
+      <tbody></tbody>
+    </table>
+  </main>
+
+  <script src="admin-company-select.js"></script>
+</body>
+</html>

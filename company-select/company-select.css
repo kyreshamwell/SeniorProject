@@ -1,0 +1,26 @@
+/* company-select.css */
+body {
+    font-family: sans-serif;
+    margin: 0;
+    padding-top: 60px; /* space for nav */
+  }
+  nav {
+    position: fixed; top: 0; left: 0; right: 0;
+    background: #23449c; color: #fff; padding: 15px;
+  }
+  .company-selection {
+    max-width: 400px;
+    margin: 2rem auto;
+    background: #fff; padding: 20px; border-radius: 8px;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+  }
+  #options {
+    margin-bottom: 1rem;
+  }
+  #options label {
+    display: block; margin: .5rem 0;
+  }
+  .read-more {
+    background: #23449c; color: #fff; border: none;
+    padding: 10px 20px; border-radius: 5px; cursor: pointer;
+  }

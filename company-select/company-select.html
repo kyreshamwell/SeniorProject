@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Company Selection</title>
+  <link rel="stylesheet" href="company-select.css"/>
+</head>
+<body>
+  <nav>
+    <div class="nav-content">
+      <div id="usernameDisplay"></div>
+      <button id="signoutButton">Sign Out</button>
+    </div>
+  </nav>
+
+  <main class="company-selection">
+    <h2>Select Your Company</h2>
+    <form id="companyForm">
+      <!-- JS will inject radio buttons here -->
+      <div id="options"></div>
+      <button type="submit" class="read-more">Submit</button>
+    </form>
+  </main>
+
+  <script src="company-select.js"></script>
+</body>
+</html>
