@@ -183,38 +183,41 @@ app.post("/reset-password", async (req, res) => {
 });
 
 // Team Signup Endpoint
-app.post("/team-signup", async (req, res) => {
-    const { teamName, userName, members } = req.body; // members should be an array
-
+//  ——————————————————————————————————————————————
+//  Team Signup (now ObjectId‑based, no more "N/A")
+app.post('/team-signup', async (req, res) => {
+    const { teamName, userName, members } = req.body;
+  
+    // 1) Basic validation
     if (!teamName || !userName || !Array.isArray(members)) {
-        return res.status(400).json({ error: "Missing required fields" });
+      return res.status(400).json({ error: 'teamName, userName & members[] required' });
     }
-
-    try {
-        const allUsernames = [userName, ...members];
-        const uniqueUsernames = [...new Set(allUsernames)];
-
-        const users = await User.find({ username: { $in: uniqueUsernames } });
-        if (users.length !== uniqueUsernames.length) {
-            return res.status(400).json({ error: "One or more usernames do not exist." });
-        }
-
-        const alreadyAssigned = users.filter(user => user.team !== "N/A");
-        if (alreadyAssigned.length > 0) {
-            return res.status(400).json({ error: "One or more users are already assigned to a team." });
-        }
-
-        await User.updateMany(
-            { username: { $in: uniqueUsernames } },
-            { $set: { team: teamName } }
-        );
-
-        res.json({ message: "Team signup successful!", team: teamName });
-    } catch (error) {
-        console.error("Team signup error:", error);
-        res.status(500).json({ error: "Server error. Please try again." });
+  
+    // 2) Build & dedupe list of usernames
+    const names = [...new Set([userName, ...members])];
+  
+    // 3) Fetch those users
+    const users = await User.find({ username: { $in: names } });
+    if (users.length !== names.length) {
+      return res.status(400).json({ error: 'One or more usernames not found' });
     }
-});
+  
+    // 4) Create the new Team document
+    const newTeam = await Team.create({
+      name:    teamName,
+      members: users.map(u => u._id)
+    });
+  
+    // 5) Update each User.team to point at newTeam._id
+    await User.updateMany(
+      { _id: { $in: users.map(u => u._id) } },
+      { $set: { team: newTeam._id } }
+    );
+  
+    // 6) Success!
+    res.json({ message: 'Team created!', teamId: newTeam._id });
+  });
+  //  ——————————————————————————————————————————————
 
 /* SETTINGS ENDPOINTS */
 
