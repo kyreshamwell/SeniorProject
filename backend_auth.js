@@ -345,71 +345,99 @@ const CompanySchema = new mongoose.Schema({
   });
   
   // 4) Team schema & model (ensure this is only declared once in your file)
-  // ─── TEAM SCHEMA & SIGNUP ROUTE ──────────────────────────────
+  // ─── Team Schema & Model ──────────────────────────────────────
 const TeamSchema = new mongoose.Schema({
-    name:    { type: String, required: true, unique: true },
-    members: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }],
-    company: { type: mongoose.Schema.Types.ObjectId, ref: 'Company', default: null }
+    name: {
+      type: String,
+      required: true,
+      unique: true
+    },
+    members: [{
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'User'
+    }],
+    company: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'Company',
+      default: null
+    }
   });
   const Team = mongoose.model('Team', TeamSchema);
-
-// ─── GET /api/teams ───────────────────────────────────────────
-// Only admins should see every team’s assignments
-app.get('/api/teams', adminAuth, async (req, res) => {
-    try {
-    const teams = await Team.find()
-        .populate('members', 'username')   // bring in each member’s username
-        .populate('company', 'name');      // bring in the company’s name
-    res.json({ teams });
-    } catch (err) {
-    console.error('Error fetching teams:', err);
-    res.status(500).json({ error: 'Server error' });
-    }
-});
   
+  
+  // ─── GET /api/teams ───────────────────────────────────────────
+  // Only admins should see every team’s assignments,
+  // and with populated member usernames + company names.
+  app.get('/api/teams', adminAuth, async (req, res) => {
+    try {
+      const teams = await Team.find()
+        .populate('members', 'username')
+        .populate('company', 'name');
+      res.json({ teams });
+    } catch (err) {
+      console.error('Error fetching teams:', err);
+      res.status(500).json({ error: 'Server error' });
+    }
+  });
+  
+  
+  // ─── POST /team-signup ────────────────────────────────────────
+  // Create a new Team and assign each User.team → newTeam._id.
   app.post('/team-signup', async (req, res) => {
     const { teamName, userName, members } = req.body;
     if (!teamName || !userName || !Array.isArray(members)) {
       return res.status(400).json({ error: 'teamName, userName & members[] required' });
     }
-    // 1) Dedupe & fetch users
+  
+    // 1) Gather & dedupe usernames
     const names = [...new Set([userName, ...members])];
+  
+    // 2) Lookup Users
     const users = await User.find({ username: { $in: names } });
     if (users.length !== names.length) {
       return res.status(400).json({ error: 'One or more usernames not found' });
     }
-    // 2) Create Team
+  
+    // 3) Create the Team
     const newTeam = await Team.create({
       name:    teamName,
       members: users.map(u => u._id)
     });
-    // 3) Assign each user.team = newTeam._id
+  
+    // 4) Update each User.team
     await User.updateMany(
-      { _id: { $in: users.map(u=>u._id) } },
+      { _id: { $in: users.map(u => u._id) } },
       { $set: { team: newTeam._id } }
     );
-    res.json({ message:'Team created!', teamId:newTeam._id });
+  
+    res.json({ message: 'Team created!', teamId: newTeam._id });
   });
   
-  // ─── SELECT‑COMPANY ROUTE (any authenticated user) ───────────
-  app.post('/api/teams/:teamId/select-company', async (req, res) => {
-    const token = req.headers.authorization?.split(" ")[1];
-    if (!token) return res.status(401).json({ error:"No token" });
-    try { jwt.verify(token, process.env.JWT_SECRET); }
-    catch { return res.status(401).json({ error:"Invalid token" }); }
   
+  // ─── POST /api/teams/:teamId/select-company ──────────────────
+  // Any authenticated user may assign their team to a company.
+  app.post('/api/teams/:teamId/select-company', async (req, res) => {
+    // 0) Verify JWT
+    const token = req.headers.authorization?.split(" ")[1];
+    if (!token) return res.status(401).json({ error: "No token" });
+    try { jwt.verify(token, process.env.JWT_SECRET); }
+    catch { return res.status(401).json({ error: "Invalid token" }); }
+  
+    // 1) Business logic
     const { teamId } = req.params;
     const { companyId } = req.body;
     const company = await Company.findById(companyId);
     if (!company || company.teamsAssigned >= company.maxTeams) {
-      return res.status(400).json({ error:"No slots available" });
+      return res.status(400).json({ error: "No slots available" });
     }
+  
+    // 2) Assign & increment
     await Team.findByIdAndUpdate(teamId, { company: companyId });
     company.teamsAssigned++;
     await company.save();
-    res.json({ message:"Company assigned!" });
-  });
   
+    res.json({ message: "Company assigned!" });
+  });
   
 // Start the server
 app.listen(PORT, '0.0.0.0', () => {
