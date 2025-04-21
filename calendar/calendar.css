@@ -48,26 +48,33 @@ body {
     border-left: 4px solid #23449c;
 }
 
-.signoutButton {
+.nav-content {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  
+  .nav-actions {
+    display: flex;
+    gap: 10px; /* space between buttons/links */
+  }
+  
+  .btn {
     background-color: gold;
     color: black;
     border: none;
-    padding: 8px 15px;
-    border-radius: 5px;
+    padding: 8px 12px;
+    border-radius: 4px;
+    text-decoration: none;
     cursor: pointer;
-}
-
-.signoutButton:hover {
-    background-color: #ffc107;
-}
-
-.nav-content {
-    display: flex;
-    justify-content: space-between; 
+    display: inline-flex;
     align-items: center;
-    width: 100%; 
-    box-sizing: border-box; 
-}
+    justify-content: center;
+  }
+  
+  .btn:hover {
+    background-color: #ffc107;
+  }
 
 nav {
     position: absolute;
