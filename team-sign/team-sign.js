@@ -1,84 +1,92 @@
+// team‑sign.js
 document.addEventListener("DOMContentLoaded", () => {
-    const membersDiv = document.getElementById("members");
-    const addButton = document.getElementById("addMember");
+    const membersDiv   = document.getElementById("members");
+    const addButton    = document.getElementById("addMember");
     const removeButton = document.getElementById("removeMember");
-    const confirmButton = document.getElementById("confirmTeam");
-
-    let memberCount = 1; // Starts with 1 member (member1)
-
+    const confirmButton= document.getElementById("confirmTeam");
+  
+    let memberCount = 1;
+  
     addButton.addEventListener("click", () => {
-        if (memberCount < 3) { // Maximum 4 members allowed
-            memberCount++;
-            const newMember = document.createElement("div");
-            newMember.innerHTML = `
-                <label for="member${memberCount}">Team Member ${memberCount}:</label>
-                <input type="text" id="member${memberCount}" class="member-input" placeholder="Enter a username">
-            `;
-            membersDiv.appendChild(newMember);
-        } else {
-            alert("Team limit reached! A maximum of 4 members is allowed.");
-        }
+      if (memberCount < 3) {
+        memberCount++;
+        const newMember = document.createElement("div");
+        newMember.innerHTML = `
+          <label for="member${memberCount}">Team Member ${memberCount}:</label>
+          <input type="text" id="member${memberCount}"
+                 class="member-input" placeholder="Enter a username">
+        `;
+        membersDiv.appendChild(newMember);
+      } else {
+        alert("Team limit reached! A maximum of 4 members is allowed.");
+      }
     });
-
+  
     removeButton.addEventListener("click", () => {
-        if (memberCount > 1) {
-            membersDiv.removeChild(membersDiv.lastElementChild);
-            memberCount--;
-        } else {
-            alert("A team must have at least one member.");
-        }
+      if (memberCount > 1) {
+        membersDiv.removeChild(membersDiv.lastElementChild);
+        memberCount--;
+      } else {
+        alert("A team must have at least one member.");
+      }
     });
-
-    confirmButton.addEventListener("click", () => {
-        teamValidation();
-    });
-});
-
-function teamValidation() {
-    const teamName = document.getElementById("teamName").value.trim();
-    const userName = document.getElementById("userName").value.trim();
-    
-    // Collect team member usernames from inputs with class "member-input"
-    let members = [];
+  
+    confirmButton.addEventListener("click", teamValidation);
+  });
+  
+  async function teamValidation() {
+    const teamNameEl = document.getElementById("teamName");
+    const userNameEl = document.getElementById("userName");
+    if (!teamNameEl || !userNameEl) {
+      console.error("Inputs not found in DOM");
+      return;
+    }
+  
+    const teamName = teamNameEl.value.trim();
+    const userName = userNameEl.value.trim();
+  
+    // 1) Make sure both fields are filled
+    if (!teamName || !userName) {
+      alert("❌ Please enter both a Team Name and Your Username.");
+      return;
+    }
+  
+    // 2) Gather member-input fields
     const memberInputs = document.querySelectorAll(".member-input");
-    memberInputs.forEach(input => {
-        const val = input.value.trim();
-        if (val !== "") {
-            members.push(val);
-        }
-    });
-
-    // Check for duplicate member usernames on the client side
+    const members = Array.from(memberInputs)
+      .map(i => i.value.trim())
+      .filter(v => v !== "");
+  
+    // 3) Check for duplicates
     const uniqueMembers = [...new Set(members)];
     if (uniqueMembers.length !== members.length) {
-        return alert("Duplicate usernames entered.");
+      alert("❌ Duplicate usernames entered.");
+      return;
     }
-
-    // Prepare payload for API call
-    const payload = {
-        teamName,
-        userName,
-        members
-    };
-
-    // Make a POST request to your backend's /team-signup endpoint
-    fetch("https://seniorproject-jkm4.onrender.com/team-signup", {
+  
+    // 4) Build payload
+    const payload = { teamName, userName, members };
+    console.log("📤 Team signup payload:", payload);
+  
+    // 5) Send to backend
+    try {
+      const res = await fetch("https://seniorproject-jkm4.onrender.com/team-signup", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(payload)
-    })
-    .then(response => response.json())
-    .then(data => {
-        if (data.error) {
-            alert("Error: " + data.error);
-        } else {
-            alert(data.message);
-            // Optionally, redirect to a team info page:
-            window.location.href = "/home/home.html"; // Adjust the URL as needed
-        }
-    })
-    .catch(error => {
-        console.error("Team signup error:", error);
-        alert("An error occurred during team signup.");
-    });
-}
+      });
+      const data = await res.json();
+  
+      if (!res.ok) {
+        // show the server’s error message
+        alert("❌ Error: " + (data.error || res.statusText));
+      } else {
+        alert("✅ " + data.message);
+        // redirect or update UI
+        window.location.href = "/home/home.html";
+      }
+    } catch (err) {
+      console.error("Team signup network error:", err);
+      alert("❌ Network error during team signup.");
+    }
+  }
