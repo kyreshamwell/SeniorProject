@@ -11,7 +11,7 @@ const SERVER_URL = "https://seniorproject-jkm4.onrender.com";  // 🔥 Your back
 
 const app = express();
 app.use(express.json());
-app.use(cors());
+app.use(cors({origin: 'https://senior-project-delta.vercel.app' }));
 
 app.use('/my-favicon', express.static(path.join(__dirname, 'my-favicon')));
 
