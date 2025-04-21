@@ -54,7 +54,7 @@ const UserSchema = new mongoose.Schema({
     email: { type: String, required: true, unique: true },
     password: { type: String, required: true },
     role: { type: String, default: "student" },
-    team: { type: String, default: "N/A" },
+    team: { type: mongoose.Schema.Types.ObjectId, ref: 'Team', default: null },
     resetToken: { type: String, default: null },
     resetTokenExpiry: { type: Number, default: null }
 });

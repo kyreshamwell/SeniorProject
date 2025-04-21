@@ -1,12 +1,13 @@
 // company-select.js
 document.addEventListener("DOMContentLoaded", async () => {
-  // 0) Ensure token & fetch the user to get the real teamId
+  // 0) Get token
   const token = localStorage.getItem("token");
   if (!token) {
     window.location.href = "/login/index.html";
     return;
   }
 
+  // 1) Fetch current user once (to grab the real teamId and role)
   let user;
   try {
     const userRes = await fetch(
@@ -15,13 +16,14 @@ document.addEventListener("DOMContentLoaded", async () => {
     );
     if (!userRes.ok) throw new Error("Failed to fetch user");
     user = await userRes.json();
-    localStorage.setItem("teamId", user.team); // now you have a real ID
+    // store the ObjectId of the team
+    localStorage.setItem("teamId", user.team);
   } catch (err) {
     console.error("Error loading user data:", err);
     return;
   }
 
-  // 1) Fetch and render companies
+  // 2) Fetch & render companies
   const form = document.getElementById("companyForm");
   const opts = document.getElementById("options");
   try {
@@ -43,7 +45,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     console.error("Error fetching companies:", err);
   }
 
-  // 2) Handle company‑select submit (only here do we POST)
+  // 3) Submit selection
   form.addEventListener("submit", async (e) => {
     e.preventDefault();
     const choice = form.company.value;
@@ -62,7 +64,6 @@ document.addEventListener("DOMContentLoaded", async () => {
           body: JSON.stringify({ companyId: choice }),
         }
       );
-
       if (resp.ok) alert("Company assigned!");
       else {
         const err = await resp.json();
@@ -74,12 +75,12 @@ document.addEventListener("DOMContentLoaded", async () => {
     }
   });
 
-  // 3) Go Back button
+  // 4) Go Back button
   document.getElementById("goBackButton")?.addEventListener("click", () => {
     window.location.href = "/home/home.html";
   });
 
-  // 4) Show Admin link if the user is an admin
+  // 5) Show Admin link if admin
   if (user.role === "admin") {
     document.getElementById("adminLink").style.display = "inline-flex";
   }
