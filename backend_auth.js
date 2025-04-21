@@ -352,6 +352,20 @@ const TeamSchema = new mongoose.Schema({
     company: { type: mongoose.Schema.Types.ObjectId, ref: 'Company', default: null }
   });
   const Team = mongoose.model('Team', TeamSchema);
+
+// ─── GET /api/teams ───────────────────────────────────────────
+// Only admins should see every team’s assignments
+app.get('/api/teams', adminAuth, async (req, res) => {
+    try {
+    const teams = await Team.find()
+        .populate('members', 'username')   // bring in each member’s username
+        .populate('company', 'name');      // bring in the company’s name
+    res.json({ teams });
+    } catch (err) {
+    console.error('Error fetching teams:', err);
+    res.status(500).json({ error: 'Server error' });
+    }
+});
   
   app.post('/team-signup', async (req, res) => {
     const { teamName, userName, members } = req.body;
