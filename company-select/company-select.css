@@ -1,5 +1,6 @@
 /* company-select.css */
 body {
+    background-image: url('/background.jpg'); 
     font-family: sans-serif;
     margin: 0;
     padding-top: 60px; /* space for nav */
@@ -23,4 +24,21 @@ body {
   .read-more {
     background: #23449c; color: #fff; border: none;
     padding: 10px 20px; border-radius: 5px; cursor: pointer;
+  }
+
+  .btn {
+    background-color: gold;
+    color: black;
+    border: none;
+    padding: 8px 12px;
+    border-radius: 4px;
+    text-decoration: none;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+  }
+  
+  .btn:hover {
+    background-color: #ffc107;
   }
