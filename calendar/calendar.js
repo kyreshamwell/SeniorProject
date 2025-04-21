@@ -58,4 +58,15 @@ document.addEventListener('DOMContentLoaded', function() {
         currentDate.setDate(currentDate.getDate() + 1);
         showDay(currentDate);
     });
+
+    // Go Back button
+    document.getElementById("goBackButton").addEventListener("click", () => {
+        window.location.href = "/home/home.html";
+    });
+    
+    // Show admin link if role is admin
+    const role = localStorage.getItem("role");
+    if (role === "admin") {
+        document.getElementById("adminLink").style.display = "inline-flex";
+    }
 });
