@@ -10,12 +10,15 @@ const path = require('path');
 const SERVER_URL = "https://seniorproject-jkm4.onrender.com";  // 🔥 Your backend URL
 
 const app = express();
-app.use(express.json());
+
 app.use(cors({
     origin: 'https://senior-project-delta.vercel.app', // or '*' to open to all
     methods: ['GET','POST','PUT','DELETE','OPTIONS'],
     allowedHeaders: ['Content-Type','Authorization']
   }));
+
+app.use(express.json());
+
 app.use('/my-favicon', express.static(path.join(__dirname, 'my-favicon')));
 
 const PORT = process.env.PORT || 5001;
