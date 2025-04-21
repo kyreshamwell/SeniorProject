@@ -325,6 +325,37 @@ const CompanySchema = new mongoose.Schema({
     company: { type: mongoose.Schema.Types.ObjectId, ref: 'Company', default: null },
   });
   const Team = mongoose.model('Team', TeamSchema);
+
+  // ─── 4a) PUT /api/companies/:id (admins only) ────────────────
+app.put('/api/companies/:id', adminAuth, async (req, res) => {
+    const { id } = req.params;
+    const { name, maxTeams } = req.body;
+    try {
+      const company = await Company.findByIdAndUpdate(
+        id,
+        { name, maxTeams },
+        { new: true, runValidators: true }
+      );
+      if (!company) return res.status(404).json({ error: 'Company not found' });
+      res.json({ company });
+    } catch (err) {
+      console.error(err);
+      res.status(400).json({ error: 'Invalid update payload' });
+    }
+  });
+  
+  // ─── 4b) DELETE /api/companies/:id (admins only) ─────────────
+  app.delete('/api/companies/:id', adminAuth, async (req, res) => {
+    const { id } = req.params;
+    try {
+      const result = await Company.findByIdAndDelete(id);
+      if (!result) return res.status(404).json({ error: 'Company not found' });
+      res.json({ message: 'Company deleted' });
+    } catch (err) {
+      console.error(err);
+      res.status(500).json({ error: 'Server error' });
+    }
+  });
   
   // 5) POST /api/teams/:teamId/select-company
   app.post('/api/teams/:teamId/select-company', adminAuth, async (req, res) => {
