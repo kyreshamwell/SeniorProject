@@ -294,6 +294,7 @@ app.get("/api/user", async (req, res) => {
     }
 });
 // 1) Company schema & model
+// ─── COMPANY SCHEMA & ROUTES ──────────────────────────────────
 const CompanySchema = new mongoose.Schema({
     name:          { type: String, required: true },
     maxTeams:      { type: Number, required: true },
@@ -301,100 +302,97 @@ const CompanySchema = new mongoose.Schema({
   });
   const Company = mongoose.model('Company', CompanySchema);
   
-  // 2) Expose GET /api/companies
   app.get('/api/companies', async (req, res) => {
+    try { res.json({ companies: await Company.find() }); }
+    catch(err){ res.status(500).json({ error: 'Server error' }); }
+  });
+  
+  app.post('/api/companies', adminAuth, async (req, res) => {
     try {
-      const companies = await Company.find();
-      res.json({ companies });
-    } catch (err) {
-      console.error(err);
-      res.status(500).json({ error: 'Server error' });
+      const { name, maxTeams } = req.body;
+      const company = await Company.create({ name, maxTeams });
+      res.status(201).json({ company });
+    } catch(err) {
+      res.status(400).json({ error:'Invalid payload' });
     }
   });
   
-  // 3) Expose POST /api/companies (admins only)
-  app.post('/api/companies', adminAuth, async (req, res) => {
-    const { name, maxTeams } = req.body;
+  app.put('/api/companies/:id', adminAuth, async (req, res) => {
     try {
-      const company = await Company.create({ name, maxTeams });
-      res.status(201).json({ company });
-    } catch (err) {
-      console.error(err);
-      res.status(400).json({ error: 'Invalid payload' });
+      const company = await Company.findByIdAndUpdate(
+        req.params.id,
+        req.body,
+        { new:true, runValidators:true }
+      );
+      if(!company) return res.status(404).json({ error:'Not found' });
+      res.json({ company });
+    } catch(err) {
+      res.status(400).json({ error:'Invalid payload' });
+    }
+  });
+  
+  app.delete('/api/companies/:id', adminAuth, async (req, res) => {
+    try {
+      const doc = await Company.findByIdAndDelete(req.params.id);
+      if(!doc) return res.status(404).json({ error:'Not found' });
+      res.json({ message:'Deleted' });
+    } catch(err) {
+      res.status(500).json({ error:'Server error' });
     }
   });
   
   // 4) Team schema & model (ensure this is only declared once in your file)
-  const TeamSchema = new mongoose.Schema({
-    name:    { type: String, required: true },
+  // ─── TEAM SCHEMA & SIGNUP ROUTE ──────────────────────────────
+const TeamSchema = new mongoose.Schema({
+    name:    { type: String, required: true, unique: true },
     members: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }],
-    company: { type: mongoose.Schema.Types.ObjectId, ref: 'Company', default: null },
+    company: { type: mongoose.Schema.Types.ObjectId, ref: 'Company', default: null }
   });
   const Team = mongoose.model('Team', TeamSchema);
-
-  // ─── 4a) PUT /api/companies/:id (admins only) ────────────────
-app.put('/api/companies/:id', adminAuth, async (req, res) => {
-    const { id } = req.params;
-    const { name, maxTeams } = req.body;
-    try {
-      const company = await Company.findByIdAndUpdate(
-        id,
-        { name, maxTeams },
-        { new: true, runValidators: true }
-      );
-      if (!company) return res.status(404).json({ error: 'Company not found' });
-      res.json({ company });
-    } catch (err) {
-      console.error(err);
-      res.status(400).json({ error: 'Invalid update payload' });
+  
+  app.post('/team-signup', async (req, res) => {
+    const { teamName, userName, members } = req.body;
+    if (!teamName || !userName || !Array.isArray(members)) {
+      return res.status(400).json({ error: 'teamName, userName & members[] required' });
     }
+    // 1) Dedupe & fetch users
+    const names = [...new Set([userName, ...members])];
+    const users = await User.find({ username: { $in: names } });
+    if (users.length !== names.length) {
+      return res.status(400).json({ error: 'One or more usernames not found' });
+    }
+    // 2) Create Team
+    const newTeam = await Team.create({
+      name:    teamName,
+      members: users.map(u => u._id)
+    });
+    // 3) Assign each user.team = newTeam._id
+    await User.updateMany(
+      { _id: { $in: users.map(u=>u._id) } },
+      { $set: { team: newTeam._id } }
+    );
+    res.json({ message:'Team created!', teamId:newTeam._id });
   });
   
-  // ─── 4b) DELETE /api/companies/:id (admins only) ─────────────
-  app.delete('/api/companies/:id', adminAuth, async (req, res) => {
-    const { id } = req.params;
-    try {
-      const result = await Company.findByIdAndDelete(id);
-      if (!result) return res.status(404).json({ error: 'Company not found' });
-      res.json({ message: 'Company deleted' });
-    } catch (err) {
-      console.error(err);
-      res.status(500).json({ error: 'Server error' });
-    }
-  });
-  
-  // 5) POST /api/teams/:teamId/select-company
+  // ─── SELECT‑COMPANY ROUTE (any authenticated user) ───────────
   app.post('/api/teams/:teamId/select-company', async (req, res) => {
-    // 0) Verify there’s a JWT
     const token = req.headers.authorization?.split(" ")[1];
-    if (!token) return res.status(401).json({ error: "No token provided" });
+    if (!token) return res.status(401).json({ error:"No token" });
+    try { jwt.verify(token, process.env.JWT_SECRET); }
+    catch { return res.status(401).json({ error:"Invalid token" }); }
   
-    // 1) Decode it (any valid token is fine—no role check)
-    try {
-      jwt.verify(token, process.env.JWT_SECRET);
-    } catch {
-      return res.status(401).json({ error: "Invalid token" });
-    }
-  
-    // 2) Business logic
-    const { teamId }    = req.params;
+    const { teamId } = req.params;
     const { companyId } = req.body;
-  
-    // 2a) Ensure slots remain
     const company = await Company.findById(companyId);
     if (!company || company.teamsAssigned >= company.maxTeams) {
-      return res.status(400).json({ error: "No slots available" });
+      return res.status(400).json({ error:"No slots available" });
     }
-  
-    // 2b) Assign company to team
     await Team.findByIdAndUpdate(teamId, { company: companyId });
-  
-    // 2c) Increment assigned count
     company.teamsAssigned++;
     await company.save();
-  
-    res.json({ message: "Company assigned to team successfully!" });
+    res.json({ message:"Company assigned!" });
   });
+  
   
 // Start the server
 app.listen(PORT, '0.0.0.0', () => {
