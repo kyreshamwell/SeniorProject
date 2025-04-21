@@ -54,12 +54,7 @@ const UserSchema = new mongoose.Schema({
 });
 const User = mongoose.model('User', UserSchema);
 
-const TeamSchema = new mongoose.Schema({
-    name: {type: String, required: true},
-    members: [{type: mongoose.Schema.Types.ObjectId, ref: 'User'}],
-    company: {type: mongoose.Schema.Types.ObjectId, ref: 'Company', defualt: null},
-})
-const Team = mongoose.model('Team', TeamSchema);
+
 
 /* SETTINGS MODEL */
 // Settings Schema & Model (for storing Discord URL, etc.)
@@ -292,23 +287,65 @@ app.get("/api/user", async (req, res) => {
       res.status(401).json({ error: "Invalid token" });
     }
 });
-
-app.post('/api/teams/:teamId/select-company', adminAuth, async (req, res) => {
-    const { teamId } = req.params;
-    const { companyId } = req.body;
-
-    // 1 ensure slots remain
-    const company = await company.findById(companyId);
-    if (!company || company.teamAssigned >= company.maxTeams) {
-        return res.status(400).json({ error: "No slots available" });
+// 1) Company schema & model
+const CompanySchema = new mongoose.Schema({
+    name:          { type: String, required: true },
+    maxTeams:      { type: Number, required: true },
+    teamsAssigned: { type: Number, default: 0 }
+  });
+  const Company = mongoose.model('Company', CompanySchema);
+  
+  // 2) Expose GET /api/companies
+  app.get('/api/companies', async (req, res) => {
+    try {
+      const companies = await Company.find();
+      res.json({ companies });
+    } catch (err) {
+      console.error(err);
+      res.status(500).json({ error: 'Server error' });
     }
-
+  });
+  
+  // 3) Expose POST /api/companies (admins only)
+  app.post('/api/companies', adminAuth, async (req, res) => {
+    const { name, maxTeams } = req.body;
+    try {
+      const company = await Company.create({ name, maxTeams });
+      res.status(201).json({ company });
+    } catch (err) {
+      console.error(err);
+      res.status(400).json({ error: 'Invalid payload' });
+    }
+  });
+  
+  // 4) Team schema & model (ensure this is only declared once in your file)
+  const TeamSchema = new mongoose.Schema({
+    name:    { type: String, required: true },
+    members: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }],
+    company: { type: mongoose.Schema.Types.ObjectId, ref: 'Company', default: null },
+  });
+  const Team = mongoose.model('Team', TeamSchema);
+  
+  // 5) POST /api/teams/:teamId/select-company
+  app.post('/api/teams/:teamId/select-company', adminAuth, async (req, res) => {
+    const { teamId }    = req.params;
+    const { companyId } = req.body;
+  
+    // 1) ensure slots remain
+    const company = await Company.findById(companyId);
+    if (!company || company.teamsAssigned >= company.maxTeams) {
+      return res.status(400).json({ error: 'No slots available' });
+    }
+  
+    // 2) assign company to team
     await Team.findByIdAndUpdate(teamId, { company: companyId });
-
-    company.teamAssigned ++;
+  
+    // 3) increment assigned count
+    company.teamsAssigned++;
     await company.save();
-    res.json({ message: "Company assigned to team successfully!" });
-})
+  
+    res.json({ message: 'Company assigned to team successfully!' });
+  });
   
 // Start the server
 app.listen(PORT, '0.0.0.0', () => {
