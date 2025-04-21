@@ -8,12 +8,19 @@
 </head>
 <body>
     <nav>
-        <div class="nav-content">
-            <div id="usernameDisplay"></div>
-            <button id="signoutButton" class="signoutButton">Sign Out</button>
-            <!-- Add the admin link, hidden by default -->
-            <a id="adminLink" href="/admin/admin.html" style="display: none;">Back to Admin Dashboard</a>
-        </div>
+        div class="nav-content">
+    <div id="usernameDisplay"></div>
+    <div class="nav-actions">
+      <!-- Go back to Home -->
+      <a href="/home/home.html" class="btn">Go Back</a>
+      <!-- Sign out -->
+      <button id="signoutButton" class="btn">Sign Out</button>
+      <!-- Admin Dashboard, only shown when role=admin -->
+      <a id="adminLink" href="/admin/admin.html" class="btn" style="display: none;">
+        Admin Dashboard
+      </a>
+    </div>
+  </div>
     </nav>
     <div class="calendar">
         <div class="header">
