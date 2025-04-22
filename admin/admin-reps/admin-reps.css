@@ -1,15 +1,35 @@
-/* admin-reps.css */
+/* admin‑reps.css */
 
-/* Page wrapper */
-body {
+/* 0) Fixed Header/Nav */
+nav {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    background: #23449c;
+    color: #fff;
+    padding: 1rem 2rem;
+    z-index: 1000;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+  }
+  
+  /* make sure nav items (if any) are spaced out nicely */
+  nav .nav-content {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  
+  /* 1) Push the body down so it isn’t hidden under the fixed nav */
+  body {
     font-family: 'Poppins', sans-serif;
     background-color: #f4f4f9;
     margin: 0;
-    padding: 2rem;
+    padding-top: 80px;   /* <-- height of nav + a bit */
     color: #333;
   }
   
-  /* Headline */
+  /* 2) Headline */
   h1 {
     color: #23449c;
     margin-bottom: 1rem;
@@ -17,7 +37,7 @@ body {
     text-align: center;
   }
   
-  /* The form */
+  /* 3) The form */
   #repForm {
     display: grid;
     grid-template-columns: 1fr 1fr;
@@ -53,7 +73,7 @@ body {
     background-color: #1a327a;
   }
   
-  /* Table container */
+  /* 4) Table container */
   #repTable {
     width: 100%;
     max-width: 900px;
@@ -62,7 +82,6 @@ body {
     box-shadow: 0 2px 6px rgba(0,0,0,0.1);
   }
   
-  /* Table header */
   #repTable thead {
     background-color: #23449c;
     color: white;
@@ -75,14 +94,14 @@ body {
     border-bottom: 1px solid #e0e0e0;
   }
   
-  /* Zebra striping */
   #repTable tbody tr:nth-child(even) {
     background-color: #fafafa;
   }
   
-  /* Action buttons */
-  #repTable button {
-    background-color: #ffc107;
+  /* 5) Action buttons */
+  #repTable button,
+  .btn {
+    background-color: gold;
     color: #333;
     border: none;
     padding: 0.4rem 0.6rem;
@@ -90,9 +109,13 @@ body {
     cursor: pointer;
     font-size: 0.9rem;
     transition: background 0.2s ease;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
   }
   
-  #repTable button.delete:hover {
+  #repTable button.delete:hover,
+  .btn:hover {
     background-color: #e0a800;
   }
   
@@ -105,7 +128,7 @@ body {
     text-decoration: underline;
   }
   
-  /* Responsive tweaks */
+  /* 6) Responsive tweaks */
   @media (max-width: 600px) {
     #repForm {
       grid-template-columns: 1fr;
