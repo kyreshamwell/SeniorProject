@@ -1,16 +1,73 @@
-#connect { padding: 2rem; }
-#repContainer {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 1rem;
-}
-.rep-bubble {
-  background: #fff;
-  border-radius: .5rem;
-  padding: 1rem;
-  box-shadow: 0 2px 6px rgba(0,0,0,.1);
-  width: 200px;
-  text-align: center;
-}
-.rep-bubble h3 { margin-bottom: .5rem; }
-.rep-bubble a { color: #23449c; text-decoration: none; }
+/* reps.css */
+
+/* 1) Full‑page background */
+body {
+    margin: 0;
+    font-family: 'Poppins', sans-serif;
+    background: url('background.jpg') center/cover no-repeat fixed;
+    color: #333;
+  }
+  
+  /* 2) Wrapper padding so bubbles aren’t at the very edge */
+  #connect {
+    padding: 3rem 2rem;
+    backdrop-filter: blur(5px);  /* slight page blur behind content */
+  }
+  
+  /* 3) Flex container for bubbles */
+  #repContainer {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1.5rem;
+    justify-content: center;
+  }
+  
+  /* 4) Frosted‑glass bubble style */
+  .rep-bubble {
+    background: rgba(255,255,255,0.8);
+    backdrop-filter: blur(4px);
+    border-radius: .75rem;
+    padding: 1.5rem;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    width: 250px;
+    text-align: center;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+  }
+  
+  /* 5) Hover lift */
+  .rep-bubble:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 20px rgba(0,0,0,0.2);
+  }
+  
+  /* 6) Text styles */
+  .rep-bubble h3 {
+    margin-bottom: .75rem;
+    font-size: 1.25rem;
+    color: #23449c;
+  }
+  .rep-bubble p {
+    margin-bottom: 1rem;
+    font-size: .95rem;
+  }
+  .rep-bubble a {
+    display: inline-block;
+    padding: .4rem .8rem;
+    background: #23449c;
+    color: #fff;
+    text-decoration: none;
+    border-radius: 4px;
+    font-size: .9rem;
+    transition: background 0.2s ease;
+  }
+  .rep-bubble a:hover {
+    background: #1a327a;
+  }
+  
+  /* 7) Responsive tweak */
+  @media (max-width: 500px) {
+    .rep-bubble {
+      width: 100%;
+      max-width: 300px;
+    }
+  }
