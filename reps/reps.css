@@ -70,6 +70,24 @@ html, body {
   .rep-bubble a:hover {
     background: #1a327a;
   }
+
+  .btn {
+    background-color: gold;
+    color: black;
+    border: none;
+    padding: 8px 12px;
+    border-radius: 4px;
+    text-decoration: none;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+  }
+  
+  .btn:hover {
+    background-color: #ffc107;
+  }
+  
   
   /* 7) Responsive tweak */
   @media (max-width: 500px) {
