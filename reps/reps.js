@@ -7,6 +7,7 @@ async function render() {
     if (!res.ok) throw new Error(await res.text());
     const { reps } = await res.json();
     const container = document.getElementById('repContainer');
+
     container.innerHTML = reps.map(r => `
       <div class="rep-bubble">
         <h3>${r.name}</h3>
@@ -16,9 +17,9 @@ async function render() {
     `).join('');
   } catch (err) {
     console.error('Failed to load representatives:', err);
-    document.getElementById('repContainer').textContent = 
+    document.getElementById('repContainer').textContent =
       'Sorry, could not load representatives.';
   }
 }
 
-render();
+document.addEventListener('DOMContentLoaded', render);
