@@ -1,0 +1,116 @@
+/* admin-reps.css */
+
+/* Page wrapper */
+body {
+    font-family: 'Poppins', sans-serif;
+    background-color: #f4f4f9;
+    margin: 0;
+    padding: 2rem;
+    color: #333;
+  }
+  
+  /* Headline */
+  h1 {
+    color: #23449c;
+    margin-bottom: 1rem;
+    font-size: 2rem;
+    text-align: center;
+  }
+  
+  /* The form */
+  #repForm {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+    max-width: 800px;
+    margin: 0 auto 2rem;
+    background: #fff;
+    padding: 1.5rem;
+    border-radius: 8px;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+  }
+  
+  #repForm input {
+    padding: 0.75rem;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 1rem;
+  }
+  
+  #repForm button {
+    grid-column: span 2;
+    background-color: #23449c;
+    color: white;
+    border: none;
+    padding: 0.75rem;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 1rem;
+    transition: background 0.2s ease;
+  }
+  
+  #repForm button:hover {
+    background-color: #1a327a;
+  }
+  
+  /* Table container */
+  #repTable {
+    width: 100%;
+    max-width: 900px;
+    margin: 0 auto;
+    border-collapse: collapse;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+  }
+  
+  /* Table header */
+  #repTable thead {
+    background-color: #23449c;
+    color: white;
+  }
+  
+  #repTable th,
+  #repTable td {
+    padding: 0.75rem 1rem;
+    text-align: left;
+    border-bottom: 1px solid #e0e0e0;
+  }
+  
+  /* Zebra striping */
+  #repTable tbody tr:nth-child(even) {
+    background-color: #fafafa;
+  }
+  
+  /* Action buttons */
+  #repTable button {
+    background-color: #ffc107;
+    color: #333;
+    border: none;
+    padding: 0.4rem 0.6rem;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 0.9rem;
+    transition: background 0.2s ease;
+  }
+  
+  #repTable button.delete:hover {
+    background-color: #e0a800;
+  }
+  
+  #repTable a {
+    color: #23449c;
+    text-decoration: none;
+  }
+  
+  #repTable a:hover {
+    text-decoration: underline;
+  }
+  
+  /* Responsive tweaks */
+  @media (max-width: 600px) {
+    #repForm {
+      grid-template-columns: 1fr;
+    }
+    #repForm button {
+      grid-column: span 1;
+    }
+  }

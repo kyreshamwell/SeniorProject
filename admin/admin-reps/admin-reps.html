@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="admin-reps.css">
+</head>
+<body>
+    <h1>Manage Representatives</h1>
+
+<form id="repForm">
+  <input name="name" placeholder="Full Name" required />
+  <input name="company" placeholder="Company" required />
+  <input name="position" placeholder="Position" required />
+  <input name="linkedinURL" placeholder="LinkedIn URL" required />
+  <button type="submit">Add Representative</button>
+</form>
+
+<table id="repTable">
+  <thead>
+    <tr><th>Name</th><th>Company</th><th>Position</th><th>LinkedIn</th><th>Actions</th></tr>
+  </thead>
+  <tbody></tbody>
+</table>
+
+<script src="admin-reps.js"></script>
+    
+</body>
+</html>
+

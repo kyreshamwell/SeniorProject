@@ -438,7 +438,60 @@ const TeamSchema = new mongoose.Schema({
   
     res.json({ message: "Company assigned!" });
   });
+
+  const RepresentativeSchema = new mongoose.Schema({
+    name: {
+      type: String,
+      required: true
+    },
+    company: {
+      type: String,
+      required: true
+    },
+    position: {
+      type: String,
+      required: true
+    },
+    linkedinURL: {
+      type: String,
+      required: true
+    }
+  });
+  const Representative = mongoose.model('Representative', RepresentativeSchema);
   
+// Get all reps (public)
+app.get('/api/representatives', async (req, res) => {
+    const reps = await Representative.find();
+    res.json({ reps });
+  });
+  
+  // Create a rep (admin only)
+  app.post('/api/representatives', adminAuth, async (req, res) => {
+    const { name, company, position, linkedinURL } = req.body;
+    try {
+      const rep = await Representative.create({ name, company, position, linkedinURL });
+      res.status(201).json({ rep });
+    } catch (err) {
+      res.status(400).json({ error: err.message });
+    }
+  });
+  
+  // Update a rep (admin only)
+  app.put('/api/representatives/:id', adminAuth, async (req, res) => {
+    try {
+      const rep = await Representative.findByIdAndUpdate(req.params.id, req.body, { new: true });
+      if (!rep) return res.status(404).json({ error: 'Not found' });
+      res.json({ rep });
+    } catch (err) {
+      res.status(400).json({ error: err.message });
+    }
+  });
+  
+  // Delete a rep (admin only)
+  app.delete('/api/representatives/:id', adminAuth, async (req, res) => {
+    await Representative.findByIdAndDelete(req.params.id);
+    res.json({ message: 'Deleted' });
+  });
 // Start the server
 app.listen(PORT, '0.0.0.0', () => {
     console.log(`🚀 Server running at ${SERVER_URL}`);
