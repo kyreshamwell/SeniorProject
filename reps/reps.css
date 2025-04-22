@@ -4,7 +4,9 @@
 body {
     margin: 0;
     font-family: 'Poppins', sans-serif;
-    background: url('background.jpg') center/cover no-repeat fixed;
+    background-image: url('../background.jpg');
+    background-size: cover;
+    background-position: center;
     color: #333;
   }
   
