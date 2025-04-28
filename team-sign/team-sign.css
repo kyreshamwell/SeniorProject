@@ -79,9 +79,11 @@
   /* Specific Button Colors */
   #addMember {
     background-color: #28a745;
+    color: #333;
   }
   #removeMember {
     background-color: #dc3545;
+    color: #333;
   }
   #confirmTeam {
     background-color: #ffc107;
