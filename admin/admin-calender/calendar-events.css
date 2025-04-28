@@ -10,7 +10,7 @@ html, body {
   }
   .rep-bubble {
     background: rgba(255, 255, 255, 0.4);  /* frosted-glass */
-    backdrop-filter: blur(6px);
+    backdrop-filter: none;
     /* … */
   }
   
