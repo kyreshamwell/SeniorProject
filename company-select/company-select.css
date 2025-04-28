@@ -1,99 +1,85 @@
-/* company-select.css */
+/*─────────────────────────────────────────────────────
+   Company Select Page
+─────────────────────────────────────────────────────*/
+
+/* 1) Make html/body fill the screen & show a full-page bg */
+html, body {
+  height: 100%;
+  margin: 0;
+}
 body {
-    background-image: url('/background.jpg'); 
-    font-family: sans-serif;
-    margin: 0;
-    padding-top: 60px; 
-  }
-  nav {
-    position: fixed; top: 0; left: 0; right: 0;
-    background: #23449c; color: #fff; padding: 15px;
-  }
-  .company-selection {
-    max-width: 400px;
-    margin: 2rem auto;
-    background: #fff; padding: 20px; border-radius: 8px;
-    box-shadow: 0 2px 6px rgba(0,0,0,0.1);
-  }
-  #options {
-    margin-bottom: 1rem;
-  }
-  #options label {
-    display: block; margin: .5rem 0;
-  }
-  .read-more {
-    background: #23449c; color: #fff; border: none;
-    padding: 10px 20px; border-radius: 5px; cursor: pointer;
-  }
-
-  .btn {
-    background-color: gold;
-    color: black;
-    border: none;
-    padding: 8px 12px;
-    border-radius: 4px;
-    text-decoration: none;
-    cursor: pointer;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-  }
-  
-  .btn:hover {
-    background-color: #ffc107;
-  }
-
-  /* Responsive adjustments for medium screens (tablets, small laptops) */
-@media screen and (max-width: 650px) {
-  body {
-      font-size: 16px;
-  }
-
-  .services-grid {
-      grid-template-columns: repeat(2, 1fr);
-  }
-
-  .form-box, .calendar, .team-signup-form, .discord-container, .rep-bubble {
-      width: 90%;
-      margin: 0 auto;
-  }
-
-  .toggle-panel h1, .join-text, .title, h2, h3 {
-      font-size: 24px;
-  }
+  font-family: sans-serif;
+  background: url('/background.jpg') no-repeat center center fixed;
+  background-size: cover;
+  /* 2) make room for the fixed navbar */
+  padding-top: 60px;
 }
 
-/* Responsive adjustments for small screens (phones) */
-@media screen and (max-width: 400px) {
-  body {
-      font-size: 14px;
-  }
+/* 3) Navbar stays on top */
+nav {
+  position: fixed;
+  top: 0; left: 0; right: 0;
+  background: #23449c;
+  color: #fff;
+  padding: 15px;
+  z-index: 1000;
+}
 
-  .services-grid {
-      grid-template-columns: 1fr;
-  }
+/* 4) The white “card” that holds the form */
+.company-selection {
+  max-width: 400px;
+  margin: 2rem auto;
+  background: #fff;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+}
 
-  .form-box, .calendar, .team-signup-form, .discord-container, .rep-bubble {
-      width: 100%;
-      margin: 0 auto;
-      padding: 10px;
-  }
+/* 5) Options list */
+#options {
+  margin-bottom: 1.5rem;
+}
+#options label {
+  display: block;
+  margin: 0.5rem 0;
+  cursor: pointer;
+}
 
-  .service-item, .rep-bubble, .calendar, .team-signup-form {
-      box-shadow: none;
-      padding: 15px;
-  }
+/* 6) “Submit” button */
+.read-more,
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: #23449c;
+  color: #fff;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 5px;
+  cursor: pointer;
+  text-decoration: none;
+  transition: background-color 0.2s;
+}
+.btn {
+  background: gold;
+  color: black;
+}
+.read-more:hover { background: #1a327a; }
+.btn:hover      { background: #ffc107; }
 
-  .signoutButton, .btn, .read-more {
-      padding: 8px 12px;
-      font-size: 14px;
+/*─────────────────────────────────────────────────────
+   Responsive (only this page)
+─────────────────────────────────────────────────────*/
+@media (max-width: 500px) {
+  .company-selection {
+    width: 90%;
+    margin: 1.5rem auto;
+    padding: 1rem;
   }
-
-  .toggle-panel h1, .join-text, .title, h2, h3 {
-      font-size: 20px;
-  }
-
-  footer p {
-      font-size: 12px;
+  .read-more,
+  .btn {
+    width: 100%;
+    padding: 0.75rem;
+    font-size: 0.9rem;
   }
 }
