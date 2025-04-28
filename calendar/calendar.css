@@ -1,143 +1,132 @@
-body {
-    font-family: sans-serif;
+/*─────────────────────────────────────────────────────
+   calendar.css
+─────────────────────────────────────────────────────*/
+
+/* 1) Make html/body fill the screen & show a full-page bg */
+html, body {
+    height: 100%;
     margin: 0;
+  }
+  body {
+    font-family: sans-serif;
+    /* full-page fixed background */
+    background: url('/background.jpg') no-repeat center center fixed;
+    background-size: cover;
+    /* make room for the fixed nav (60px) */
+    padding-top: 60px;
     display: flex;
     justify-content: center;
+    align-items: start; /* start+padding-top centers below the nav */
+  }
+  
+  /* 2) Fixed navbar at top */
+  nav {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    height: 60px;
+    background-color: #23449c;
+    color: #fff;
+    display: flex;
     align-items: center;
-    height: 100vh;
-    background-image: url('/background.jpg'); 
-    background-color: #f4f4f4;
-
-    background-size: cover; 
-    background-repeat: no-repeat;
-}
-
-.calendar {
+    padding: 0 20px;
+    z-index: 1000;
+  }
+  
+  /* 3) Calendar card */
+  .calendar {
     width: 400px;
-    background-color: white;
+    background: rgba(255,255,255,0.95);
     border-radius: 8px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
     padding: 20px;
-}
-
-.header {
+    margin-top: 20px; /* extra space under navbar */
+  }
+  
+  /* 4) Day header */
+  .header {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: 20px;
-}
-
-.header button {
+    margin-bottom: 16px;
+  }
+  .header button {
     background: none;
     border: none;
-    font-size: 1.2em;
+    font-size: 1.4em;
     cursor: pointer;
-}
-
-.day-view {
+    color: #23449c;
+  }
+  
+  /* 5) Event list */
+  .day-view {
     border: 1px solid #ddd;
-    padding: 10px;
-}
-
-.event {
-    background-color: #e0f7fa;
-    padding: 8px;
+    padding: 12px;
+  }
+  .event {
+    background-color: #23449c;
+    color: #fff;
+    padding: 8px 12px;
     margin-bottom: 8px;
     border-radius: 4px;
-    background-color: #23449c;
-    border-left: 4px solid #23449c;
-}
-
-.nav-content {
+    font-size: 0.95rem;
+  }
+  
+  /* 6) Nav-actions (Go Back / Admin) */
+  .nav-content {
     display: flex;
     justify-content: space-between;
     align-items: center;
+    width: 100%;
   }
-  
   .nav-actions {
     display: flex;
-    gap: 10px; /* space between buttons/links */
+    gap: 10px;
   }
-  
   .btn {
     background-color: gold;
     color: black;
     border: none;
-    padding: 8px 12px;
+    padding: 8px 14px;
     border-radius: 4px;
-    text-decoration: none;
     cursor: pointer;
     display: inline-flex;
     align-items: center;
     justify-content: center;
+    transition: background-color 0.2s ease;
   }
-  
   .btn:hover {
     background-color: #ffc107;
   }
-
-nav {
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    background-color: #23449c;
-    color: white;
-    padding: 15px 20px;
-    text-align: center;
-}
-
-/* Responsive adjustments for medium screens (tablets, small laptops) */
-@media screen and (max-width: 650px) {
-  body {
-      font-size: 16px;
-  }
-
-  .services-grid {
-      grid-template-columns: repeat(2, 1fr);
-  }
-
-  .form-box, .calendar, .team-signup-form, .discord-container, .rep-bubble {
+  
+  /*─────────────────────────────────────────────────────
+     Responsive: tablets / small laptops
+  ─────────────────────────────────────────────────────*/
+  @media (max-width: 650px) {
+    .calendar {
       width: 90%;
-      margin: 0 auto;
+      margin: 20px auto;
+    }
+    .header button {
+      font-size: 1.2em;
+    }
   }
-
-  .toggle-panel h1, .join-text, .title, h2, h3 {
-      font-size: 24px;
+  
+  /*─────────────────────────────────────────────────────
+     Responsive: phones
+  ─────────────────────────────────────────────────────*/
+  @media (max-width: 400px) {
+    .calendar {
+      padding: 16px;
+    }
+    .header {
+      flex-direction: column;
+      gap: 8px;
+    }
+    .event {
+      font-size: 0.9rem;
+    }
+    .btn {
+      padding: 6px 10px;
+      font-size: 0.9rem;
+    }
   }
-}
-
-/* Responsive adjustments for small screens (phones) */
-@media screen and (max-width: 400px) {
-  body {
-      font-size: 14px;
-  }
-
-  .services-grid {
-      grid-template-columns: 1fr;
-  }
-
-  .form-box, .calendar, .team-signup-form, .discord-container, .rep-bubble {
-      width: 100%;
-      margin: 0 auto;
-      padding: 10px;
-  }
-
-  .service-item, .rep-bubble, .calendar, .team-signup-form {
-      box-shadow: none;
-      padding: 15px;
-  }
-
-  .signoutButton, .btn, .read-more {
-      padding: 8px 12px;
-      font-size: 14px;
-  }
-
-  .toggle-panel h1, .join-text, .title, h2, h3 {
-      font-size: 20px;
-  }
-
-  footer p {
-      font-size: 12px;
-  }
-}

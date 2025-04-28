@@ -1,163 +1,101 @@
-/* reps.css */
+/* ─── reps.css ───────────────────────────────────────── */
 
-/* 1) Make html/body take full height and show a full‑page background */
+/* 1) Full-height with fixed, cover background */
 html, body {
-    height: 100%;
-    margin: 0;
-  }
-  
-  body {
-    font-family: 'Poppins', sans-serif;
-    /* full‑page fixed background, centered, no repeat */
-    background: url('../background.jpg') no-repeat center center fixed;
-    background-size: cover;
-    color: #333;
-  }
-  
-  /* 2) Wrapper padding */
-  #connect {
-    padding: 3rem 2rem;
-  }
-  
-  /* 3) Container for bubbles */
-  #repContainer {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 1.5rem;
-    justify-content: center;
-  }
-  
-  /* 4) Semi‑transparent bubbles */
-  .rep-bubble {
-    /* lighter white, so you see through to the background */
-    background: rgba(255, 255, 255, 0.4);
-    /* optional blur behind each bubble for frosted‑glass effect */
-    backdrop-filter: blur(6px);
-    border-radius: 0.75rem;
-    padding: 1.5rem;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
-    width: 250px;
-    text-align: center;
-    transition: transform 0.2s ease, box-shadow 0.2s ease;
-  }
-  
-  /* 5) Hover lift */
-  .rep-bubble:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 8px 20px rgba(0,0,0,0.2);
-  }
-  
-  /* 6) Text inside bubbles */
-  .rep-bubble h3 {
-    margin-bottom: 0.75rem;
-    font-size: 1.25rem;
-    color: #23449c;
-  }
-  .rep-bubble p {
-    margin-bottom: 1rem;
-    font-size: 0.95rem;
-  }
-  .rep-bubble a {
-    display: inline-block;
-    padding: 0.4rem 0.8rem;
-    background: #23449c;
-    color: #fff;
-    text-decoration: none;
-    border-radius: 4px;
-    font-size: 0.9rem;
-    transition: background 0.2s ease;
-  }
-  .rep-bubble a:hover {
-    background: #1a327a;
-  }
-
-/* existing .btn */
-.btn {
-    background-color: gold;
-    color: black;
-    border: none;
-    padding: 8px 12px;
-    border-radius: 4px;
-    text-decoration: none;
-    cursor: pointer;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    transition: background-color 0.2s ease;
-  }
-  
-  /* add these two rules */
-  #goBackBtn {
-    margin: 2rem auto;        /* space above/below and center horizontally */
-    display: block;           /* so margin:auto centers it */
-    font-size: 1rem;          /* bump up if you like */
-  }
-  
-  .btn:hover {
-    background-color: #ffc107;
-  }
-  
-  
-  /* 7) Responsive tweak */
-  @media (max-width: 500px) {
-    .rep-bubble {
-      width: 100%;
-      max-width: 300px;
-    }
-  }
-
-
-  /* Responsive adjustments for medium screens (tablets, small laptops) */
-@media screen and (max-width: 650px) {
-  body {
-      font-size: 16px;
-  }
-
-  .services-grid {
-      grid-template-columns: repeat(2, 1fr);
-  }
-
-  .form-box, .calendar, .team-signup-form, .discord-container, .rep-bubble {
-      width: 90%;
-      margin: 0 auto;
-  }
-
-  .toggle-panel h1, .join-text, .title, h2, h3 {
-      font-size: 24px;
-  }
+  height: 100%;
+  margin: 0;
+}
+body {
+  font-family: 'Poppins', sans-serif;
+  background: url('../background.jpg') no-repeat center center fixed;
+  background-size: cover;
+  color: #333;
+  display: flex;
+  flex-direction: column;
 }
 
-/* Responsive adjustments for small screens (phones) */
-@media screen and (max-width: 400px) {
-  body {
-      font-size: 14px;
-  }
+/* 2) Wrapper for padding below any nav */
+#connect {
+  flex: 1;
+  padding: 3rem 2rem;
+  overflow-y: auto;
+}
 
-  .services-grid {
-      grid-template-columns: 1fr;
-  }
+/* 3) Container for rep bubbles */
+#repContainer {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1.5rem;
+  justify-content: center;
+}
 
-  .form-box, .calendar, .team-signup-form, .discord-container, .rep-bubble {
-      width: 100%;
-      margin: 0 auto;
-      padding: 10px;
-  }
+/* 4) Frosted-glass style bubbles */
+.rep-bubble {
+  background: rgba(255, 255, 255, 0.4);
+  backdrop-filter: blur(6px);
+  border-radius: 0.75rem;
+  padding: 1.5rem;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+  width: 250px;
+  text-align: center;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+.rep-bubble:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 20px rgba(0,0,0,0.2);
+}
 
-  .service-item, .rep-bubble, .calendar, .team-signup-form {
-      box-shadow: none;
-      padding: 15px;
-  }
+/* 5) Text inside bubbles */
+.rep-bubble h3 {
+  margin-bottom: 0.75rem;
+  font-size: 1.25rem;
+  color: #23449c;
+}
+.rep-bubble p {
+  margin-bottom: 1rem;
+  font-size: 0.95rem;
+}
+.rep-bubble a {
+  display: inline-block;
+  padding: 0.4rem 0.8rem;
+  background: #23449c;
+  color: #fff;
+  text-decoration: none;
+  border-radius: 4px;
+  font-size: 0.9rem;
+  transition: background 0.2s ease;
+}
+.rep-bubble a:hover {
+  background: #1a327a;
+}
 
-  .signoutButton, .btn, .read-more {
-      padding: 8px 12px;
-      font-size: 14px;
-  }
+/* 6) Go Back button styling */
+.btn {
+  background-color: gold;
+  color: black;
+  border: none;
+  padding: 8px 12px;
+  border-radius: 4px;
+  text-decoration: none;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transition: background-color 0.2s ease;
+}
+.btn:hover {
+  background-color: #ffc107;
+}
+#goBackBtn {
+  margin: 2rem auto;
+  display: block;
+  font-size: 1rem;
+}
 
-  .toggle-panel h1, .join-text, .title, h2, h3 {
-      font-size: 20px;
-  }
-
-  footer p {
-      font-size: 12px;
+/* 7) Responsive: Enlarge bubbles to full width on narrow screens */
+@media (max-width: 500px) {
+  .rep-bubble {
+    width: 100%;
+    max-width: 300px;
   }
 }
