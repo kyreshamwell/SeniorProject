@@ -499,22 +499,23 @@ app.listen(PORT, '0.0.0.0', () => {
 
 // ─── Event Schema & Model ──────────────────────────────────
 const EventSchema = new mongoose.Schema({
-  title:       { type: String, required: true },
-  date:        { type: Date,   required: true },
-  startTime:   { type: String, required: true },  // e.g. "14:00"
-  endTime:     { type: String, required: true }   // e.g. "15:30"
+  title:     { type: String, required: true },
+  date:      { type: Date,   required: true },
+  startTime: { type: String, required: true },  // stored as “14:00”
+  endTime:   { type: String, required: true }   // stored as “15:30”
 });
 const Event = mongoose.model('Event', EventSchema);
 
-// GET /api/events?date=YYYY-MM-DD
+// ─── GET /api/events?date=YYYY-MM-DD ───────────────────────
 app.get('/api/events', async (req, res) => {
-  try {
-    const iso = req.query.date;
-    if (!iso) return res.status(400).json({ error: "date query required" });
-    const dayStart = new Date(iso);
-    const dayEnd = new Date(iso);
-    dayEnd.setDate(dayEnd.getDate()+1);
+  const iso = req.query.date;
+  if (!iso) return res.status(400).json({ error: "date query required" });
 
+  const dayStart = new Date(iso);
+  const dayEnd   = new Date(iso);
+  dayEnd.setDate(dayEnd.getDate() + 1);
+
+  try {
     const events = await Event.find({
       date: { $gte: dayStart, $lt: dayEnd }
     }).sort('startTime');
@@ -526,7 +527,7 @@ app.get('/api/events', async (req, res) => {
   }
 });
 
-// POST /api/events  (admins only)
+// ─── POST /api/events (admins only) ───────────────────────
 app.post('/api/events', adminAuth, async (req, res) => {
   try {
     const ev = await Event.create(req.body);
@@ -537,11 +538,11 @@ app.post('/api/events', adminAuth, async (req, res) => {
   }
 });
 
-// DELETE /api/events/:id  (admins only)
+// ─── DELETE /api/events/:id (admins only) ─────────────────
 app.delete('/api/events/:id', adminAuth, async (req, res) => {
   try {
-    const result = await Event.findByIdAndDelete(req.params.id);
-    if (!result) return res.status(404).json({ error:'Not found' });
+    const deleted = await Event.findByIdAndDelete(req.params.id);
+    if (!deleted) return res.status(404).json({ error:'Not found' });
     res.json({ message:'Deleted' });
   } catch (err) {
     console.error(err);
