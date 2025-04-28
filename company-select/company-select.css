@@ -1,85 +1,92 @@
-/*─────────────────────────────────────────────────────
-   Company Select Page
-─────────────────────────────────────────────────────*/
+/* company-select.css */
 
-/* 1) Make html/body fill the screen & show a full-page bg */
+/* 1) Make the page a flex‐column and center its content */
 html, body {
   height: 100%;
   margin: 0;
-}
-body {
-  font-family: sans-serif;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;  /* vertical centering */
+  align-items: center;      /* horizontal centering */
   background: url('/background.jpg') no-repeat center center fixed;
   background-size: cover;
-  /* 2) make room for the fixed navbar */
-  padding-top: 60px;
+  font-family: sans-serif;
 }
 
-/* 3) Navbar stays on top */
+/* 2) Push content below the fixed navbar */
+body {
+  padding-top: 60px; /* height of nav */
+}
+
+/* 3) Fixed navbar at top */
 nav {
   position: fixed;
   top: 0; left: 0; right: 0;
   background: #23449c;
   color: #fff;
   padding: 15px;
-  z-index: 1000;
+  z-index: 10;
 }
 
-/* 4) The white “card” that holds the form */
+/* 4) Centered form container */
 .company-selection {
-  max-width: 400px;
-  margin: 2rem auto;
   background: #fff;
   padding: 20px;
   border-radius: 8px;
   box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+  width: 100%;
+  max-width: 400px;
+  box-sizing: border-box;
 }
 
-/* 5) Options list */
+/* 5) Form fields */
 #options {
-  margin-bottom: 1.5rem;
+  margin-bottom: 1rem;
 }
 #options label {
   display: block;
-  margin: 0.5rem 0;
-  cursor: pointer;
+  margin: .5rem 0;
 }
 
-/* 6) “Submit” button */
-.read-more,
-.btn {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
+/* 6) Buttons */
+.read-more, .btn {
   background: #23449c;
   color: #fff;
   border: none;
   padding: 10px 20px;
   border-radius: 5px;
   cursor: pointer;
-  text-decoration: none;
-  transition: background-color 0.2s;
+  text-align: center;
+  display: inline-block;
 }
 .btn {
   background: gold;
   color: black;
 }
-.read-more:hover { background: #1a327a; }
-.btn:hover      { background: #ffc107; }
+.read-more:hover, .btn:hover {
+  background-color: #ffc107;
+}
 
-/*─────────────────────────────────────────────────────
-   Responsive (only this page)
-─────────────────────────────────────────────────────*/
-@media (max-width: 500px) {
+/* 7) Responsive tweaks */
+@media screen and (max-width: 650px) {
+  body {
+    font-size: 16px;
+  }
   .company-selection {
     width: 90%;
-    margin: 1.5rem auto;
-    padding: 1rem;
   }
-  .read-more,
-  .btn {
-    width: 100%;
-    padding: 0.75rem;
-    font-size: 0.9rem;
+}
+
+@media screen and (max-width: 400px) {
+  body {
+    font-size: 14px;
+  }
+  .company-selection {
+    padding: 15px;
+    box-shadow: none;
+  }
+  .read-more, .btn {
+    padding: 8px 12px;
+    font-size: 14px;
   }
 }

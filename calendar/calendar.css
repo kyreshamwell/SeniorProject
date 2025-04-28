@@ -1,93 +1,89 @@
-/*─────────────────────────────────────────────────────
-   calendar.css
-─────────────────────────────────────────────────────*/
+/* calendar.css */
 
-/* 1) Make html/body fill the screen & show a full-page bg */
+/* 1) Make the page a flex‐column and center its content */
 html, body {
     height: 100%;
     margin: 0;
-  }
-  body {
-    font-family: sans-serif;
-    /* full-page fixed background */
-    background: url('/background.jpg') no-repeat center center fixed;
-    background-size: cover;
-    /* make room for the fixed nav (60px) */
-    padding-top: 60px;
     display: flex;
-    justify-content: center;
-    align-items: start; /* start+padding-top centers below the nav */
+    flex-direction: column;
+    justify-content: center;  /* vertical centering */
+    align-items: center;      /* horizontal centering */
   }
   
-  /* 2) Fixed navbar at top */
+  /* 2) Push content below the fixed navbar */
+  body {
+    padding-top: 60px; /* height of nav */
+    background: url('/background.jpg') no-repeat center center fixed;
+    background-size: cover;
+    font-family: sans-serif;
+  }
+  
+  /* 3) Fixed navbar at top */
   nav {
     position: fixed;
     top: 0; left: 0; right: 0;
-    height: 60px;
     background-color: #23449c;
-    color: #fff;
-    display: flex;
-    align-items: center;
-    padding: 0 20px;
-    z-index: 1000;
+    color: white;
+    padding: 15px 20px;
+    z-index: 10;
   }
   
-  /* 3) Calendar card */
-  .calendar {
-    width: 400px;
-    background: rgba(255,255,255,0.95);
-    border-radius: 8px;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
-    padding: 20px;
-    margin-top: 20px; /* extra space under navbar */
-  }
-  
-  /* 4) Day header */
-  .header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 16px;
-  }
-  .header button {
-    background: none;
-    border: none;
-    font-size: 1.4em;
-    cursor: pointer;
-    color: #23449c;
-  }
-  
-  /* 5) Event list */
-  .day-view {
-    border: 1px solid #ddd;
-    padding: 12px;
-  }
-  .event {
-    background-color: #23449c;
-    color: #fff;
-    padding: 8px 12px;
-    margin-bottom: 8px;
-    border-radius: 4px;
-    font-size: 0.95rem;
-  }
-  
-  /* 6) Nav-actions (Go Back / Admin) */
   .nav-content {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    width: 100%;
   }
+  
   .nav-actions {
     display: flex;
     gap: 10px;
   }
+  
+  /* 4) Calendar box itself */
+  .calendar {
+    width: 400px;
+    background-color: white;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+  }
+  
+  /* 5) Calendar header */
+  .header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+  }
+  .header button {
+    background: none;
+    border: none;
+    font-size: 1.2em;
+    cursor: pointer;
+  }
+  
+  /* 6) Day view */
+  .day-view {
+    border: 1px solid #ddd;
+    padding: 10px;
+  }
+  .event {
+    background-color: #23449c;
+    color: white;
+    padding: 8px;
+    margin-bottom: 8px;
+    border-radius: 4px;
+    border-left: 4px solid #23449c;
+  }
+  
+  /* 7) Buttons */
   .btn {
     background-color: gold;
     color: black;
     border: none;
-    padding: 8px 14px;
+    padding: 8px 12px;
     border-radius: 4px;
+    text-decoration: none;
     cursor: pointer;
     display: inline-flex;
     align-items: center;
@@ -98,35 +94,35 @@ html, body {
     background-color: #ffc107;
   }
   
-  /*─────────────────────────────────────────────────────
-     Responsive: tablets / small laptops
-  ─────────────────────────────────────────────────────*/
-  @media (max-width: 650px) {
+  /* 8) Ensure goBack and adminLink sit above the calendar */
+  #goBackButton, #adminLink {
+    z-index: 11;
+  }
+  
+  /* 9) Responsive tweaks */
+  @media screen and (max-width: 650px) {
+    body {
+      font-size: 16px;
+    }
     .calendar {
       width: 90%;
-      margin: 20px auto;
-    }
-    .header button {
-      font-size: 1.2em;
+      max-width: 400px;
     }
   }
   
-  /*─────────────────────────────────────────────────────
-     Responsive: phones
-  ─────────────────────────────────────────────────────*/
-  @media (max-width: 400px) {
+  @media screen and (max-width: 400px) {
+    body {
+      font-size: 14px;
+    }
     .calendar {
-      padding: 16px;
+      padding: 15px;
+      box-shadow: none;
     }
-    .header {
-      flex-direction: column;
-      gap: 8px;
-    }
-    .event {
-      font-size: 0.9rem;
+    .header h2 {
+      font-size: 1.2em;
     }
     .btn {
       padding: 6px 10px;
-      font-size: 0.9rem;
+      font-size: 14px;
     }
   }
