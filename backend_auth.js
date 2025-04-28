@@ -526,7 +526,16 @@ app.get('/api/events', async (req, res) => {
     res.status(500).json({ error: 'Server error' });
   }
 });
-
+// Admin-only: return every event in the DB
+app.get('/api/events/all', adminAuth, async (req, res) => {
+  try {
+    const events = await Event.find().sort('date startTime');
+    res.json({ events });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: 'Server error' });
+  }
+});
 // ─── POST /api/events (admins only) ───────────────────────
 app.post('/api/events', adminAuth, async (req, res) => {
   try {
@@ -548,4 +557,6 @@ app.delete('/api/events/:id', adminAuth, async (req, res) => {
     console.error(err);
     res.status(500).json({ error:'Server error' });
   }
+  
 });
+
