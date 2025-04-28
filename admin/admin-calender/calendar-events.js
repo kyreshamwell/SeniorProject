@@ -7,7 +7,7 @@ const form  = document.getElementById('eventForm');
 function to12Hour(time24) {
   let [h, m] = time24.split(":").map(s => parseInt(s, 10));
   const suffix = h >= 12 ? "PM" : "AM";
-  h = ((h + 11) % 12) + 1;
+  h = ((h + 11) % 12) + 1;       // map 0→12, 13→1, etc.
   return `${h}:${m.toString().padStart(2, "0")} ${suffix}`;
 }
 
@@ -21,10 +21,13 @@ async function loadEvents() {
     return;
   }
   const { events } = await res.json();
+
   tbl.innerHTML = events.map(ev => `
     <tr>
       <td>${new Date(ev.date).toLocaleDateString('en-US', { timeZone: 'UTC' })}</td>
-      <td>${ev.startTime}–${ev.endTime}</td>
+      <td>
+        ${to12Hour(ev.startTime)} &ndash; ${to12Hour(ev.endTime)}
+      </td>
       <td>${ev.title}</td>
       <td><button data-id="${ev._id}" class="delete">×</button></td>
     </tr>
