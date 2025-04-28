@@ -23,7 +23,6 @@ form.addEventListener('submit', async e => {
     startTime:   document.getElementById('startTime').value,
     endTime:     document.getElementById('endTime').value,
     title:       document.getElementById('title').value,
-    description: document.getElementById('description').value,
   };
   await fetch(`${API}/api/events`, {
     method:'POST',

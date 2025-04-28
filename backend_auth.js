@@ -500,7 +500,6 @@ app.listen(PORT, '0.0.0.0', () => {
 // ─── Event Schema & Model ──────────────────────────────────
 const EventSchema = new mongoose.Schema({
   title:       { type: String, required: true },
-  description: { type: String, default: "" },
   date:        { type: Date,   required: true },
   startTime:   { type: String, required: true },  // e.g. "14:00"
   endTime:     { type: String, required: true }   // e.g. "15:30"
