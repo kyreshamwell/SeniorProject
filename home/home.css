@@ -172,7 +172,7 @@ footer p {
 }
 
 .button-group .read-more {
-    flex: 1;
+    flex: 1 1 calc(50% - 10px);
     text-align: center;
     padding: 10px 0;
     box-sizing: border-box;
@@ -201,6 +201,11 @@ footer p {
 
 /* Responsive adjustments for small screens (phones) */
 @media screen and (max-width: 400px) {
+    .button-group .read-more {
+        flex: 1 1 100%;     /* full width on phones */
+        margin-bottom: 10px;/* add a little breathing room */
+        font-size: 14px;    /* make text a bit smaller */
+      }
     body {
         font-size: 14px;
     }
