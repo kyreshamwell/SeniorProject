@@ -3,6 +3,14 @@ const token = localStorage.getItem('token');
 const tbl   = document.querySelector('#eventsTable tbody');
 const form  = document.getElementById('eventForm');
 
+// helper to convert "14:30" → "2:30 PM"
+function to12Hour(time24) {
+  let [h, m] = time24.split(":").map(s => parseInt(s, 10));
+  const suffix = h >= 12 ? "PM" : "AM";
+  h = ((h + 11) % 12) + 1;
+  return `${h}:${m.toString().padStart(2, "0")} ${suffix}`;
+}
+
 async function loadEvents() {
   const res = await fetch(`${API}/api/events?date=ALL`, {
     headers: { 'Authorization': 'Bearer ' + token }
@@ -15,7 +23,7 @@ async function loadEvents() {
   const { events } = await res.json();
   tbl.innerHTML = events.map(ev => `
     <tr>
-      <td>${new Date(ev.date).toLocaleDateString()}</td>
+      <td>${new Date(ev.date).toLocaleDateString('en-US', { timeZone: 'UTC' })}</td>
       <td>${ev.startTime}–${ev.endTime}</td>
       <td>${ev.title}</td>
       <td><button data-id="${ev._id}" class="delete">×</button></td>

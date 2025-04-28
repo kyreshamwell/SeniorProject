@@ -519,8 +519,8 @@ app.get('/api/events', async (req, res) => {
 
     if (date !== 'ALL') {
       // filter to that one day
-      const dayStart = new Date(date);
-      const dayEnd   = new Date(date);
+      const dayStart = new Date(date + 'T00:00:00Z');   // force UTC midnight
+      const dayEnd   = new Date(date + 'T00:00:00Z');
       dayEnd.setDate(dayEnd.getDate() + 1);
       query.date = { $gte: dayStart, $lt: dayEnd };
     }
