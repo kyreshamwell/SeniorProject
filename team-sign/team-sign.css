@@ -1,147 +1,106 @@
-/* General Page Styling */
-body {
-    font-family: Arial, sans-serif;
-    background: url('../background.jpg') no-repeat center center fixed;
-    background-size: cover;
+/*─────────────────────────────────────────────────────
+   Team Signup Styles
+─────────────────────────────────────────────────────*/
+
+/* Reset & Full-page Background */
+* {
+    box-sizing: border-box;
     margin: 0;
     padding: 0;
+  }
+  html, body {
+    height: 100%;
+    font-family: 'Arial', sans-serif;
+  }
+  body {
+    background: url('../background.jpg') no-repeat center center fixed;
+    background-size: cover;
     display: flex;
     align-items: center;
     justify-content: center;
-    height: 100vh;
-}
-
-/* Container */
-.container {
-    background-color: #23449c;  /* Blue background */
-    padding: 30px;
-    width: 400px;
-    border-radius: 10px;
-    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
-    text-align: center;         /* Center text within container */
-    color: #fff;                /* White text for contrast */
-}
-
-/* Title */
-h2 {
-    margin-bottom: 20px;
-    color: #fff;
-}
-
-/* Labels */
-label {
-    display: block;
-    font-weight: bold;
-    margin: 10px 0 5px;
+  }
+  
+  /* Container Card */
+  .container {
+    background: rgba(35, 68, 156, 0.9); /* semi-opaque blue */
+    width: 100%;
+    max-width: 400px;
+    padding: 2.5rem 1.5rem;
+    border-radius: 12px;
+    box-shadow: 0 8px 20px rgba(0,0,0,0.2);
     text-align: center;
-}
-
-/* Inputs */
-input {
-    width: 90%;
-    padding: 10px;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-    margin-bottom: 15px;
-    font-size: 14px;
+    color: #fff;
+  }
+  
+  /* Title */
+  .container h2 {
+    font-size: 1.75rem;
+    margin-bottom: 1.5rem;
+  }
+  
+  /* Form Elements */
+  label {
     display: block;
-    margin-left: auto;
-    margin-right: auto;
-}
-
-/* Members Div */
-#members {
-    margin-top: 10px;
-}
-
-/* Buttons */
-button {
-    width: 90%;
-    padding: 10px;
-    margin: 5px auto;
+    font-weight: 700;
+    margin: 0.75rem 0 0.25rem;
+    text-align: left;
+  }
+  input[type="text"] {
+    width: 100%;
+    padding: 0.75rem;
     border: none;
-    border-radius: 5px;
+    border-radius: 6px;
+    font-size: 1rem;
+    margin-bottom: 1rem;
+  }
+  
+  /* Member Inputs Wrapper */
+  #members {
+    margin-top: 1rem;
+  }
+  
+  /* Buttons */
+  button {
+    width: 100%;
+    padding: 0.75rem;
+    margin: 0.5rem 0;
+    border: none;
+    border-radius: 6px;
+    font-size: 1rem;
+    font-weight: 600;
     cursor: pointer;
-    font-size: 16px;
-    transition: opacity 0.2s ease-in-out;
-    display: block;
-}
-
-/* Button Colors */
-/* Robust Green for "Add Member" */
-#addMember {
-    background-color: #28a745;  
-    color: #fff;
-}
-
-/* Robust Red for "Remove Member" */
-#removeMember {
-    background-color: #dc3545;  
-    color: #fff;
-}
-
-/* Bold Yellow for "Confirm Team" */
-#confirmTeam {
-    background-color: #ffc107;  
-    color: #fff;
-}
-
-/* Hover Effects */
-button:hover {
-    opacity: 0.9;
-}
-
-/* Responsive adjustments for medium screens (tablets, small laptops) */
-@media screen and (max-width: 650px) {
-    body {
-        font-size: 16px;
+    transition: background-color 0.2s, transform 0.1s;
+  }
+  button:hover {
+    transform: translateY(-2px);
+    opacity: 0.95;
+  }
+  
+  /* Specific Button Colors */
+  #addMember {
+    background-color: #28a745;
+  }
+  #removeMember {
+    background-color: #dc3545;
+  }
+  #confirmTeam {
+    background-color: #ffc107;
+    color: #333;
+  }
+  
+  /*─────────────────────────────────────────────────────
+     Responsive Tweaks
+  ─────────────────────────────────────────────────────*/
+  @media (max-width: 500px) {
+    .container {
+      padding: 1.5rem 1rem;
+      width: 90%;
     }
-
-    .services-grid {
-        grid-template-columns: repeat(2, 1fr);
+    .container h2 {
+      font-size: 1.5rem;
     }
-
-    .form-box, .calendar, .team-signup-form, .discord-container, .rep-bubble {
-        width: 90%;
-        margin: 0 auto;
+    input[type="text"], button {
+      font-size: 0.9rem;
+      padding: 0.6rem;
     }
-
-    .toggle-panel h1, .join-text, .title, h2, h3 {
-        font-size: 24px;
-    }
-}
-
-/* Responsive adjustments for small screens (phones) */
-@media screen and (max-width: 400px) {
-    body {
-        font-size: 14px;
-    }
-
-    .services-grid {
-        grid-template-columns: 1fr;
-    }
-
-    .form-box, .calendar, .team-signup-form, .discord-container, .rep-bubble {
-        width: 100%;
-        margin: 0 auto;
-        padding: 10px;
-    }
-
-    .service-item, .rep-bubble, .calendar, .team-signup-form {
-        box-shadow: none;
-        padding: 15px;
-    }
-
-    .signoutButton, .btn, .read-more {
-        padding: 8px 12px;
-        font-size: 14px;
-    }
-
-    .toggle-panel h1, .join-text, .title, h2, h3 {
-        font-size: 20px;
-    }
-
-    footer p {
-        font-size: 12px;
-    }
-}
+  }
