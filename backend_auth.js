@@ -496,3 +496,56 @@ app.get('/api/representatives', async (req, res) => {
 app.listen(PORT, '0.0.0.0', () => {
     console.log(`🚀 Server running at ${SERVER_URL}`);
 });
+
+// ─── Event Schema & Model ──────────────────────────────────
+const EventSchema = new mongoose.Schema({
+  title:       { type: String, required: true },
+  description: { type: String, default: "" },
+  date:        { type: Date,   required: true },
+  startTime:   { type: String, required: true },  // e.g. "14:00"
+  endTime:     { type: String, required: true }   // e.g. "15:30"
+});
+const Event = mongoose.model('Event', EventSchema);
+
+// GET /api/events?date=YYYY-MM-DD
+app.get('/api/events', async (req, res) => {
+  try {
+    const iso = req.query.date;
+    if (!iso) return res.status(400).json({ error: "date query required" });
+    const dayStart = new Date(iso);
+    const dayEnd = new Date(iso);
+    dayEnd.setDate(dayEnd.getDate()+1);
+
+    const events = await Event.find({
+      date: { $gte: dayStart, $lt: dayEnd }
+    }).sort('startTime');
+
+    res.json({ events });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: 'Server error' });
+  }
+});
+
+// POST /api/events  (admins only)
+app.post('/api/events', adminAuth, async (req, res) => {
+  try {
+    const ev = await Event.create(req.body);
+    res.status(201).json({ event: ev });
+  } catch (err) {
+    console.error(err);
+    res.status(400).json({ error: 'Invalid payload' });
+  }
+});
+
+// DELETE /api/events/:id  (admins only)
+app.delete('/api/events/:id', adminAuth, async (req, res) => {
+  try {
+    const result = await Event.findByIdAndDelete(req.params.id);
+    if (!result) return res.status(404).json({ error:'Not found' });
+    res.json({ message:'Deleted' });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error:'Server error' });
+  }
+});

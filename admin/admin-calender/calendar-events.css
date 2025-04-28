@@ -1,0 +1,132 @@
+/* ─── Base Styles ─────────────────────────────────────────────────────────────── */
+html, body {
+    height: 100%;
+    margin: 0;
+    padding: 20px;
+    font-family: sans-serif;
+    background: #f0f0f0 url('/background.jpg') no-repeat center center fixed;
+    background-size: cover;
+    color: #333;
+  }
+  
+  /* ─── Headings ───────────────────────────────────────────────────────────────── */
+  h1 {
+    color: #23449c;
+    margin-bottom: 1rem;
+  }
+  
+  /* ─── Event Form ──────────────────────────────────────────────────────────────── */
+  #eventForm {
+    display: grid;
+    gap: 10px;
+    margin-bottom: 20px;
+  }
+  
+  /* ─── Events Table ────────────────────────────────────────────────────────────── */
+  #eventsTable {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 2rem;
+  }
+  
+  #eventsTable th,
+  #eventsTable td {
+    padding: 8px;
+    border: 1px solid #ccc;
+    text-align: left;
+  }
+  
+  /* ─── Buttons ────────────────────────────────────────────────────────────────── */
+  button {
+    background-color: #23449c;
+    color: #fff;
+    border: none;
+    padding: 8px 12px;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+  }
+  
+  button:hover {
+    background-color: #1a327a;
+  }
+  
+  button.delete {
+    background-color: #dc3545;
+  }
+  
+  button.delete:hover {
+    background-color: #b02a37;
+  }
+  
+  /* ─── Responsive Images ───────────────────────────────────────────────────────── */
+  img {
+    max-width: 100%;
+    height: auto;
+    display: block;
+    margin: 10px auto;
+    object-fit: cover;
+    border-radius: 4px;
+  }
+  
+  /* If you have images inside the events table, size them smaller */
+  #eventsTable img {
+    max-width: 80px;
+    height: auto;
+    object-fit: contain;
+  }
+
+  /* Responsive adjustments for medium screens (tablets, small laptops) */
+@media screen and (max-width: 650px) {
+    body {
+        font-size: 16px;
+    }
+  
+    .services-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+  
+    .form-box, .calendar, .team-signup-form, .discord-container, .rep-bubble {
+        width: 90%;
+        margin: 0 auto;
+    }
+  
+    .toggle-panel h1, .join-text, .title, h2, h3 {
+        font-size: 24px;
+    }
+  }
+  
+  /* Responsive adjustments for small screens (phones) */
+  @media screen and (max-width: 400px) {
+    body {
+        font-size: 14px;
+    }
+  
+    .services-grid {
+        grid-template-columns: 1fr;
+    }
+  
+    .form-box, .calendar, .team-signup-form, .discord-container, .rep-bubble {
+        width: 100%;
+        margin: 0 auto;
+        padding: 10px;
+    }
+  
+    .service-item, .rep-bubble, .calendar, .team-signup-form {
+        box-shadow: none;
+        padding: 15px;
+    }
+  
+    .signoutButton, .btn, .read-more {
+        padding: 8px 12px;
+        font-size: 14px;
+    }
+  
+    .toggle-panel h1, .join-text, .title, h2, h3 {
+        font-size: 20px;
+    }
+  
+    footer p {
+        font-size: 12px;
+    }
+  }

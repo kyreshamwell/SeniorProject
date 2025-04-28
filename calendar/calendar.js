@@ -1,72 +1,63 @@
-document.addEventListener('DOMContentLoaded', function() {
-    const dayView = document.getElementById('dayView');
-    const currentDayDisplay = document.getElementById('currentDay');
-    const prevDayButton = document.getElementById('prevDay');
-    const nextDayButton = document.getElementById('nextDay');
+const API = "https://seniorproject-jkm4.onrender.com";
 
-    let currentDate = new Date();
-    let currentDayOfWeek = currentDate.getDay(); // 0 (Sunday) to 6 (Saturday)
+document.addEventListener("DOMContentLoaded", () => {
+  const dayView          = document.getElementById("dayView");
+  const currentDayDisplay= document.getElementById("currentDay");
+  const prevBtn          = document.getElementById("prevDay");
+  const nextBtn          = document.getElementById("nextDay");
+  const goBackBtn        = document.getElementById("goBackButton");
+  const adminLink        = document.getElementById("adminLink");
 
-    // Function to display the events for a given day
-    function showDay(date) {
-        currentDayDisplay.textContent = date.toLocaleDateString('en-US', { weekday: 'long', month: 'short', day: 'numeric' });
-        dayView.innerHTML = ''; // Clear previous events
+  let currentDate = new Date();
 
-        const dayOfWeek = date.getDay();
-        if (dayOfWeek === 5) { // Friday
-            displayEvents(fridayEvents);
-        } else if (dayOfWeek === 6) { // Saturday
-            displayEvents(saturdayEvents);
-        }
+  // 1) Fetch & render for a given day
+  async function showDay(date) {
+    // update header
+    currentDayDisplay.textContent = date.toLocaleDateString("en-US", {
+      weekday: "long",
+      month:   "short",
+      day:     "numeric",
+    });
+    dayView.innerHTML = "";
+
+    // fetch events
+    const iso = date.toISOString().slice(0, 10);
+    const res = await fetch(`${API}/api/events?date=${iso}`);
+    const { events } = await res.json();
+
+    if (!events.length) {
+      dayView.textContent = "No events";
+    } else {
+      events.forEach((ev) => {
+        const div = document.createElement("div");
+        div.className = "event";
+        div.textContent = `${ev.startTime}–${ev.endTime}: ${ev.title}`;
+        dayView.appendChild(div);
+      });
     }
+  }
 
-    // Function to add events to the day view
-    function displayEvents(events) {
-        events.forEach(event => {
-            const eventDiv = document.createElement('div');
-            eventDiv.className = 'event';
-            eventDiv.textContent = `${event.time} - ${event.title}`;
-            dayView.appendChild(eventDiv);
-        });
-    }
-
-    // Event data
-    const fridayEvents = [
-        { time: '4:30 PM', title: 'Team Check in' },
-        { time: '5:00 PM', title: 'Kickoff' },
-        { time: '8:00 PM', title: 'Capitalone workshop' },
-        { time: '9:30 PM', title: 'Team Check in' },
-        { time: '10:00 PM', title: 'Dinner' }
-    ];
-
-    const saturdayEvents = [
-        { time: '9:00 AM', title: 'Breakfast' },
-        { time: '12:00 PM', title: 'Lunch' },
-        { time: '2:50 PM', title: 'Project Submissions due' }
-    ];
-
-    // Initial display
+  // 2) Prev / Next buttons
+  prevBtn.addEventListener("click", () => {
+    currentDate.setDate(currentDate.getDate() - 1);
     showDay(currentDate);
+  });
+  nextBtn.addEventListener("click", () => {
+    currentDate.setDate(currentDate.getDate() + 1);
+    showDay(currentDate);
+  });
 
-    // Navigation buttons
-    prevDayButton.addEventListener('click', () => {
-        currentDate.setDate(currentDate.getDate() - 1);
-        showDay(currentDate);
-    });
+  // 3) Go Back button
+  goBackBtn.addEventListener("click", () => {
+    window.location.href = "/home/home.html";
+  });
 
-    nextDayButton.addEventListener('click', () => {
-        currentDate.setDate(currentDate.getDate() + 1);
-        showDay(currentDate);
-    });
+  // 4) Show Admin link if the user is an admin
+  const role = localStorage.getItem("role");
+  if (role === "admin") {
+    adminLink.style.display = "inline-flex";
+  }
 
-    // Go Back button
-    document.getElementById("goBackButton").addEventListener("click", () => {
-        window.location.href = "/home/home.html";
-    });
-    
-    // Show admin link if role is admin
-    const role = localStorage.getItem("role");
-    if (role === "admin") {
-        document.getElementById("adminLink").style.display = "inline-flex";
-    }
+  // Initial load
+  showDay(currentDate);
 });

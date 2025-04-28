@@ -1,34 +1,40 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Calendar</title>
-    <link rel="stylesheet" href="calendar.css">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Calendar</title>
+  <link rel="stylesheet" href="calendar.css" />
 </head>
 <body>
-    <nav>
-        <div class="nav-content">
-            <div id="usernameDisplay"></div>
-        
-            <div class="nav-actions">
-              <!-- Go Back button -->
-              <button id="goBackButton" class="btn">Go Back</button>
-        
-              <!-- Admin Dashboard, only shown when role=admin -->
-              <a id="adminLink" href="/admin/admin.html" class="btn" style="display: none;">Admin Dashboard</a>
-            </div>
-          </div>
-    </nav>
-    <div class="calendar">
-        <div class="header">
-            <button id="prevDay">&lt;</button>
-            <h2 id="currentDay"></h2>
-            <button id="nextDay">&gt;</button>
-        </div>
-        <div class="day-view" id="dayView">
-            </div>
+  <nav>
+    <div class="nav-content">
+      <div id="usernameDisplay"></div>
+
+      <div class="nav-actions">
+        <!-- Go Back button -->
+        <button id="goBackButton" class="btn">Go Back</button>
+
+        <!-- Admin Dashboard link, only shown when role=admin -->
+        <a id="adminLink"
+           href="/admin/admin.html"
+           class="btn"
+           style="display: none;">
+          Admin Dashboard
+        </a>
+      </div>
     </div>
-    <script src="calendar.js"></script>
+  </nav>
+
+  <div class="calendar">
+    <div class="header">
+      <button id="prevDay">&lt;</button>
+      <h2 id="currentDay"></h2>
+      <button id="nextDay">&gt;</button>
+    </div>
+    <div class="day-view" id="dayView"></div>
+  </div>
+
+  <script src="calendar.js"></script>
 </body>
 </html>

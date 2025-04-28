@@ -63,3 +63,58 @@ body {
     font-size: 16px;
   }
   
+
+  /* Responsive adjustments for medium screens (tablets, small laptops) */
+@media screen and (max-width: 650px) {
+  body {
+      font-size: 16px;
+  }
+
+  .services-grid {
+      grid-template-columns: repeat(2, 1fr);
+  }
+
+  .form-box, .calendar, .team-signup-form, .discord-container, .rep-bubble {
+      width: 90%;
+      margin: 0 auto;
+  }
+
+  .toggle-panel h1, .join-text, .title, h2, h3 {
+      font-size: 24px;
+  }
+}
+
+/* Responsive adjustments for small screens (phones) */
+@media screen and (max-width: 400px) {
+  body {
+      font-size: 14px;
+  }
+
+  .services-grid {
+      grid-template-columns: 1fr;
+  }
+
+  .form-box, .calendar, .team-signup-form, .discord-container, .rep-bubble {
+      width: 100%;
+      margin: 0 auto;
+      padding: 10px;
+  }
+
+  .service-item, .rep-bubble, .calendar, .team-signup-form {
+      box-shadow: none;
+      padding: 15px;
+  }
+
+  .signoutButton, .btn, .read-more {
+      padding: 8px 12px;
+      font-size: 14px;
+  }
+
+  .toggle-panel h1, .join-text, .title, h2, h3 {
+      font-size: 20px;
+  }
+
+  footer p {
+      font-size: 12px;
+  }
+}
