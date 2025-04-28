@@ -508,22 +508,30 @@ const Event = mongoose.model('Event', EventSchema);
 
 // ─── GET /api/events?date=YYYY-MM-DD ───────────────────────
 app.get('/api/events', async (req, res) => {
-  const iso = req.query.date;
-  if (!iso) return res.status(400).json({ error: "date query required" });
-
-  const dayStart = new Date(iso);
-  const dayEnd   = new Date(iso);
-  dayEnd.setDate(dayEnd.getDate() + 1);
-
   try {
-    const events = await Event.find({
-      date: { $gte: dayStart, $lt: dayEnd }
-    }).sort('startTime');
+    const { date } = req.query;
+    let query = {};
 
+    if (!date) {
+      // no date at all
+      return res.status(400).json({ error: "date query required" });
+    }
+
+    if (date !== 'ALL') {
+      // filter to that one day
+      const dayStart = new Date(date);
+      const dayEnd   = new Date(date);
+      dayEnd.setDate(dayEnd.getDate() + 1);
+      query.date = { $gte: dayStart, $lt: dayEnd };
+    }
+    // else date === 'ALL' → leave query = {}
+
+    const events = await Event.find(query)
+      .sort({ date: 1, startTime: 1 });  // sort by date then time
     res.json({ events });
   } catch (err) {
-    console.error(err);
-    res.status(500).json({ error: 'Server error' });
+    console.error("Error in GET /api/events:", err);
+    res.status(500).json({ error: "Server error fetching events" });
   }
 });
 // Admin-only: return every event in the DB

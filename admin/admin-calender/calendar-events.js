@@ -5,17 +5,20 @@ const form  = document.getElementById('eventForm');
 
 async function loadEvents() {
   const res = await fetch(`${API}/api/events?date=ALL`, {
-    headers: { 'Authorization': 'Bearer '+token }
+    headers: { 'Authorization': 'Bearer ' + token }
   });
+  if (!res.ok) {
+    console.error("Failed to load events:", await res.text());
+    tbl.innerHTML = `<tr><td colspan="4">Error loading events</td></tr>`;
+    return;
+  }
   const { events } = await res.json();
   tbl.innerHTML = events.map(ev => `
     <tr>
       <td>${new Date(ev.date).toLocaleDateString()}</td>
       <td>${ev.startTime}–${ev.endTime}</td>
       <td>${ev.title}</td>
-      <td>
-        <button data-id="${ev._id}" class="delete">×</button>
-      </td>
+      <td><button data-id="${ev._id}" class="delete">×</button></td>
     </tr>
   `).join('');
 }
@@ -31,8 +34,8 @@ form.addEventListener('submit', async e => {
   await fetch(`${API}/api/events`, {
     method: 'POST',
     headers: {
-      'Content-Type':'application/json',
-      'Authorization':'Bearer '+token
+      'Content-Type':  'application/json',
+      'Authorization': 'Bearer ' + token
     },
     body: JSON.stringify(payload)
   });
@@ -45,9 +48,10 @@ tbl.addEventListener('click', async e => {
   const id = e.target.dataset.id;
   await fetch(`${API}/api/events/${id}`, {
     method: 'DELETE',
-    headers: { 'Authorization':'Bearer '+token }
+    headers: { 'Authorization': 'Bearer ' + token }
   });
   loadEvents();
 });
 
+// initial load
 loadEvents();
