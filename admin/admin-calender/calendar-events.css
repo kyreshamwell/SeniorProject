@@ -8,6 +8,11 @@ html, body {
     background-size: cover;
     color: #333;
   }
+  .rep-bubble {
+    background: rgba(255, 255, 255, 0.4);  /* frosted-glass */
+    backdrop-filter: blur(6px);
+    /* … */
+  }
   
   /* ─── Headings ───────────────────────────────────────────────────────────────── */
   h1 {
