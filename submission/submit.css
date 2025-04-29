@@ -104,3 +104,27 @@ button:disabled {
 .btn:hover {
     background-color: #555;
 }
+
+/* 7) Responsive tweaks */
+@media screen and (max-width: 650px) {
+    body {
+      font-size: 16px;
+    }
+    .company-selection {
+      width: 90%;
+    }
+  }
+  
+  @media screen and (max-width: 400px) {
+    body {
+      font-size: 14px;
+    }
+    .company-selection {
+      padding: 15px;
+      box-shadow: none;
+    }
+    .read-more, .btn {
+      padding: 8px 12px;
+      font-size: 14px;
+    }
+  }
