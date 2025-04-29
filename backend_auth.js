@@ -687,12 +687,28 @@ app.get('/api/admin/submissions', adminAuth, async (req, res) => {
 
 app.get('/api/admin/submissions/:id/view', adminAuth, async (req, res) => {
     try {
+        console.log('Viewing submission:', req.params.id);
         const submission = await Submission.findById(req.params.id);
         if (!submission) {
+            console.log('Submission not found:', req.params.id);
             return res.status(404).json({ error: 'Submission not found' });
         }
 
+        console.log('Found submission:', submission);
         const filePath = path.join(__dirname, 'uploads', submission.fileName);
+        console.log('File path:', filePath);
+
+        // Check if file exists
+        if (!fs.existsSync(filePath)) {
+            console.log('File not found at path:', filePath);
+            return res.status(404).json({ error: 'File not found' });
+        }
+
+        // Set appropriate headers
+        res.setHeader('Content-Type', 'application/pdf');
+        res.setHeader('Content-Disposition', `inline; filename="${submission.originalName}"`);
+        
+        // Send the file
         res.sendFile(filePath);
     } catch (error) {
         console.error('Error viewing submission:', error);

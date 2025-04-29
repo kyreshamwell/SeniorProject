@@ -18,21 +18,25 @@ async function fetchSubmissions() {
         spinner.classList.remove('hidden');
         errorMessage.classList.add('hidden');
 
+        console.log('Fetching submissions...');
         const response = await fetch('https://seniorproject-jkm4.onrender.com/api/admin/submissions', {
             headers: {
                 'Authorization': `Bearer ${localStorage.getItem('token')}`
             }
         });
 
+        console.log('Response status:', response.status);
+        const data = await response.json();
+        console.log('Received data:', data);
+
         if (!response.ok) {
-            throw new Error('Failed to fetch submissions');
+            throw new Error(data.error || 'Failed to fetch submissions');
         }
 
-        const data = await response.json();
         displaySubmissions(data.submissions);
     } catch (error) {
         console.error('Error fetching submissions:', error);
-        errorMessage.textContent = 'Failed to load submissions. Please try again.';
+        errorMessage.textContent = error.message || 'Failed to load submissions. Please try again.';
         errorMessage.classList.remove('hidden');
     } finally {
         spinner.classList.add('hidden');
@@ -72,14 +76,18 @@ function displaySubmissions(submissions) {
 // View submission
 async function viewSubmission(submissionId) {
     try {
+        console.log('Viewing submission:', submissionId);
         const response = await fetch(`https://seniorproject-jkm4.onrender.com/api/admin/submissions/${submissionId}/view`, {
             headers: {
                 'Authorization': `Bearer ${localStorage.getItem('token')}`
             }
         });
 
+        console.log('View response status:', response.status);
+        
         if (!response.ok) {
-            throw new Error('Failed to view submission');
+            const errorData = await response.json();
+            throw new Error(errorData.error || 'Failed to view submission');
         }
 
         const blob = await response.blob();
@@ -87,7 +95,7 @@ async function viewSubmission(submissionId) {
         window.open(url, '_blank');
     } catch (error) {
         console.error('Error viewing submission:', error);
-        alert('Failed to view submission. Please try again.');
+        alert(error.message || 'Failed to view submission. Please try again.');
     }
 }
 
