@@ -2,7 +2,7 @@
 function checkAuth() {
     const token = localStorage.getItem('token');
     if (!token) {
-        window.location.href = '/login/login.html';
+        window.location.href = 'https://senior-project-delta.vercel.app/login/login.html';
         return false;
     }
     return true;
@@ -59,7 +59,7 @@ async function handleSubmit(e) {
             <div style="color: red; margin: 20px 0;">
                 <h3>❌ Error</h3>
                 <p>Something went wrong. Please try again.</p>
-            </div>
+            </div> 
         `;
     } finally {
         // Re-enable submit button
