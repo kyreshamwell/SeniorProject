@@ -18,7 +18,7 @@ async function fetchSubmissions() {
         spinner.classList.remove('hidden');
         errorMessage.classList.add('hidden');
 
-        const response = await fetch('https://seniorproject-jkm4.onrender.com/api/submissions', {
+        const response = await fetch('https://seniorproject-jkm4.onrender.com/api/admin/submissions', {
             headers: {
                 'Authorization': `Bearer ${localStorage.getItem('token')}`
             }
@@ -44,6 +44,15 @@ function displaySubmissions(submissions) {
     const submissionsBody = document.getElementById('submissionsBody');
     submissionsBody.innerHTML = '';
 
+    if (!submissions || submissions.length === 0) {
+        submissionsBody.innerHTML = `
+            <tr>
+                <td colspan="5" style="text-align: center;">No submissions found</td>
+            </tr>
+        `;
+        return;
+    }
+
     submissions.forEach(submission => {
         const row = document.createElement('tr');
         row.innerHTML = `
@@ -63,7 +72,7 @@ function displaySubmissions(submissions) {
 // View submission
 async function viewSubmission(submissionId) {
     try {
-        const response = await fetch(`https://seniorproject-jkm4.onrender.com/api/submissions/${submissionId}/view`, {
+        const response = await fetch(`https://seniorproject-jkm4.onrender.com/api/admin/submissions/${submissionId}/view`, {
             headers: {
                 'Authorization': `Bearer ${localStorage.getItem('token')}`
             }
@@ -85,7 +94,7 @@ async function viewSubmission(submissionId) {
 // Download submission
 async function downloadSubmission(submissionId) {
     try {
-        const response = await fetch(`https://seniorproject-jkm4.onrender.com/api/submissions/${submissionId}/download`, {
+        const response = await fetch(`https://seniorproject-jkm4.onrender.com/api/admin/submissions/${submissionId}/download`, {
             headers: {
                 'Authorization': `Bearer ${localStorage.getItem('token')}`
             }
@@ -162,9 +171,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Set up event listeners
     document.getElementById('refreshBtn').addEventListener('click', fetchSubmissions);
-    document.getElementById('logoutBtn').addEventListener('click', () => {
-        localStorage.removeItem('token');
-        window.location.href = '/login/login.html';
+    document.getElementById('goBackBtn').addEventListener('click', () => {
+        window.location.href = '/admin/admin.html';
     });
     document.getElementById('searchInput').addEventListener('input', filterSubmissions);
     document.getElementById('teamFilter').addEventListener('change', filterSubmissions);
