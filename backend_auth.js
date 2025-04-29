@@ -616,7 +616,12 @@ const SubmissionSchema = new mongoose.Schema({
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Team',
     default: null
-  }
+  }, 
+company: {
+  type: mongoose.Schema.Types.ObjectId,
+  ref: 'Company',
+  required: true
+}
 });
 const Submission = mongoose.model('Submission', SubmissionSchema);
 
