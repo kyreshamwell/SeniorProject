@@ -672,5 +672,48 @@ app.post('/submit-project', upload.single('projectFile'), async (req, res) => {
   }
 });
 
+// Admin endpoints for submissions
+app.get('/api/admin/submissions', adminAuth, async (req, res) => {
+    try {
+        const submissions = await Submission.find()
+            .populate('team', 'name')
+            .sort({ submittedAt: -1 });
+        res.json({ submissions });
+    } catch (error) {
+        console.error('Error fetching submissions:', error);
+        res.status(500).json({ error: 'Failed to fetch submissions' });
+    }
+});
+
+app.get('/api/admin/submissions/:id/view', adminAuth, async (req, res) => {
+    try {
+        const submission = await Submission.findById(req.params.id);
+        if (!submission) {
+            return res.status(404).json({ error: 'Submission not found' });
+        }
+
+        const filePath = path.join(__dirname, 'uploads', submission.fileName);
+        res.sendFile(filePath);
+    } catch (error) {
+        console.error('Error viewing submission:', error);
+        res.status(500).json({ error: 'Failed to view submission' });
+    }
+});
+
+app.get('/api/admin/submissions/:id/download', adminAuth, async (req, res) => {
+    try {
+        const submission = await Submission.findById(req.params.id);
+        if (!submission) {
+            return res.status(404).json({ error: 'Submission not found' });
+        }
+
+        const filePath = path.join(__dirname, 'uploads', submission.fileName);
+        res.download(filePath, submission.originalName);
+    } catch (error) {
+        console.error('Error downloading submission:', error);
+        res.status(500).json({ error: 'Failed to download submission' });
+    }
+});
+
 
 
