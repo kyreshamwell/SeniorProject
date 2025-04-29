@@ -7,9 +7,23 @@ const jwt = require('jsonwebtoken');
 const cors = require('cors');
 const crypto = require('crypto');
 const path = require('path');
+const multer = require('multer');
 const SERVER_URL = "https://seniorproject-jkm4.onrender.com";  // 🔥 Your backend URL
 
 const app = express();
+
+// Configure multer for file uploads
+const storage = multer.diskStorage({
+  destination: function (req, file, cb) {
+    cb(null, 'uploads/') // Make sure this directory exists
+  },
+  filename: function (req, file, cb) {
+    const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9)
+    cb(null, uniqueSuffix + '-' + file.originalname)
+  }
+});
+
+const upload = multer({ storage: storage });
 
 app.use(cors({
     origin: 'https://senior-project-delta.vercel.app', // or '*' to open to all
@@ -366,7 +380,7 @@ const TeamSchema = new mongoose.Schema({
   
   
   // ─── GET /api/teams ───────────────────────────────────────────
-  // Only admins should see every team’s assignments,
+  // Only admins should see every team's assignments,
   // and with populated member usernames + company names.
   app.get('/api/teams', adminAuth, async (req, res) => {
     try {
@@ -501,8 +515,8 @@ app.listen(PORT, '0.0.0.0', () => {
 const EventSchema = new mongoose.Schema({
   title:     { type: String, required: true },
   date:      { type: Date,   required: true },
-  startTime: { type: String, required: true },  // stored as “14:00”
-  endTime:   { type: String, required: true }   // stored as “15:30”
+  startTime: { type: String, required: true },  // stored as "14:00"
+  endTime:   { type: String, required: true }   // stored as "15:30"
 });
 const Event = mongoose.model('Event', EventSchema);
 
@@ -567,4 +581,79 @@ app.delete('/api/events/:id', adminAuth, async (req, res) => {
   }
   
 });
+
+// ─── Submission Schema & Model ──────────────────────────────────
+const SubmissionSchema = new mongoose.Schema({
+  username: {
+    type: String,
+    required: true
+  },
+  originalName: {
+    type: String,
+    required: true
+  },
+  fileName: {
+    type: String,
+    required: true
+  },
+  submittedAt: {
+    type: Date,
+    default: Date.now
+  },
+  team: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Team',
+    default: null
+  }
+});
+const Submission = mongoose.model('Submission', SubmissionSchema);
+
+// === PROJECT FILE SUBMISSION WITH USERNAME ===
+app.post('/submit-project', upload.single('projectFile'), async (req, res) => {
+  try {
+    // 1) Verify JWT
+    const token = req.headers.authorization?.split(" ")[1];
+    if (!token) return res.status(401).json({ error: "No token provided" });
+    
+    let decoded;
+    try {
+      decoded = jwt.verify(token, process.env.JWT_SECRET);
+    } catch (err) {
+      return res.status(401).json({ error: "Invalid token" });
+    }
+
+    // 2) Get user and verify they exist
+    const user = await User.findById(decoded.userId);
+    if (!user) return res.status(404).json({ error: "User not found" });
+
+    // 3) Get file info from request
+    const fileInfo = req.file;
+    if (!fileInfo) return res.status(400).json({ error: "No file uploaded" });
+
+    // 4) Create submission with team association
+    const newSubmission = new Submission({
+      username: user.username,
+      originalName: fileInfo.originalname,
+      fileName: fileInfo.filename,
+      team: user.team // This will be null if user isn't in a team
+    });
+
+    await newSubmission.save();
+
+    res.json({
+      message: "Project submitted successfully!",
+      submission: {
+        fileName: fileInfo.filename,
+        originalName: fileInfo.originalname,
+        submittedAt: newSubmission.submittedAt,
+        team: newSubmission.team
+      }
+    });
+  } catch (err) {
+    console.error("File upload error:", err);
+    res.status(500).json({ error: "File upload failed" });
+  }
+});
+
+
 

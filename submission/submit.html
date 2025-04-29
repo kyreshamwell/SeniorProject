@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Submit Project - HackathonEDU</title>
+    <link rel="stylesheet" href="submit.css">
+</head>
+<body>
+    <div class="container">
+        <h2> Submit Your Project</h2>
+
+        <nav>
+            <div class="nav-content">
+              <div id="usernameDisplay"></div>
+              <button id="goBackButton" class="btn" onclick="window.location.href='/home/home.html'">Go Back</button>
+            </div>
+          </nav>
+        
+        <form id="uploadForm" enctype="multipart/form-data">
+            <div class="form-group">
+                <label for="projectFile">Select your project file:</label>
+                <input type="file" id="projectFile" name="projectFile" required>
+            </div>
+            
+            <button type="submit">Submit Project</button>
+        </form>
+
+        <div id="result"></div>
+    </div>
+
+    <script src="submit.js"></script>
+</body>
+</html>
