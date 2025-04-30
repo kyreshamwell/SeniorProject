@@ -660,19 +660,32 @@ app.post('/submit-project', upload.single('projectFile'), async (req, res) => {
             return res.status(500).json({ error: "File upload failed" });
         }
 
-        // 5) Create submission with team association
+        // 5) Get user's team and company
+        const team = await Team.findById(user.team);
+        if (!team) {
+            return res.status(400).json({ error: "User is not in a team" });
+        }
+
+        if (!team.company) {
+            return res.status(400).json({ error: "Team is not assigned to a company" });
+        }
+
+        // 6) Create submission with team and company association
         const newSubmission = new Submission({
             username: user.username,
             originalName: fileInfo.originalname,
             fileName: fileInfo.filename,
-            team: user.team // This will be null if user isn't in a team
+            team: user.team,
+            company: team.company
         });
 
         await newSubmission.save();
         console.log('Created submission:', {
             id: newSubmission._id,
             fileName: newSubmission.fileName,
-            originalName: newSubmission.originalName
+            originalName: newSubmission.originalName,
+            team: newSubmission.team,
+            company: newSubmission.company
         });
 
         res.json({
@@ -681,7 +694,8 @@ app.post('/submit-project', upload.single('projectFile'), async (req, res) => {
                 fileName: fileInfo.filename,
                 originalName: fileInfo.originalname,
                 submittedAt: newSubmission.submittedAt,
-                team: newSubmission.team
+                team: newSubmission.team,
+                company: newSubmission.company
             }
         });
     } catch (err) {
