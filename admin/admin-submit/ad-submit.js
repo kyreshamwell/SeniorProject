@@ -8,6 +8,44 @@ function checkAdminAuth() {
     return true;
 }
 
+// Validate token and refresh if needed
+async function validateToken() {
+    const token = localStorage.getItem('token');
+    if (!token) {
+        window.location.href = '/login/login.html';
+        return false;
+    }
+
+    try {
+        const response = await fetch('https://seniorproject-jkm4.onrender.com/api/user', {
+            headers: {
+                'Authorization': `Bearer ${token}`
+            }
+        });
+
+        if (!response.ok) {
+            // Token is invalid, redirect to login
+            localStorage.removeItem('token');
+            window.location.href = '/login/login.html';
+            return false;
+        }
+
+        const data = await response.json();
+        if (data.role !== 'admin') {
+            // User is not an admin, redirect to home
+            window.location.href = '/home/home.html';
+            return false;
+        }
+
+        return true;
+    } catch (error) {
+        console.error('Error validating token:', error);
+        localStorage.removeItem('token');
+        window.location.href = '/login/login.html';
+        return false;
+    }
+}
+
 // Fetch all submissions
 async function fetchSubmissions() {
     const spinner = document.getElementById('loadingSpinner');
@@ -15,6 +53,11 @@ async function fetchSubmissions() {
     const submissionsBody = document.getElementById('submissionsBody');
 
     try {
+        // Validate token before proceeding
+        if (!await validateToken()) {
+            return;
+        }
+
         spinner.classList.remove('hidden');
         errorMessage.classList.add('hidden');
 
@@ -171,8 +214,11 @@ function isWithinDateRange(date, range) {
 }
 
 // Initialize
-document.addEventListener('DOMContentLoaded', () => {
-    if (!checkAdminAuth()) return;
+document.addEventListener('DOMContentLoaded', async () => {
+    // Validate token before proceeding
+    if (!await validateToken()) {
+        return;
+    }
 
     // Fetch initial submissions
     fetchSubmissions();
