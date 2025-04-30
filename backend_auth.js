@@ -596,33 +596,38 @@ app.delete('/api/events/:id', adminAuth, async (req, res) => {
 
 // ─── Submission Schema & Model ──────────────────────────────────
 const SubmissionSchema = new mongoose.Schema({
-  username: {
-    type: String,
-    required: true
-  },
-  originalName: {
-    type: String,
-    required: true
-  },
-  fileName: {
-    type: String,
-    required: true
-  },
-  submittedAt: {
-    type: Date,
-    default: Date.now
-  },
-  team: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: 'Team',
-    default: null
-  }, 
-company: {
-  type: mongoose.Schema.Types.ObjectId,
-  ref: 'Company',
-  required: true
-}
+    username: {
+        type: String,
+        required: true
+    },
+    originalName: {
+        type: String,
+        required: true
+    },
+    fileName: {
+        type: String,
+        required: true
+    },
+    submittedAt: {
+        type: Date,
+        default: Date.now
+    },
+    team: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Team',
+        default: null
+    },
+    company: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Company',
+        required: true
+    }
 });
+
+// Add index for better query performance
+SubmissionSchema.index({ company: 1 });
+SubmissionSchema.index({ team: 1 });
+
 const Submission = mongoose.model('Submission', SubmissionSchema);
 
 // === PROJECT FILE SUBMISSION WITH USERNAME ===
@@ -707,9 +712,18 @@ app.post('/submit-project', upload.single('projectFile'), async (req, res) => {
 // Admin endpoints for submissions
 app.get('/api/admin/submissions', adminAuth, async (req, res) => {
     try {
+        console.log('Fetching submissions...');
         const submissions = await Submission.find()
             .populate('company', 'name')
             .sort({ submittedAt: -1 });
+        
+        console.log('Found submissions:', submissions.map(s => ({
+            id: s._id,
+            username: s.username,
+            company: s.company,
+            fileName: s.fileName
+        })));
+
         res.json({ submissions });
     } catch (error) {
         console.error('Error fetching submissions:', error);
