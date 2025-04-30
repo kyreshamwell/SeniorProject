@@ -104,7 +104,7 @@ function displaySubmissions(submissions) {
         const row = document.createElement('tr');
         row.innerHTML = `
             <td>${submission.username}</td>
-            <td>${submission.team || 'No Team'}</td>
+            <td>${submission.company ? submission.company.name : 'No Company'}</td>
             <td>${submission.originalName}</td>
             <td>${new Date(submission.submittedAt).toLocaleString()}</td>
             <td>

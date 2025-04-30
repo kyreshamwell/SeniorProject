@@ -708,7 +708,7 @@ app.post('/submit-project', upload.single('projectFile'), async (req, res) => {
 app.get('/api/admin/submissions', adminAuth, async (req, res) => {
     try {
         const submissions = await Submission.find()
-            .populate('team', 'name')
+            .populate('company', 'name')
             .sort({ submittedAt: -1 });
         res.json({ submissions });
     } catch (error) {
