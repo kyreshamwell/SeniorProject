@@ -675,22 +675,27 @@ app.post('/submit-project', upload.single('projectFile'), async (req, res) => {
             return res.status(400).json({ error: "Team is not assigned to a company" });
         }
 
+        console.log('Team info:', {
+            id: team._id,
+            name: team.name,
+            company: team.company
+        });
+
         // 6) Create submission with team and company association
         const newSubmission = new Submission({
             username: user.username,
             originalName: fileInfo.originalname,
             fileName: fileInfo.filename,
-            team: user.team,
+            team: team._id,
             company: team.company
         });
 
         await newSubmission.save();
         console.log('Created submission:', {
             id: newSubmission._id,
-            fileName: newSubmission.fileName,
-            originalName: newSubmission.originalName,
             team: newSubmission.team,
-            company: newSubmission.company
+            company: newSubmission.company,
+            fileName: newSubmission.fileName
         });
 
         res.json({
@@ -699,8 +704,8 @@ app.post('/submit-project', upload.single('projectFile'), async (req, res) => {
                 fileName: fileInfo.filename,
                 originalName: fileInfo.originalname,
                 submittedAt: newSubmission.submittedAt,
-                team: newSubmission.team,
-                company: newSubmission.company
+                team: team.name,
+                company: team.company
             }
         });
     } catch (err) {
@@ -714,14 +719,20 @@ app.get('/api/admin/submissions', adminAuth, async (req, res) => {
     try {
         console.log('Fetching submissions...');
         const submissions = await Submission.find()
-            .populate('team', 'name')
-            .populate('company', 'name')
+            .populate({
+                path: 'team',
+                select: 'name'
+            })
+            .populate({
+                path: 'company',
+                select: 'name'
+            })
             .sort({ submittedAt: -1 });
         
         console.log('Found submissions:', submissions.map(s => ({
             id: s._id,
-            team: s.team,
-            company: s.company,
+            team: s.team ? { id: s.team._id, name: s.team.name } : null,
+            company: s.company ? { id: s.company._id, name: s.company.name } : null,
             fileName: s.fileName
         })));
 
