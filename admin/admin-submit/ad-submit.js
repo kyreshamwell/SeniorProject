@@ -119,7 +119,13 @@ function displaySubmissions(submissions) {
 // View submission
 async function viewSubmission(submissionId) {
     try {
-        console.log('Viewing submission:', submissionId);
+        console.log('Attempting to view submission:', submissionId);
+        
+        // Validate token before proceeding
+        if (!await validateToken()) {
+            return;
+        }
+
         const response = await fetch(`https://seniorproject-jkm4.onrender.com/api/admin/submissions/${submissionId}/view`, {
             headers: {
                 'Authorization': `Bearer ${localStorage.getItem('token')}`
@@ -130,10 +136,17 @@ async function viewSubmission(submissionId) {
         
         if (!response.ok) {
             const errorData = await response.json();
+            console.error('View submission error:', errorData);
             throw new Error(errorData.error || 'Failed to view submission');
         }
 
         const blob = await response.blob();
+        console.log('Received blob:', blob.type, blob.size);
+        
+        if (blob.size === 0) {
+            throw new Error('Received empty file');
+        }
+
         const url = window.URL.createObjectURL(blob);
         window.open(url, '_blank');
     } catch (error) {
@@ -145,17 +158,34 @@ async function viewSubmission(submissionId) {
 // Download submission
 async function downloadSubmission(submissionId) {
     try {
+        console.log('Attempting to download submission:', submissionId);
+        
+        // Validate token before proceeding
+        if (!await validateToken()) {
+            return;
+        }
+
         const response = await fetch(`https://seniorproject-jkm4.onrender.com/api/admin/submissions/${submissionId}/download`, {
             headers: {
                 'Authorization': `Bearer ${localStorage.getItem('token')}`
             }
         });
 
+        console.log('Download response status:', response.status);
+
         if (!response.ok) {
-            throw new Error('Failed to download submission');
+            const errorData = await response.json();
+            console.error('Download submission error:', errorData);
+            throw new Error(errorData.error || 'Failed to download submission');
         }
 
         const blob = await response.blob();
+        console.log('Received blob:', blob.type, blob.size);
+        
+        if (blob.size === 0) {
+            throw new Error('Received empty file');
+        }
+
         const url = window.URL.createObjectURL(blob);
         const a = document.createElement('a');
         a.href = url;
@@ -166,7 +196,7 @@ async function downloadSubmission(submissionId) {
         window.URL.revokeObjectURL(url);
     } catch (error) {
         console.error('Error downloading submission:', error);
-        alert('Failed to download submission. Please try again.');
+        alert(error.message || 'Failed to download submission. Please try again.');
     }
 }
 

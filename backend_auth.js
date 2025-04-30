@@ -704,12 +704,18 @@ app.get('/api/admin/submissions/:id/view', adminAuth, async (req, res) => {
             return res.status(404).json({ error: 'File not found' });
         }
 
+        // Get file stats
+        const stats = fs.statSync(filePath);
+        console.log('File stats:', stats);
+
         // Set appropriate headers
         res.setHeader('Content-Type', 'application/pdf');
+        res.setHeader('Content-Length', stats.size);
         res.setHeader('Content-Disposition', `inline; filename="${submission.originalName}"`);
         
-        // Send the file
-        res.sendFile(filePath);
+        // Create read stream and pipe to response
+        const fileStream = fs.createReadStream(filePath);
+        fileStream.pipe(res);
     } catch (error) {
         console.error('Error viewing submission:', error);
         res.status(500).json({ error: 'Failed to view submission' });
@@ -718,13 +724,35 @@ app.get('/api/admin/submissions/:id/view', adminAuth, async (req, res) => {
 
 app.get('/api/admin/submissions/:id/download', adminAuth, async (req, res) => {
     try {
+        console.log('Downloading submission:', req.params.id);
         const submission = await Submission.findById(req.params.id);
         if (!submission) {
+            console.log('Submission not found:', req.params.id);
             return res.status(404).json({ error: 'Submission not found' });
         }
 
+        console.log('Found submission:', submission);
         const filePath = path.join(__dirname, 'uploads', submission.fileName);
-        res.download(filePath, submission.originalName);
+        console.log('File path:', filePath);
+
+        // Check if file exists
+        if (!fs.existsSync(filePath)) {
+            console.log('File not found at path:', filePath);
+            return res.status(404).json({ error: 'File not found' });
+        }
+
+        // Get file stats
+        const stats = fs.statSync(filePath);
+        console.log('File stats:', stats);
+
+        // Set appropriate headers
+        res.setHeader('Content-Type', 'application/pdf');
+        res.setHeader('Content-Length', stats.size);
+        res.setHeader('Content-Disposition', `attachment; filename="${submission.originalName}"`);
+        
+        // Create read stream and pipe to response
+        const fileStream = fs.createReadStream(filePath);
+        fileStream.pipe(res);
     } catch (error) {
         console.error('Error downloading submission:', error);
         res.status(500).json({ error: 'Failed to download submission' });
