@@ -627,49 +627,67 @@ const Submission = mongoose.model('Submission', SubmissionSchema);
 
 // === PROJECT FILE SUBMISSION WITH USERNAME ===
 app.post('/submit-project', upload.single('projectFile'), async (req, res) => {
-  try {
-    // 1) Verify JWT
-    const token = req.headers.authorization?.split(" ")[1];
-    if (!token) return res.status(401).json({ error: "No token provided" });
-    
-    let decoded;
     try {
-      decoded = jwt.verify(token, process.env.JWT_SECRET);
+        // 1) Verify JWT
+        const token = req.headers.authorization?.split(" ")[1];
+        if (!token) return res.status(401).json({ error: "No token provided" });
+        
+        let decoded;
+        try {
+            decoded = jwt.verify(token, process.env.JWT_SECRET);
+        } catch (err) {
+            return res.status(401).json({ error: "Invalid token" });
+        }
+
+        // 2) Get user and verify they exist
+        const user = await User.findById(decoded.userId);
+        if (!user) return res.status(404).json({ error: "User not found" });
+
+        // 3) Get file info from request
+        const fileInfo = req.file;
+        if (!fileInfo) return res.status(400).json({ error: "No file uploaded" });
+
+        console.log('File upload info:', {
+            originalName: fileInfo.originalname,
+            fileName: fileInfo.filename,
+            size: fileInfo.size,
+            path: fileInfo.path
+        });
+
+        // 4) Verify file was actually saved
+        if (!fs.existsSync(fileInfo.path)) {
+            console.error('File was not saved:', fileInfo.path);
+            return res.status(500).json({ error: "File upload failed" });
+        }
+
+        // 5) Create submission with team association
+        const newSubmission = new Submission({
+            username: user.username,
+            originalName: fileInfo.originalname,
+            fileName: fileInfo.filename,
+            team: user.team // This will be null if user isn't in a team
+        });
+
+        await newSubmission.save();
+        console.log('Created submission:', {
+            id: newSubmission._id,
+            fileName: newSubmission.fileName,
+            originalName: newSubmission.originalName
+        });
+
+        res.json({
+            message: "Project submitted successfully!",
+            submission: {
+                fileName: fileInfo.filename,
+                originalName: fileInfo.originalname,
+                submittedAt: newSubmission.submittedAt,
+                team: newSubmission.team
+            }
+        });
     } catch (err) {
-      return res.status(401).json({ error: "Invalid token" });
+        console.error("File upload error:", err);
+        res.status(500).json({ error: "File upload failed" });
     }
-
-    // 2) Get user and verify they exist
-    const user = await User.findById(decoded.userId);
-    if (!user) return res.status(404).json({ error: "User not found" });
-
-    // 3) Get file info from request
-    const fileInfo = req.file;
-    if (!fileInfo) return res.status(400).json({ error: "No file uploaded" });
-
-    // 4) Create submission with team association
-    const newSubmission = new Submission({
-      username: user.username,
-      originalName: fileInfo.originalname,
-      fileName: fileInfo.filename,
-      team: user.team // This will be null if user isn't in a team
-    });
-
-    await newSubmission.save();
-
-    res.json({
-      message: "Project submitted successfully!",
-      submission: {
-        fileName: fileInfo.filename,
-        originalName: fileInfo.originalname,
-        submittedAt: newSubmission.submittedAt,
-        team: newSubmission.team
-      }
-    });
-  } catch (err) {
-    console.error("File upload error:", err);
-    res.status(500).json({ error: "File upload failed" });
-  }
 });
 
 // Admin endpoints for submissions
@@ -690,13 +708,30 @@ app.get('/api/admin/submissions/:id/view', adminAuth, async (req, res) => {
         console.log('Viewing submission:', req.params.id);
         const submission = await Submission.findById(req.params.id);
         if (!submission) {
-            console.log('Submission not found:', req.params.id);
+            console.log('Submission not found in database:', req.params.id);
             return res.status(404).json({ error: 'Submission not found' });
         }
 
-        console.log('Found submission:', submission);
+        console.log('Found submission in database:', {
+            id: submission._id,
+            fileName: submission.fileName,
+            originalName: submission.originalName,
+            submittedAt: submission.submittedAt
+        });
+
         const filePath = path.join(__dirname, 'uploads', submission.fileName);
-        console.log('File path:', filePath);
+        console.log('Attempting to access file at path:', filePath);
+
+        // Check if uploads directory exists
+        const uploadsDir = path.join(__dirname, 'uploads');
+        if (!fs.existsSync(uploadsDir)) {
+            console.log('Uploads directory does not exist:', uploadsDir);
+            return res.status(404).json({ error: 'Uploads directory not found' });
+        }
+
+        // List files in uploads directory
+        const files = fs.readdirSync(uploadsDir);
+        console.log('Files in uploads directory:', files);
 
         // Check if file exists
         if (!fs.existsSync(filePath)) {
@@ -706,7 +741,11 @@ app.get('/api/admin/submissions/:id/view', adminAuth, async (req, res) => {
 
         // Get file stats
         const stats = fs.statSync(filePath);
-        console.log('File stats:', stats);
+        console.log('File stats:', {
+            size: stats.size,
+            created: stats.birthtime,
+            modified: stats.mtime
+        });
 
         // Set appropriate headers
         res.setHeader('Content-Type', 'application/pdf');
