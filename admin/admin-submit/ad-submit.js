@@ -105,14 +105,14 @@ function displaySubmissions(submissions) {
     submissions.forEach(submission => {
         console.log('Processing submission:', {
             id: submission._id,
-            username: submission.username,
+            team: submission.team,
             company: submission.company,
             fileName: submission.fileName
         });
 
         const row = document.createElement('tr');
         row.innerHTML = `
-            <td>${submission.username}</td>
+            <td>${submission.team && submission.team.name ? submission.team.name : 'No Team'}</td>
             <td>${submission.company && submission.company.name ? submission.company.name : 'No Company'}</td>
             <td>${submission.originalName}</td>
             <td>${new Date(submission.submittedAt).toLocaleString()}</td>

@@ -714,12 +714,13 @@ app.get('/api/admin/submissions', adminAuth, async (req, res) => {
     try {
         console.log('Fetching submissions...');
         const submissions = await Submission.find()
+            .populate('team', 'name')
             .populate('company', 'name')
             .sort({ submittedAt: -1 });
         
         console.log('Found submissions:', submissions.map(s => ({
             id: s._id,
-            username: s.username,
+            team: s.team,
             company: s.company,
             fileName: s.fileName
         })));
