@@ -89,21 +89,22 @@ async function submitCheckIn() {
             'Authorization': `Bearer ${token}`
           },
           body: JSON.stringify({
-            photo: base64data,
-            groupId: 'default' // You might want to get this from somewhere
+            photo: base64data
           })
         });
+
+        const data = await checkInResponse.json();
 
         if (checkInResponse.ok) {
           alert('Check-in successful!');
           stopCamera();
-          window.location.href = '/home.html'; // Redirect to home page
+          window.location.href = '/home/home.html';
         } else {
-          throw new Error('Check-in failed');
+          throw new Error(data.error || 'Check-in failed');
         }
       } catch (err) {
         console.error('Error submitting check-in:', err);
-        alert('Failed to submit check-in. Please try again.');
+        alert(err.message || 'Failed to submit check-in. Please try again.');
       }
     };
 

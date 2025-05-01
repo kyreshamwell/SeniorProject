@@ -855,23 +855,55 @@ app.get('/api/admin/submissions/:id/download', adminAuth, async (req, res) => {
 // Check-in routes
 app.post('/api/checkin', async (req, res) => {
     try {
-        const { userId, groupId } = req.body;
-        const photo = req.body.photo; // Base64 encoded image
-
-        if (!userId || !groupId || !photo) {
-            return res.status(400).json({ error: 'Missing required fields' });
+        // Get token from Authorization header
+        const authHeader = req.headers.authorization;
+        if (!authHeader) {
+            return res.status(401).json({ error: 'No token provided' });
         }
 
+        const token = authHeader.split(' ')[1];
+        let decoded;
+        try {
+            decoded = jwt.verify(token, process.env.JWT_SECRET);
+        } catch (err) {
+            return res.status(401).json({ error: 'Invalid token' });
+        }
+
+        // Get user from token
+        const user = await User.findById(decoded.userId);
+        if (!user) {
+            return res.status(404).json({ error: 'User not found' });
+        }
+
+        const { photo } = req.body;
+        if (!photo) {
+            return res.status(400).json({ error: 'Photo is required' });
+        }
+
+        // Create check-in with user's ID
         const checkIn = new CheckIn({
-            userId,
-            groupId,
+            userId: user._id,
             photo,
             timestamp: new Date(),
-            isVisible: true
+            isVisible: true,
+            groupId: user.team || 'default' // Use user's team if available
         });
 
         await checkIn.save();
-        res.status(201).json({ message: 'Check-in successful', checkIn });
+        console.log('Check-in saved successfully:', {
+            userId: user._id,
+            timestamp: checkIn.timestamp,
+            groupId: checkIn.groupId
+        });
+
+        res.status(201).json({ 
+            message: 'Check-in successful',
+            checkIn: {
+                id: checkIn._id,
+                timestamp: checkIn.timestamp,
+                isVisible: checkIn.isVisible
+            }
+        });
     } catch (err) {
         console.error('Error saving check-in:', err);
         res.status(500).json({ error: 'Failed to save check-in' });
