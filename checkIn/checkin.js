@@ -9,6 +9,7 @@ const retakeBtn = document.getElementById('retake-btn');
 const submitBtn = document.getElementById('submit-btn');
 const photoPreview = document.getElementById('photo-preview');
 const capturedPhoto = document.getElementById('captured-photo');
+const backBtn = document.getElementById('back-btn');
 
 // State
 let stream = null;
@@ -81,7 +82,7 @@ async function submitCheckIn() {
       const base64data = reader.result.split(',')[1];
       
       try {
-        const checkInResponse = await fetch('/api/checkin', {
+        const checkInResponse = await fetch('https://seniorproject-jkm4.onrender.com/api/checkin', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
@@ -96,7 +97,7 @@ async function submitCheckIn() {
         if (checkInResponse.ok) {
           alert('Check-in successful!');
           stopCamera();
-          window.location.reload(); // Refresh the page
+          window.location.href = '/home.html'; // Redirect to home page
         } else {
           throw new Error('Check-in failed');
         }
@@ -113,11 +114,17 @@ async function submitCheckIn() {
   }
 }
 
+function goBack() {
+  stopCamera();
+  window.location.href = '/home.html'; // Redirect to home page
+}
+
 // Event Listeners
 startCameraBtn.addEventListener('click', startCamera);
 captureBtn.addEventListener('click', capturePhoto);
 retakeBtn.addEventListener('click', retakePhoto);
 submitBtn.addEventListener('click', submitCheckIn);
+backBtn.addEventListener('click', goBack);
 
 // Initialize
 window.addEventListener('DOMContentLoaded', () => {
