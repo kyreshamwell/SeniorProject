@@ -105,6 +105,7 @@ async function startCamera() {
     captureBtn.style.display = 'inline-block';
   } catch (err) {
     console.error('Error accessing camera:', err);
+    alert('Error accessing camera. Please make sure you have granted camera permissions.');
     startCameraBtn.style.display = 'inline-block';
   }
 }
@@ -141,26 +142,51 @@ function retakePhoto() {
 }
 
 async function submitCheckIn() {
-  const userId = generateDailyUserId();
-  const formData = new FormData();
-  formData.append('userId', userId);
-  formData.append('photo', await fetch(capturedPhoto.src).then(r => r.blob()));
-  formData.append('timestamp', new Date().toISOString());
-
   try {
-    const response = await fetch('/api/checkin', {
-      method: 'POST',
-      body: formData
-    });
-
-    if (response.ok) {
-      stopCamera();
-      setTimeout(() => showSection('options'), 1000);
-    } else {
-      throw new Error('Check-in failed');
+    // Get the user's token from localStorage
+    const token = localStorage.getItem('token');
+    if (!token) {
+      throw new Error('Not authenticated');
     }
+
+    // Convert the captured photo to base64
+    const response = await fetch(capturedPhoto.src);
+    const blob = await response.blob();
+    const reader = new FileReader();
+    
+    reader.onloadend = async () => {
+      const base64data = reader.result.split(',')[1];
+      
+      try {
+        const checkInResponse = await fetch('/api/checkin', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`
+          },
+          body: JSON.stringify({
+            photo: base64data,
+            groupId: 'default' // You might want to get this from somewhere
+          })
+        });
+
+        if (checkInResponse.ok) {
+          alert('Check-in successful!');
+          stopCamera();
+          window.location.reload(); // Refresh the page
+        } else {
+          throw new Error('Check-in failed');
+        }
+      } catch (err) {
+        console.error('Error submitting check-in:', err);
+        alert('Failed to submit check-in. Please try again.');
+      }
+    };
+
+    reader.readAsDataURL(blob);
   } catch (err) {
-    console.error('Error submitting check-in:', err);
+    console.error('Error in submitCheckIn:', err);
+    alert('Error submitting check-in. Please make sure you are logged in.');
   }
 }
 
@@ -190,6 +216,11 @@ submitBtn.addEventListener('click', submitCheckIn);
 
 // Initialize
 window.addEventListener('DOMContentLoaded', () => {
-  showSection('options');
+  // Check if user is authenticated
+  const token = localStorage.getItem('token');
+  if (!token) {
+    alert('Please log in to use the check-in system.');
+    window.location.href = '/login.html';
+  }
 });
   

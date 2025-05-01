@@ -118,20 +118,6 @@ h2 {
   border-radius: 10px;
 }
 
-/* QR Code */
-#qrcode {
-  display: flex;
-  justify-content: center;
-  margin: 2rem 0;
-}
-
-#qrcode img {
-  padding: 1rem;
-  background: white;
-  border-radius: 10px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-}
-
 /* Responsive design */
 @media (max-width: 600px) {
   .container {
