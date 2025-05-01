@@ -86,7 +86,21 @@ const UserSchema = new mongoose.Schema({
 });
 const User = mongoose.model('User', UserSchema);
 
+/* CHECK-IN MODEL */
+const CheckInSchema = new mongoose.Schema({
+    userId: { type: String, required: true },
+    photo: { type: String, required: true },
+    timestamp: { type: Date, default: Date.now },
+    isVisible: { type: Boolean, default: true },
+    groupId: { type: String, required: true }
+});
 
+// Create indexes for faster queries
+CheckInSchema.index({ userId: 1, timestamp: -1 });
+CheckInSchema.index({ groupId: 1, timestamp: -1 });
+CheckInSchema.index({ isVisible: 1 });
+
+const CheckIn = mongoose.model('CheckIn', CheckInSchema);
 
 /* SETTINGS MODEL */
 // Settings Schema & Model (for storing Discord URL, etc.)
@@ -897,6 +911,3 @@ app.put('/api/admin/checkins/:id/visibility', async (req, res) => {
     res.status(500).json({ error: 'Failed to update visibility' });
   }
 });
-
-
-
