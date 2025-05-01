@@ -1,12 +1,12 @@
-// Check if user is admin
-function checkAdminAuth() {
-    const token = localStorage.getItem('token');
-    if (!token) {
-        window.location.href = '/login/login.html';
-        return false;
-    }
-    return true;
-}
+// // Check if user is admin
+// function checkAdminAuth() {
+//     const token = localStorage.getItem('token');
+//     if (!token) {
+//         window.location.href = '/login/login.html';
+//         return false;
+//     }
+//     return true;
+// }
 
 // Validate token and refresh if needed
 async function validateToken() {

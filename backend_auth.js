@@ -838,5 +838,65 @@ app.get('/api/admin/submissions/:id/download', adminAuth, async (req, res) => {
     }
 });
 
+const CheckIn = require('./models/CheckIn');
+
+// Check-in routes
+app.post('/api/checkin', async (req, res) => {
+  try {
+    const { userId, groupId } = req.body;
+    const photo = req.body.photo; // Base64 encoded image
+
+    const checkIn = new CheckIn({
+      userId,
+      groupId,
+      photo,
+      timestamp: new Date()
+    });
+
+    await checkIn.save();
+    res.status(201).json({ message: 'Check-in successful' });
+  } catch (err) {
+    console.error('Error saving check-in:', err);
+    res.status(500).json({ error: 'Failed to save check-in' });
+  }
+});
+
+// Admin routes
+app.get('/api/admin/checkins', async (req, res) => {
+  try {
+    const { visibility, group } = req.query;
+    let query = {};
+
+    if (visibility === 'visible') {
+      query.isVisible = true;
+    } else if (visibility === 'hidden') {
+      query.isVisible = false;
+    }
+
+    if (group && group !== 'all') {
+      query.groupId = group;
+    }
+
+    const checkins = await CheckIn.find(query).sort({ timestamp: -1 });
+    res.json(checkins);
+  } catch (err) {
+    console.error('Error fetching check-ins:', err);
+    res.status(500).json({ error: 'Failed to fetch check-ins' });
+  }
+});
+
+app.put('/api/admin/checkins/:id/visibility', async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { isVisible } = req.body;
+
+    await CheckIn.findByIdAndUpdate(id, { isVisible });
+    res.json({ message: 'Visibility updated successfully' });
+  } catch (err) {
+    console.error('Error updating visibility:', err);
+    res.status(500).json({ error: 'Failed to update visibility' });
+  }
+});
+
 
 

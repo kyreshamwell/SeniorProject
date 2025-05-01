@@ -1,0 +1,160 @@
+/* public/styles.css */
+
+/* Reset and base styles */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  background-image: url('/background.jpg');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+  color: #333;
+  line-height: 1.6;
+  min-height: 100vh;
+}
+
+.container {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 2rem;
+  background-color: rgba(255, 255, 255, 0.9);
+  min-height: 100vh;
+}
+
+/* Typography */
+h1 {
+  color: #2c3e50;
+  text-align: center;
+  margin-bottom: 2rem;
+  font-size: 2.5rem;
+}
+
+h2 {
+  color: #2c3e50;
+  margin-bottom: 1.5rem;
+  font-size: 1.8rem;
+}
+
+/* Sections */
+.section {
+  background: white;
+  border-radius: 10px;
+  padding: 2rem;
+  margin-bottom: 2rem;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+/* Buttons */
+.button-group {
+  display: flex;
+  gap: 1rem;
+  justify-content: center;
+  flex-wrap: wrap;
+  margin-top: 1.5rem;
+}
+
+.primary-btn {
+  background-color: #3498db;
+  color: white;
+  border: none;
+  padding: 0.8rem 1.5rem;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 1rem;
+  transition: background-color 0.3s ease;
+}
+
+.primary-btn:hover {
+  background-color: #2980b9;
+}
+
+.secondary-btn {
+  background-color: #95a5a6;
+  color: white;
+  border: none;
+  padding: 0.8rem 1.5rem;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 1rem;
+  transition: background-color 0.3s ease;
+}
+
+.secondary-btn:hover {
+  background-color: #7f8c8d;
+}
+
+/* Camera section */
+.camera-container {
+  width: 100%;
+  max-width: 640px;
+  margin: 0 auto;
+  position: relative;
+  background: #000;
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+#camera {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+
+#photo-preview {
+  width: 100%;
+  max-width: 640px;
+  margin: 0 auto;
+}
+
+#captured-photo {
+  width: 100%;
+  height: auto;
+  border-radius: 10px;
+}
+
+/* QR Code */
+#qrcode {
+  display: flex;
+  justify-content: center;
+  margin: 2rem 0;
+}
+
+#qrcode img {
+  padding: 1rem;
+  background: white;
+  border-radius: 10px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+/* Responsive design */
+@media (max-width: 600px) {
+  .container {
+    padding: 1rem;
+  }
+
+  .section {
+    padding: 1.5rem;
+  }
+
+  h1 {
+    font-size: 2rem;
+  }
+
+  h2 {
+    font-size: 1.5rem;
+  }
+
+  .button-group {
+    flex-direction: column;
+  }
+
+  .primary-btn, .secondary-btn {
+    width: 100%;
+  }
+}

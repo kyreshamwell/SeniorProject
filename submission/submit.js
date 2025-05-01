@@ -1,12 +1,12 @@
-// Check if user is logged in
-function checkAuth() {
-    const token = localStorage.getItem('token');
-    if (!token) {
-        window.location.href = 'https://senior-project-delta.vercel.app/login/login.html';
-        return false;
-    }
-    return true;
-}
+// // Check if user is logged in
+// function checkAuth() {
+//     const token = localStorage.getItem('token');
+//     if (!token) {
+//         window.location.href = 'https://senior-project-delta.vercel.app/login/login.html';
+//         return false;
+//     }
+//     return true;
+// }
 
 // Handle file upload
 async function handleSubmit(e) {

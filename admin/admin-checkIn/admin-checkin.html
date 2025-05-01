@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8" />
+  <title>Admin Check-In Dashboard</title>
+  <link rel="stylesheet" href="admin-checkin.css" />
+</head>
+<body>
+  <div class="header">
+    <h1>Check-In Admin Dashboard</h1>
+    <div class="date-filter">
+      <input type="date" id="date-filter" />
+      <button id="reset-date">Reset</button>
+    </div>
+  </div>
+
+  <div class="filters">
+    <div class="filter-group">
+      <label>
+        Show/Hide:
+        <select id="visibility-filter">
+          <option value="all">All Check-ins</option>
+          <option value="visible">Visible Only</option>
+          <option value="hidden">Hidden Only</option>
+        </select>
+      </label>
+      <label>
+        Group:
+        <select id="group-filter">
+          <option value="all">All Groups</option>
+        </select>
+      </label>
+      <label>
+        Search:
+        <input type="text" id="search-box" class="search-box" placeholder="Search by group or user...">
+      </label>
+    </div>
+  </div>
+
+  <div id="checkin-grid" class="checkin-grid">
+    <!-- Check-in cards will be dynamically inserted here -->
+  </div>
+
+  <script src="admin-checkin.js"></script>
+</body>
+</html> 
