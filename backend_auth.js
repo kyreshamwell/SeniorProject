@@ -929,9 +929,22 @@ app.get('/api/admin/checkins', adminAuth, async (req, res) => {
 
         const checkins = await CheckIn.find(query)
             .sort({ timestamp: -1 })
-            .populate('userId', 'username'); // If you want to include user details
+            .populate({
+                path: 'userId',
+                select: 'username team',
+                populate: {
+                    path: 'team',
+                    select: 'name'
+                }
+            });
 
-        res.json({ checkins });
+        // Transform the data to include team name
+        const transformedCheckins = checkins.map(checkin => ({
+            ...checkin.toObject(),
+            teamName: checkin.userId?.team?.name || 'No Team'
+        }));
+
+        res.json({ checkins: transformedCheckins });
     } catch (err) {
         console.error('Error fetching check-ins:', err);
         res.status(500).json({ error: 'Failed to fetch check-ins' });

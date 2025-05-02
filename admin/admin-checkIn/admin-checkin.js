@@ -68,21 +68,18 @@ async function fetchCheckInStatus() {
 
 // Update the group filter options based on available groups
 function updateGroupFilter() {
-  const groups = [...new Set(allCheckins.map(checkin => checkin.groupId))];
+  const groups = [...new Set(allCheckins.map(checkin => checkin.teamName))];
   const groupFilter = document.getElementById('group-filter');
   
   // Keep the "All Groups" option
-  groupFilter.innerHTML = '<option value="all">All Groups</option>';
+  groupFilter.innerHTML = '<option value="all">All Teams</option>';
   
   // Add group options
-  groups.forEach(group => {
-    if (group && group !== 'default') {  // Only add non-default groups
+  groups.forEach(teamName => {
+    if (teamName && teamName !== 'No Team') {  // Only add non-default teams
       const option = document.createElement('option');
-      option.value = group;
-      // Format the group ID to be more readable
-      const groupName = group === 'default' ? 'No Group' : 
-                       group.length > 8 ? group.substring(0, 8) + '...' : group;
-      option.textContent = groupName;
+      option.value = teamName;
+      option.textContent = teamName;
       groupFilter.appendChild(option);
     }
   });
@@ -101,14 +98,14 @@ function applyFilters() {
 
   // Apply group filter
   if (currentFilters.group !== 'all') {
-    filtered = filtered.filter(checkin => checkin.groupId === currentFilters.group);
+    filtered = filtered.filter(checkin => checkin.teamName === currentFilters.group);
   }
 
   // Apply search filter
   if (currentFilters.search) {
     const searchLower = currentFilters.search.toLowerCase();
     filtered = filtered.filter(checkin => 
-      checkin.groupId.toLowerCase().includes(searchLower)
+      checkin.teamName.toLowerCase().includes(searchLower)
     );
   }
 
@@ -137,16 +134,12 @@ function displayCheckIns(checkins) {
     
     const statusClass = checkin.isVisible ? 'status-visible' : 'status-hidden';
     const statusText = checkin.isVisible ? 'Visible' : 'Hidden';
-    // Format the group ID to be more readable
-    const groupName = checkin.groupId === 'default' ? 'No Group' : 
-                     checkin.groupId.length > 8 ? checkin.groupId.substring(0, 8) + '...' : 
-                     checkin.groupId;
 
     card.innerHTML = `
       <img src="data:image/jpeg;base64,${checkin.photo}" alt="Check-in photo" class="checkin-photo">
       <div class="checkin-info">
         <p>
-          <strong>Group:</strong> ${groupName}
+          <strong>Team:</strong> ${checkin.teamName}
           <span class="status-badge ${statusClass}">${statusText}</span>
         </p>
         <p><strong>Time:</strong> ${new Date(checkin.timestamp).toLocaleString()}</p>
