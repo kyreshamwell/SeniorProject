@@ -5,6 +5,7 @@ const groupFilter = document.getElementById('group-filter');
 const searchBox = document.getElementById('search-box');
 const dateFilter = document.getElementById('date-filter');
 const resetDateBtn = document.getElementById('reset-date');
+const backToAdminBtn = document.getElementById('back-to-admin');
 
 // State
 let allCheckins = [];
@@ -190,6 +191,10 @@ resetDateBtn.addEventListener('click', () => {
   dateFilter.value = '';
   currentFilters.date = null;
   applyFilters();
+});
+
+backToAdminBtn.addEventListener('click', () => {
+  window.location.href = '/admin/admin.html';
 });
 
 // Initialize

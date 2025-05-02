@@ -16,6 +16,30 @@ body {
   box-shadow: 0 2px 4px rgba(0,0,0,0.1);
 }
 
+.header-left {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+.back-btn {
+  padding: 8px 16px;
+  background-color: #f1f3f4;
+  color: #3c4043;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 14px;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  transition: background-color 0.2s;
+}
+
+.back-btn:hover {
+  background-color: #e8eaed;
+}
+
 .header h1 {
   margin: 0;
   color: #333;
