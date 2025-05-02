@@ -20,8 +20,8 @@ async function startCamera() {
     stream = await navigator.mediaDevices.getUserMedia({ 
       video: { 
         facingMode: 'user',
-        width: { ideal: 1280 },
-        height: { ideal: 720 }
+        width: { ideal: 640 },
+        height: { ideal: 480 }
       } 
     });
     camera.srcObject = stream;
@@ -54,7 +54,7 @@ function capturePhoto() {
     captureBtn.style.display = 'none';
     retakeBtn.style.display = 'inline-block';
     submitBtn.style.display = 'inline-block';
-  }, 'image/jpeg', 0.95);
+  }, 'image/jpeg', 0.7);
 }
 
 function retakePhoto() {
@@ -65,6 +65,46 @@ function retakePhoto() {
   submitBtn.style.display = 'none';
 }
 
+// Function to compress image
+async function compressImage(file) {
+  return new Promise((resolve) => {
+    const reader = new FileReader();
+    reader.readAsDataURL(file);
+    reader.onload = (event) => {
+      const img = new Image();
+      img.src = event.target.result;
+      img.onload = () => {
+        const canvas = document.createElement('canvas');
+        const MAX_WIDTH = 640;
+        const MAX_HEIGHT = 480;
+        let width = img.width;
+        let height = img.height;
+
+        if (width > height) {
+          if (width > MAX_WIDTH) {
+            height *= MAX_WIDTH / width;
+            width = MAX_WIDTH;
+          }
+        } else {
+          if (height > MAX_HEIGHT) {
+            width *= MAX_HEIGHT / height;
+            height = MAX_HEIGHT;
+          }
+        }
+
+        canvas.width = width;
+        canvas.height = height;
+        const ctx = canvas.getContext('2d');
+        ctx.drawImage(img, 0, 0, width, height);
+
+        // Convert to base64 with reduced quality
+        const base64String = canvas.toDataURL('image/jpeg', 0.6);
+        resolve(base64String.split(',')[1]);
+      };
+    };
+  });
+}
+
 async function submitCheckIn() {
   try {
     // Get the user's token from localStorage
@@ -73,42 +113,38 @@ async function submitCheckIn() {
       throw new Error('Not authenticated');
     }
 
-    // Convert the captured photo to base64
+    // Convert the captured photo to blob
     const response = await fetch(capturedPhoto.src);
     const blob = await response.blob();
-    const reader = new FileReader();
     
-    reader.onloadend = async () => {
-      const base64data = reader.result.split(',')[1];
-      
-      try {
-        const checkInResponse = await fetch('https://seniorproject-jkm4.onrender.com/api/checkin', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            'Authorization': `Bearer ${token}`
-          },
-          body: JSON.stringify({
-            photo: base64data
-          })
-        });
+    // Compress the image
+    const compressedBase64 = await compressImage(blob);
+    
+    try {
+      const checkInResponse = await fetch('https://seniorproject-jkm4.onrender.com/api/checkin', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
+        },
+        body: JSON.stringify({
+          photo: compressedBase64
+        })
+      });
 
-        const data = await checkInResponse.json();
+      const data = await checkInResponse.json();
 
-        if (checkInResponse.ok) {
-          alert('Check-in successful!');
-          stopCamera();
-          window.location.href = '/home/home.html';
-        } else {
-          throw new Error(data.error || 'Check-in failed');
-        }
-      } catch (err) {
-        console.error('Error submitting check-in:', err);
-        alert(err.message || 'Failed to submit check-in. Please try again.');
+      if (checkInResponse.ok) {
+        alert('Check-in successful!');
+        stopCamera();
+        window.location.href = '/home/home.html';
+      } else {
+        throw new Error(data.error || 'Check-in failed');
       }
-    };
-
-    reader.readAsDataURL(blob);
+    } catch (err) {
+      console.error('Error submitting check-in:', err);
+      alert(err.message || 'Failed to submit check-in. Please try again.');
+    }
   } catch (err) {
     console.error('Error in submitCheckIn:', err);
     alert('Error submitting check-in. Please make sure you are logged in.');
@@ -117,7 +153,7 @@ async function submitCheckIn() {
 
 function goBack() {
   stopCamera();
-  window.location.href = '/home/home.html'; // Redirect to home page
+  window.location.href = '/home/home.html';
 }
 
 // Event Listeners
