@@ -871,7 +871,7 @@ app.post('/api/checkin', async (req, res) => {
         }
 
         // Get user from token
-        const user = await User.findById(decoded.userId);
+        const user = await User.findById(decoded.userId).populate('team');
         if (!user) {
             return res.status(404).json({ error: 'User not found' });
         }
@@ -881,20 +881,21 @@ app.post('/api/checkin', async (req, res) => {
             return res.status(400).json({ error: 'Photo is required' });
         }
 
-        // Create check-in with user's ID
+        // Create check-in with user's ID and team
         const checkIn = new CheckIn({
             userId: user._id,
             photo,
             timestamp: new Date(),
             isVisible: true,
-            groupId: user.team || 'default' // Use user's team if available
+            groupId: user.team ? user.team._id.toString() : 'default'
         });
 
         await checkIn.save();
         console.log('Check-in saved successfully:', {
             userId: user._id,
             timestamp: checkIn.timestamp,
-            groupId: checkIn.groupId
+            groupId: checkIn.groupId,
+            teamName: user.team ? user.team.name : 'No Team'
         });
 
         res.status(201).json({ 
@@ -902,7 +903,8 @@ app.post('/api/checkin', async (req, res) => {
             checkIn: {
                 id: checkIn._id,
                 timestamp: checkIn.timestamp,
-                isVisible: checkIn.isVisible
+                isVisible: checkIn.isVisible,
+                teamName: user.team ? user.team.name : 'No Team'
             }
         });
     } catch (err) {
@@ -944,7 +946,7 @@ app.get('/api/admin/checkins', adminAuth, async (req, res) => {
             let teamName = 'No Team';
             
             if (user && user.team) {
-                teamName = user.team.name || 'No Team';
+                teamName = user.team.name;
             }
 
             return {
@@ -955,6 +957,12 @@ app.get('/api/admin/checkins', adminAuth, async (req, res) => {
                 teamName: teamName
             };
         });
+
+        console.log('Transformed check-ins:', transformedCheckins.map(c => ({
+            id: c._id,
+            teamName: c.teamName,
+            timestamp: c.timestamp
+        })));
 
         res.json({ checkins: transformedCheckins });
     } catch (err) {
