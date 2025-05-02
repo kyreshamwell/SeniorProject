@@ -88,11 +88,11 @@ const User = mongoose.model('User', UserSchema);
 
 /* CHECK-IN MODEL */
 const CheckInSchema = new mongoose.Schema({
-    userId: { type: String, required: true },
+    userId: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
     photo: { type: String, required: true },
     timestamp: { type: Date, default: Date.now },
     isVisible: { type: Boolean, default: true },
-    groupId: { type: String, required: true }
+    groupId: { type: mongoose.Schema.Types.ObjectId, ref: 'Team', default: null }
 });
 
 // Create indexes for faster queries
@@ -870,7 +870,7 @@ app.post('/api/checkin', async (req, res) => {
             return res.status(401).json({ error: 'Invalid token' });
         }
 
-        // Get user from token
+        // Get user from token with populated team
         const user = await User.findById(decoded.userId).populate('team');
         if (!user) {
             return res.status(404).json({ error: 'User not found' });
@@ -887,14 +887,14 @@ app.post('/api/checkin', async (req, res) => {
             photo,
             timestamp: new Date(),
             isVisible: true,
-            groupId: user.team ? user.team._id.toString() : 'default'
+            groupId: user.team ? user.team._id : null  // Store the team ID directly
         });
 
         await checkIn.save();
         console.log('Check-in saved successfully:', {
             userId: user._id,
             timestamp: checkIn.timestamp,
-            groupId: checkIn.groupId,
+            teamId: checkIn.groupId,
             teamName: user.team ? user.team.name : 'No Team'
         });
 
@@ -938,15 +938,20 @@ app.get('/api/admin/checkins', adminAuth, async (req, res) => {
                     path: 'team',
                     select: 'name'
                 }
-            });
+            })
+            .populate('groupId', 'name');  // Populate the team information directly
 
         // Transform the data to include team name
         const transformedCheckins = checkins.map(checkin => {
-            const user = checkin.userId;
             let teamName = 'No Team';
             
-            if (user && user.team) {
-                teamName = user.team.name;
+            // Try to get team name from populated groupId first
+            if (checkin.groupId && checkin.groupId.name) {
+                teamName = checkin.groupId.name;
+            }
+            // Fallback to user's team if groupId is not populated
+            else if (checkin.userId && checkin.userId.team && checkin.userId.team.name) {
+                teamName = checkin.userId.team.name;
             }
 
             return {
