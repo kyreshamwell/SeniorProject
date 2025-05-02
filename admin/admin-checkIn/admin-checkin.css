@@ -123,7 +123,7 @@ body {
   gap: 8px;
 }
 
-select, input[type="text"], input[type="date"] {
+select, input[type="text"] {
   padding: 8px;
   border: 1px solid #ddd;
   border-radius: 4px;
@@ -160,57 +160,4 @@ select, input[type="text"], input[type="date"] {
 
 .checkin-info p {
   margin: 8px 0;
-}
-
-.status-badge {
-  padding: 4px 8px;
-  border-radius: 4px;
-  font-size: 12px;
-  margin-left: 8px;
-}
-
-.status-visible {
-  background-color: #e6f4ea;
-  color: #137333;
-}
-
-.status-hidden {
-  background-color: #fce8e6;
-  color: #c5221f;
-}
-
-.visibility-toggle {
-  margin-top: 15px;
-  padding-top: 15px;
-  border-top: 1px solid #eee;
-}
-
-.visibility-toggle label {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  cursor: pointer;
-}
-
-button {
-  padding: 8px 16px;
-  background-color: #1a73e8;
-  color: white;
-  border: none;
-  border-radius: 4px;
-  cursor: pointer;
-  font-size: 14px;
-}
-
-button:hover {
-  background-color: #1557b0;
-}
-
-#reset-date {
-  background-color: #f1f3f4;
-  color: #3c4043;
-}
-
-#reset-date:hover {
-  background-color: #e8eaed;
 } 
