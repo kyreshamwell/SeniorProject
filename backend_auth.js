@@ -623,6 +623,14 @@ const SubmissionSchema = new mongoose.Schema({
         type: String,
         required: true
     },
+    fileData: {
+        type: Buffer,
+        required: true
+    },
+    contentType: {
+        type: String,
+        required: true
+    },
     submittedAt: {
         type: Date,
         default: Date.now
@@ -667,18 +675,9 @@ app.post('/submit-project', upload.single('projectFile'), async (req, res) => {
         const fileInfo = req.file;
         if (!fileInfo) return res.status(400).json({ error: "No file uploaded" });
 
-        console.log('File upload info:', {
-            originalName: fileInfo.originalname,
-            fileName: fileInfo.filename,
-            size: fileInfo.size,
-            path: fileInfo.path
-        });
-
-        // 4) Verify file was actually saved
-        if (!fs.existsSync(fileInfo.path)) {
-            console.error('File was not saved:', fileInfo.path);
-            return res.status(500).json({ error: "File upload failed" });
-        }
+        // 4) Read the file data
+        const fileData = fs.readFileSync(fileInfo.path);
+        const contentType = fileInfo.mimetype;
 
         // 5) Get user's team and company
         const team = await Team.findById(user.team);
@@ -690,28 +689,21 @@ app.post('/submit-project', upload.single('projectFile'), async (req, res) => {
             return res.status(400).json({ error: "Team is not assigned to a company" });
         }
 
-        console.log('Team info:', {
-            id: team._id,
-            name: team.name,
-            company: team.company
-        });
-
-        // 6) Create submission with team and company association
+        // 6) Create submission with file data
         const newSubmission = new Submission({
             username: user.username,
             originalName: fileInfo.originalname,
             fileName: fileInfo.filename,
+            fileData: fileData,
+            contentType: contentType,
             team: team._id,
             company: team.company
         });
 
         await newSubmission.save();
-        console.log('Created submission:', {
-            id: newSubmission._id,
-            team: newSubmission.team,
-            company: newSubmission.company,
-            fileName: newSubmission.fileName
-        });
+
+        // 7) Clean up the temporary file
+        fs.unlinkSync(fileInfo.path);
 
         res.json({
             message: "Project submitted successfully!",
@@ -767,49 +759,13 @@ app.get('/api/admin/submissions/:id/view', adminAuth, async (req, res) => {
             return res.status(404).json({ error: 'Submission not found' });
         }
 
-        console.log('Found submission in database:', {
-            id: submission._id,
-            fileName: submission.fileName,
-            originalName: submission.originalName,
-            submittedAt: submission.submittedAt
-        });
-
-        const filePath = path.join(__dirname, 'uploads', submission.fileName);
-        console.log('Attempting to access file at path:', filePath);
-
-        // Check if uploads directory exists
-        const uploadsDir = path.join(__dirname, 'uploads');
-        if (!fs.existsSync(uploadsDir)) {
-            console.log('Uploads directory does not exist:', uploadsDir);
-            return res.status(404).json({ error: 'Uploads directory not found' });
-        }
-
-        // List files in uploads directory
-        const files = fs.readdirSync(uploadsDir);
-        console.log('Files in uploads directory:', files);
-
-        // Check if file exists
-        if (!fs.existsSync(filePath)) {
-            console.log('File not found at path:', filePath);
-            return res.status(404).json({ error: 'File not found' });
-        }
-
-        // Get file stats
-        const stats = fs.statSync(filePath);
-        console.log('File stats:', {
-            size: stats.size,
-            created: stats.birthtime,
-            modified: stats.mtime
-        });
-
         // Set appropriate headers
-        res.setHeader('Content-Type', 'application/pdf');
-        res.setHeader('Content-Length', stats.size);
+        res.setHeader('Content-Type', submission.contentType);
+        res.setHeader('Content-Length', submission.fileData.length);
         res.setHeader('Content-Disposition', `inline; filename="${submission.originalName}"`);
         
-        // Create read stream and pipe to response
-        const fileStream = fs.createReadStream(filePath);
-        fileStream.pipe(res);
+        // Send the file data
+        res.send(submission.fileData);
     } catch (error) {
         console.error('Error viewing submission:', error);
         res.status(500).json({ error: 'Failed to view submission' });
@@ -825,28 +781,13 @@ app.get('/api/admin/submissions/:id/download', adminAuth, async (req, res) => {
             return res.status(404).json({ error: 'Submission not found' });
         }
 
-        console.log('Found submission:', submission);
-        const filePath = path.join(__dirname, 'uploads', submission.fileName);
-        console.log('File path:', filePath);
-
-        // Check if file exists
-        if (!fs.existsSync(filePath)) {
-            console.log('File not found at path:', filePath);
-            return res.status(404).json({ error: 'File not found' });
-        }
-
-        // Get file stats
-        const stats = fs.statSync(filePath);
-        console.log('File stats:', stats);
-
         // Set appropriate headers
-        res.setHeader('Content-Type', 'application/pdf');
-        res.setHeader('Content-Length', stats.size);
+        res.setHeader('Content-Type', submission.contentType);
+        res.setHeader('Content-Length', submission.fileData.length);
         res.setHeader('Content-Disposition', `attachment; filename="${submission.originalName}"`);
         
-        // Create read stream and pipe to response
-        const fileStream = fs.createReadStream(filePath);
-        fileStream.pipe(res);
+        // Send the file data
+        res.send(submission.fileData);
     } catch (error) {
         console.error('Error downloading submission:', error);
         res.status(500).json({ error: 'Failed to download submission' });
