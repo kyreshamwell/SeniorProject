@@ -939,10 +939,22 @@ app.get('/api/admin/checkins', adminAuth, async (req, res) => {
             });
 
         // Transform the data to include team name
-        const transformedCheckins = checkins.map(checkin => ({
-            ...checkin.toObject(),
-            teamName: checkin.userId?.team?.name || 'No Team'
-        }));
+        const transformedCheckins = checkins.map(checkin => {
+            const user = checkin.userId;
+            let teamName = 'No Team';
+            
+            if (user && user.team) {
+                teamName = user.team.name || 'No Team';
+            }
+
+            return {
+                _id: checkin._id,
+                photo: checkin.photo,
+                timestamp: checkin.timestamp,
+                isVisible: checkin.isVisible,
+                teamName: teamName
+            };
+        });
 
         res.json({ checkins: transformedCheckins });
     } catch (err) {
