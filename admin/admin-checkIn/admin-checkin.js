@@ -79,7 +79,10 @@ function updateGroupFilter() {
     if (group && group !== 'default') {  // Only add non-default groups
       const option = document.createElement('option');
       option.value = group;
-      option.textContent = group;
+      // Format the group ID to be more readable
+      const groupName = group === 'default' ? 'No Group' : 
+                       group.length > 8 ? group.substring(0, 8) + '...' : group;
+      option.textContent = groupName;
       groupFilter.appendChild(option);
     }
   });
@@ -134,7 +137,10 @@ function displayCheckIns(checkins) {
     
     const statusClass = checkin.isVisible ? 'status-visible' : 'status-hidden';
     const statusText = checkin.isVisible ? 'Visible' : 'Hidden';
-    const groupName = checkin.groupId === 'default' ? 'No Group' : checkin.groupId;
+    // Format the group ID to be more readable
+    const groupName = checkin.groupId === 'default' ? 'No Group' : 
+                     checkin.groupId.length > 8 ? checkin.groupId.substring(0, 8) + '...' : 
+                     checkin.groupId;
 
     card.innerHTML = `
       <img src="data:image/jpeg;base64,${checkin.photo}" alt="Check-in photo" class="checkin-photo">

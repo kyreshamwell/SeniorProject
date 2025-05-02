@@ -967,9 +967,14 @@ app.put('/api/admin/checkins/:id/visibility', adminAuth, async (req, res) => {
 // Check-in status endpoints
 app.get('/api/checkin-status', async (req, res) => {
   try {
+    const token = req.headers.authorization?.split(" ")[1];
+    if (!token) {
+      return res.status(401).json({ error: "No token provided" });
+    }
+
     let settings = await Settings.findOne({});
     if (!settings) {
-      settings = await Settings.create({});
+      settings = await Settings.create({ checkInEnabled: false });
     }
     res.json({ enabled: settings.checkInEnabled });
   } catch (err) {
@@ -982,7 +987,7 @@ app.get('/api/admin/checkin-status', adminAuth, async (req, res) => {
   try {
     let settings = await Settings.findOne({});
     if (!settings) {
-      settings = await Settings.create({});
+      settings = await Settings.create({ checkInEnabled: false });
     }
     res.json({ enabled: settings.checkInEnabled });
   } catch (err) {
@@ -994,6 +999,10 @@ app.get('/api/admin/checkin-status', adminAuth, async (req, res) => {
 app.put('/api/admin/checkin-status', adminAuth, async (req, res) => {
   try {
     const { enabled } = req.body;
+    if (typeof enabled !== 'boolean') {
+      return res.status(400).json({ error: 'enabled must be a boolean' });
+    }
+
     let settings = await Settings.findOne({});
     if (!settings) {
       settings = await Settings.create({ checkInEnabled: enabled });
