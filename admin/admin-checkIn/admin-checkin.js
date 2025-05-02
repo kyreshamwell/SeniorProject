@@ -6,6 +6,7 @@ const searchBox = document.getElementById('search-box');
 const dateFilter = document.getElementById('date-filter');
 const resetDateBtn = document.getElementById('reset-date');
 const backToAdminBtn = document.getElementById('back-to-admin');
+const globalCheckinToggle = document.getElementById('global-checkin-toggle');
 
 // State
 let allCheckins = [];
@@ -42,6 +43,29 @@ async function fetchCheckIns() {
   }
 }
 
+// Fetch check-in system status
+async function fetchCheckInStatus() {
+  try {
+    const token = localStorage.getItem('token');
+    if (!token) {
+      throw new Error('Not authenticated');
+    }
+
+    const response = await fetch('https://seniorproject-jkm4.onrender.com/api/admin/checkin-status', {
+      headers: {
+        'Authorization': `Bearer ${token}`
+      }
+    });
+    
+    if (!response.ok) throw new Error('Failed to fetch check-in status');
+    
+    const data = await response.json();
+    globalCheckinToggle.checked = data.enabled;
+  } catch (err) {
+    console.error('Error fetching check-in status:', err);
+  }
+}
+
 // Update the group filter options based on available groups
 function updateGroupFilter() {
   const groups = [...new Set(allCheckins.map(checkin => checkin.groupId))];
@@ -52,10 +76,12 @@ function updateGroupFilter() {
   
   // Add group options
   groups.forEach(group => {
-    const option = document.createElement('option');
-    option.value = group;
-    option.textContent = group;
-    groupFilter.appendChild(option);
+    if (group && group !== 'default') {  // Only add non-default groups
+      const option = document.createElement('option');
+      option.value = group;
+      option.textContent = group;
+      groupFilter.appendChild(option);
+    }
   });
 }
 
@@ -79,8 +105,7 @@ function applyFilters() {
   if (currentFilters.search) {
     const searchLower = currentFilters.search.toLowerCase();
     filtered = filtered.filter(checkin => 
-      checkin.groupId.toLowerCase().includes(searchLower) ||
-      (checkin.userId && checkin.userId.username && checkin.userId.username.toLowerCase().includes(searchLower))
+      checkin.groupId.toLowerCase().includes(searchLower)
     );
   }
 
@@ -109,16 +134,15 @@ function displayCheckIns(checkins) {
     
     const statusClass = checkin.isVisible ? 'status-visible' : 'status-hidden';
     const statusText = checkin.isVisible ? 'Visible' : 'Hidden';
-    const username = checkin.userId && checkin.userId.username ? checkin.userId.username : 'Unknown User';
+    const groupName = checkin.groupId === 'default' ? 'No Group' : checkin.groupId;
 
     card.innerHTML = `
       <img src="data:image/jpeg;base64,${checkin.photo}" alt="Check-in photo" class="checkin-photo">
       <div class="checkin-info">
         <p>
-          <strong>Group:</strong> ${checkin.groupId}
+          <strong>Group:</strong> ${groupName}
           <span class="status-badge ${statusClass}">${statusText}</span>
         </p>
-        <p><strong>User:</strong> ${username}</p>
         <p><strong>Time:</strong> ${new Date(checkin.timestamp).toLocaleString()}</p>
         <div class="visibility-toggle">
           <label>
@@ -166,6 +190,34 @@ async function toggleVisibility(checkinId, isVisible) {
   }
 }
 
+// Update check-in system status
+async function updateCheckInStatus(enabled) {
+  try {
+    const token = localStorage.getItem('token');
+    if (!token) {
+      throw new Error('Not authenticated');
+    }
+
+    const response = await fetch('https://seniorproject-jkm4.onrender.com/api/admin/checkin-status', {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}`
+      },
+      body: JSON.stringify({ enabled })
+    });
+
+    if (!response.ok) throw new Error('Failed to update check-in status');
+    
+    alert(`Check-in system ${enabled ? 'enabled' : 'disabled'}`);
+  } catch (err) {
+    console.error('Error updating check-in status:', err);
+    alert('Failed to update check-in status. Please try again.');
+    // Revert the toggle if the update failed
+    globalCheckinToggle.checked = !enabled;
+  }
+}
+
 // Event Listeners
 visibilityFilter.addEventListener('change', (e) => {
   currentFilters.visibility = e.target.value;
@@ -197,6 +249,10 @@ backToAdminBtn.addEventListener('click', () => {
   window.location.href = '/admin/admin.html';
 });
 
+globalCheckinToggle.addEventListener('change', (e) => {
+  updateCheckInStatus(e.target.checked);
+});
+
 // Initialize
 window.addEventListener('DOMContentLoaded', () => {
   // Check if user is authenticated and is admin
@@ -220,6 +276,7 @@ window.addEventListener('DOMContentLoaded', () => {
       window.location.href = '/home/home.html';
       return;
     }
+    fetchCheckInStatus();
     fetchCheckIns();
   })
   .catch(err => {

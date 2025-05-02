@@ -105,7 +105,8 @@ const CheckIn = mongoose.model('CheckIn', CheckInSchema);
 /* SETTINGS MODEL */
 // Settings Schema & Model (for storing Discord URL, etc.)
 const SettingsSchema = new mongoose.Schema({
-  discordURL: { type: String, default: "https://discord.gg/default" }
+  discordURL: { type: String, default: "https://discord.gg/default" },
+  checkInEnabled: { type: Boolean, default: false }
 });
 const Settings = mongoose.model('Settings', SettingsSchema);
 
@@ -961,4 +962,48 @@ app.put('/api/admin/checkins/:id/visibility', adminAuth, async (req, res) => {
         console.error('Error updating visibility:', err);
         res.status(500).json({ error: 'Failed to update visibility' });
     }
+});
+
+// Check-in status endpoints
+app.get('/api/checkin-status', async (req, res) => {
+  try {
+    let settings = await Settings.findOne({});
+    if (!settings) {
+      settings = await Settings.create({});
+    }
+    res.json({ enabled: settings.checkInEnabled });
+  } catch (err) {
+    console.error('Error fetching check-in status:', err);
+    res.status(500).json({ error: 'Server error' });
+  }
+});
+
+app.get('/api/admin/checkin-status', adminAuth, async (req, res) => {
+  try {
+    let settings = await Settings.findOne({});
+    if (!settings) {
+      settings = await Settings.create({});
+    }
+    res.json({ enabled: settings.checkInEnabled });
+  } catch (err) {
+    console.error('Error fetching check-in status:', err);
+    res.status(500).json({ error: 'Server error' });
+  }
+});
+
+app.put('/api/admin/checkin-status', adminAuth, async (req, res) => {
+  try {
+    const { enabled } = req.body;
+    let settings = await Settings.findOne({});
+    if (!settings) {
+      settings = await Settings.create({ checkInEnabled: enabled });
+    } else {
+      settings.checkInEnabled = enabled;
+      await settings.save();
+    }
+    res.json({ enabled: settings.checkInEnabled });
+  } catch (err) {
+    console.error('Error updating check-in status:', err);
+    res.status(500).json({ error: 'Server error' });
+  }
 });

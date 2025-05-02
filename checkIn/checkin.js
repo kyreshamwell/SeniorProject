@@ -14,9 +14,44 @@ const backBtn = document.getElementById('back-btn');
 // State
 let stream = null;
 
+// Check if check-in system is enabled
+async function checkCheckInStatus() {
+  try {
+    const token = localStorage.getItem('token');
+    if (!token) {
+      throw new Error('Not authenticated');
+    }
+
+    const response = await fetch('https://seniorproject-jkm4.onrender.com/api/checkin-status', {
+      headers: {
+        'Authorization': `Bearer ${token}`
+      }
+    });
+
+    if (!response.ok) throw new Error('Failed to fetch check-in status');
+    
+    const data = await response.json();
+    if (!data.enabled) {
+      alert('Check-in system is currently disabled by the administrator.');
+      window.location.href = '/home/home.html';
+      return false;
+    }
+    return true;
+  } catch (err) {
+    console.error('Error checking check-in status:', err);
+    alert('Error checking check-in status. Please try again later.');
+    window.location.href = '/home/home.html';
+    return false;
+  }
+}
+
 // Camera functions
 async function startCamera() {
   try {
+    // Check if check-in is enabled before starting camera
+    const isEnabled = await checkCheckInStatus();
+    if (!isEnabled) return;
+
     stream = await navigator.mediaDevices.getUserMedia({ 
       video: { 
         facingMode: 'user',
@@ -164,12 +199,16 @@ submitBtn.addEventListener('click', submitCheckIn);
 backBtn.addEventListener('click', goBack);
 
 // Initialize
-window.addEventListener('DOMContentLoaded', () => {
+window.addEventListener('DOMContentLoaded', async () => {
   // Check if user is authenticated
   const token = localStorage.getItem('token');
   if (!token) {
     alert('Please log in to use the check-in system.');
     window.location.href = '/login.html';
+    return;
   }
+
+  // Check if check-in system is enabled
+  await checkCheckInStatus();
 });
   
