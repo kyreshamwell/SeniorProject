@@ -18,15 +18,26 @@ let currentFilters = {
 // Fetch check-ins from the server
 async function fetchCheckIns() {
   try {
-    const response = await fetch('/api/admin/checkins');
+    const token = localStorage.getItem('token');
+    if (!token) {
+      throw new Error('Not authenticated');
+    }
+
+    const response = await fetch('https://seniorproject-jkm4.onrender.com/api/admin/checkins', {
+      headers: {
+        'Authorization': `Bearer ${token}`
+      }
+    });
+    
     if (!response.ok) throw new Error('Failed to fetch check-ins');
     
-    allCheckins = await response.json();
+    const data = await response.json();
+    allCheckins = data.checkins;
     updateGroupFilter();
     applyFilters();
   } catch (err) {
     console.error('Error fetching check-ins:', err);
-    alert('Failed to load check-ins. Please try again.');
+    alert('Failed to load check-ins. Please make sure you are logged in as an admin.');
   }
 }
 
@@ -68,7 +79,7 @@ function applyFilters() {
     const searchLower = currentFilters.search.toLowerCase();
     filtered = filtered.filter(checkin => 
       checkin.groupId.toLowerCase().includes(searchLower) ||
-      checkin.userId.toLowerCase().includes(searchLower)
+      (checkin.userId && checkin.userId.username && checkin.userId.username.toLowerCase().includes(searchLower))
     );
   }
 
@@ -97,15 +108,16 @@ function displayCheckIns(checkins) {
     
     const statusClass = checkin.isVisible ? 'status-visible' : 'status-hidden';
     const statusText = checkin.isVisible ? 'Visible' : 'Hidden';
+    const username = checkin.userId && checkin.userId.username ? checkin.userId.username : 'Unknown User';
 
     card.innerHTML = `
-      <img src="${checkin.photo}" alt="Check-in photo" class="checkin-photo">
+      <img src="data:image/jpeg;base64,${checkin.photo}" alt="Check-in photo" class="checkin-photo">
       <div class="checkin-info">
         <p>
           <strong>Group:</strong> ${checkin.groupId}
           <span class="status-badge ${statusClass}">${statusText}</span>
         </p>
-        <p><strong>User:</strong> ${checkin.userId}</p>
+        <p><strong>User:</strong> ${username}</p>
         <p><strong>Time:</strong> ${new Date(checkin.timestamp).toLocaleString()}</p>
         <div class="visibility-toggle">
           <label>
@@ -125,10 +137,16 @@ function displayCheckIns(checkins) {
 // Toggle visibility of a check-in
 async function toggleVisibility(checkinId, isVisible) {
   try {
-    const response = await fetch(`/api/admin/checkins/${checkinId}/visibility`, {
+    const token = localStorage.getItem('token');
+    if (!token) {
+      throw new Error('Not authenticated');
+    }
+
+    const response = await fetch(`https://seniorproject-jkm4.onrender.com/api/admin/checkins/${checkinId}/visibility`, {
       method: 'PUT',
       headers: {
-        'Content-Type': 'application/json'
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}`
       },
       body: JSON.stringify({ isVisible })
     });
@@ -143,7 +161,7 @@ async function toggleVisibility(checkinId, isVisible) {
     }
   } catch (err) {
     console.error('Error updating visibility:', err);
-    alert('Failed to update visibility. Please try again.');
+    alert('Failed to update visibility. Please make sure you are logged in as an admin.');
   }
 }
 
@@ -175,4 +193,32 @@ resetDateBtn.addEventListener('click', () => {
 });
 
 // Initialize
-fetchCheckIns(); 
+window.addEventListener('DOMContentLoaded', () => {
+  // Check if user is authenticated and is admin
+  const token = localStorage.getItem('token');
+  if (!token) {
+    alert('Please log in to access the admin dashboard.');
+    window.location.href = '/login.html';
+    return;
+  }
+
+  // Verify admin role
+  fetch('https://seniorproject-jkm4.onrender.com/api/user', {
+    headers: {
+      'Authorization': `Bearer ${token}`
+    }
+  })
+  .then(response => response.json())
+  .then(data => {
+    if (data.role !== 'admin') {
+      alert('Access denied. Admin privileges required.');
+      window.location.href = '/home/home.html';
+      return;
+    }
+    fetchCheckIns();
+  })
+  .catch(err => {
+    console.error('Error verifying admin status:', err);
+    alert('Error verifying admin status. Please try again.');
+  });
+}); 
