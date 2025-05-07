@@ -4,6 +4,7 @@ const groupFilter = document.getElementById('group-filter');
 const searchBox = document.getElementById('search-box');
 const backToAdminBtn = document.getElementById('back-to-admin');
 const globalCheckinToggle = document.getElementById('global-checkin-toggle');
+const refreshBtn = document.getElementById('refreshBtn');
 
 // State
 let allCheckins = [];
@@ -143,6 +144,21 @@ searchBox.addEventListener('input', (e) => {
 
 backToAdminBtn.addEventListener('click', () => {
   window.location.href = '/admin/admin.html';
+});
+
+refreshBtn.addEventListener('click', () => {
+  // Add visual feedback
+  refreshBtn.innerHTML = '🔄 Refreshing...';
+  refreshBtn.disabled = true;
+  
+  // Fetch new data
+  fetchCheckIns().finally(() => {
+    // Reset button after 1 second
+    setTimeout(() => {
+      refreshBtn.innerHTML = '🔄 Refresh';
+      refreshBtn.disabled = false;
+    }, 1000);
+  });
 });
 
 globalCheckinToggle.addEventListener('change', (e) => {
