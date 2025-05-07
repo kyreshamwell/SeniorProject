@@ -3,21 +3,64 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <meta name="description" content="Admin Dashboard for Career Fair Management">
+    <link rel="stylesheet" href="admin.css">
+    <title>Admin Dashboard</title>
 </head>
 <body>
-    <a href="../admin/admin-discord/admin-discord.html">Modify Discord</a>
-    <a href="/home/home.html" class="preview-btn">Preview Student View</a>
-    <a href="../admin/admin-compSelect/admin-compSelect.html">Company Select</a>
-    <a href="../admin/admin-reps/admin-reps.html">Manage Representatives</a>
-    <a href="../admin/admin-calender/calendar-events.html">Manage Events</a>
-    <a href="../admin/admin-submit/ad-submit.html">View Submissions</a>
-    <a href="../admin/admin-checkIn/admin-checkin.html">Check In</a>
-    <button id="signoutButton" class="signoutButton">Sign Out</button>
+    <header class="admin-header">
+        <h1>Admin Dashboard</h1>
+        <button id="signoutButton" class="signoutButton">Sign Out</button>
+    </header>
 
-    <!-- going to this admin-discord.html page it gives you a promt to enter the discord link and save it im guessing with js and then have it update on the actual discord.html page 
-         from the discord folder which is connected via the home page
-    -->
-         <script src="admin.js"></script>
+    <main class="admin-container">
+        <nav class="admin-nav">
+            <div class="nav-section">
+                <h2>Event Management</h2>
+                <a href="../admin/admin-calender/calendar-events.html" class="nav-link">
+                    <span class="icon">📅</span>
+                    Manage Events
+                </a>
+                <a href="../admin/admin-checkIn/admin-checkin.html" class="nav-link">
+                    <span class="icon">✓</span>
+                    Check In
+                </a>
+            </div>
+
+            <div class="nav-section">
+                <h2>Company Management</h2>
+                <a href="../admin/admin-compSelect/admin-compSelect.html" class="nav-link">
+                    <span class="icon">🏢</span>
+                    Company Select
+                </a>
+                <a href="../admin/admin-reps/admin-reps.html" class="nav-link">
+                    <span class="icon">👥</span>
+                    Manage Representatives
+                </a>
+            </div>
+
+            <div class="nav-section">
+                <h2>Communication</h2>
+                <a href="../admin/admin-discord/admin-discord.html" class="nav-link">
+                    <span class="icon">💬</span>
+                    Modify Discord
+                </a>
+                <a href="../admin/admin-submit/ad-submit.html" class="nav-link">
+                    <span class="icon">📝</span>
+                    View Submissions
+                </a>
+            </div>
+
+            <div class="nav-section">
+                <h2>Preview</h2>
+                <a href="/home/home.html" class="nav-link preview-btn">
+                    <span class="icon">👁️</span>
+                    Preview Student View
+                </a>
+            </div>
+        </nav>
+    </main>
+
+    <script src="admin.js"></script>
 </body>
 </html>

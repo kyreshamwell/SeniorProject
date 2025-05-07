@@ -263,7 +263,16 @@ document.addEventListener('DOMContentLoaded', async () => {
     fetchSubmissions();
 
     // Set up event listeners
-    document.getElementById('refreshBtn').addEventListener('click', fetchSubmissions);
+    document.getElementById('refreshBtn').addEventListener('click', () => {
+        fetchSubmissions();
+        // Add visual feedback for refresh
+        const refreshBtn = document.getElementById('refreshBtn');
+        refreshBtn.innerHTML = '🔄 Refreshing...';
+        setTimeout(() => {
+            refreshBtn.innerHTML = '🔄 Refresh';
+        }, 1000);
+    });
+
     document.getElementById('goBackBtn').addEventListener('click', () => {
         window.location.href = '/admin/admin.html';
     });

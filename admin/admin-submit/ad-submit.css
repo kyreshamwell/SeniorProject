@@ -2,14 +2,29 @@ body {
     margin: 0;
     padding: 0;
     font-family: Arial, sans-serif;
-    background-color: #f5f5f5;
+    background: url('../background.jpg') no-repeat center center fixed;
+    background-size: cover;
     min-height: 100vh;
+    position: relative;
+}
+
+body::before {
+    content: '';
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    z-index: -1;
 }
 
 .container {
     max-width: 1200px;
     margin: 0 auto;
     padding: 20px;
+    position: relative;
+    z-index: 1;
 }
 
 .admin-nav {
@@ -18,9 +33,10 @@ body {
     align-items: center;
     margin-bottom: 30px;
     padding: 15px;
-    background-color: white;
+    background-color: rgba(255, 255, 255, 0.95);
     border-radius: 8px;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+    backdrop-filter: blur(5px);
 }
 
 .admin-nav h1 {
@@ -86,10 +102,11 @@ body {
 }
 
 .submissions-container {
-    background-color: white;
+    background-color: rgba(255, 255, 255, 0.95);
     border-radius: 8px;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    box-shadow: 0 2px 4px rgba(0,0,0,0.2);
     overflow-x: auto;
+    backdrop-filter: blur(5px);
 }
 
 table {
