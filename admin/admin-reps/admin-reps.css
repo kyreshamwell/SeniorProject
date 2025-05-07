@@ -24,7 +24,7 @@ nav .nav-content {
 /* 1) Push the body down so it isn't hidden under the fixed nav */
 body {
     font-family: 'Poppins', sans-serif;
-    background: url('../background.jpg') no-repeat center center fixed;
+    background: url('/background.jpg') no-repeat center center fixed;
     background-size: cover;
     margin: 0;
     padding-top: 80px;
