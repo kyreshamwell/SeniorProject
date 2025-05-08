@@ -128,7 +128,7 @@ h1 {
 /* 5) Action buttons */
 #repTable button,
 .btn {
-    background-color: rgba(35, 68, 156, 0.95);
+    background-color: gold;
     color: white;
     border: none;
     padding: 0.4rem 0.6rem;
@@ -143,7 +143,7 @@ h1 {
 
 #repTable button:hover,
 .btn:hover {
-    background-color: rgba(35, 68, 156, 0.8);
+    background-color: gold;
     transform: translateY(-1px);
 }
 
