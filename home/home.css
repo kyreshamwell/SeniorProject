@@ -3,10 +3,14 @@ body {
     margin: 0;
     padding: 0;
     background-image: url('/background.jpg'); 
-    background-size: cover;
+    background-size: 100% 100%;
     background-position: center;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
     color: white; 
-    position: relative; 
+    position: relative;
+    min-height: 100vh;
+    overflow-x: hidden;
 }
 
 nav {
