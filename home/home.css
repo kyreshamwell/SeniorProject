@@ -183,18 +183,29 @@ footer p {
 
 }
 
+/* Responsive adjustments for large screens */
+@media screen and (min-width: 1200px) {
+    .services-grid {
+        grid-template-columns: repeat(3, 1fr);
+        max-width: 1400px;
+    }
+}
+
 /* Responsive adjustments for medium screens (tablets, small laptops) */
-@media screen and (max-width: 650px) {
+@media screen and (max-width: 1199px) and (min-width: 768px) {
     body {
         font-size: 16px;
     }
 
     .services-grid {
         grid-template-columns: repeat(2, 1fr);
+        max-width: 900px;
+        padding: 0 20px;
     }
 
     .form-box, .calendar, .team-signup-form, .discord-container, .rep-bubble {
         width: 90%;
+        max-width: 800px;
         margin: 0 auto;
     }
 
@@ -204,24 +215,26 @@ footer p {
 }
 
 /* Responsive adjustments for small screens (phones) */
-@media screen and (max-width: 400px) {
+@media screen and (max-width: 767px) {
     .button-group .read-more {
-        flex: 1 1 100%;     /* full width on phones */
-        margin-bottom: 10px;/* add a little breathing room */
-        font-size: 14px;    /* make text a bit smaller */
-      }
+        flex: 1 1 100%;
+        margin-bottom: 10px;
+        font-size: 14px;
+    }
+
     body {
         font-size: 14px;
     }
 
     .services-grid {
         grid-template-columns: 1fr;
+        padding: 0 15px;
     }
 
     .form-box, .calendar, .team-signup-form, .discord-container, .rep-bubble {
         width: 100%;
         margin: 0 auto;
-        padding: 10px;
+        padding: 15px;
     }
 
     .service-item, .rep-bubble, .calendar, .team-signup-form {
@@ -238,7 +251,50 @@ footer p {
         font-size: 20px;
     }
 
+    .nav-content {
+        flex-direction: column;
+        gap: 10px;
+    }
+
+    .user-info {
+        flex-direction: column;
+        text-align: center;
+    }
+
+    .user-info i {
+        margin-right: 0;
+        margin-bottom: 5px;
+    }
+
     footer p {
         font-size: 12px;
+    }
+}
+
+/* Extra small screens */
+@media screen and (max-width: 480px) {
+    body {
+        font-size: 13px;
+    }
+
+    .services-section {
+        padding: 30px 10px;
+    }
+
+    .service-item {
+        padding: 10px;
+    }
+
+    .service-content {
+        padding: 50px 10px 10px;
+    }
+
+    .service-icon {
+        font-size: 2em;
+    }
+
+    .read-more {
+        padding: 8px 15px;
+        font-size: 13px;
     }
 }
