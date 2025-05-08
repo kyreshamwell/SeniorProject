@@ -131,6 +131,30 @@ async function updateCheckInStatus(enabled) {
   }
 }
 
+// Fetch initial check-in status
+async function fetchCheckInStatus() {
+  try {
+    const token = localStorage.getItem('token');
+    if (!token) {
+      throw new Error('Not authenticated');
+    }
+
+    const response = await fetch('https://seniorproject-jkm4.onrender.com/api/admin/checkin-status', {
+      headers: {
+        'Authorization': `Bearer ${token}`
+      }
+    });
+
+    if (!response.ok) throw new Error('Failed to fetch check-in status');
+    
+    const data = await response.json();
+    globalCheckinToggle.checked = data.enabled;
+  } catch (err) {
+    console.error('Error fetching check-in status:', err);
+    alert('Failed to load check-in status. Please try again.');
+  }
+}
+
 // Event Listeners
 groupFilter.addEventListener('change', (e) => {
   currentFilters.group = e.target.value;
@@ -189,6 +213,7 @@ window.addEventListener('DOMContentLoaded', () => {
       return;
     }
     fetchCheckIns();
+    fetchCheckInStatus();
   })
   .catch(err => {
     console.error('Error verifying admin status:', err);
