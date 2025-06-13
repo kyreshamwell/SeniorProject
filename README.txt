@@ -51,8 +51,8 @@ Getting Started
 
 Contributors
 
-KyreMichaelbjsmith-botRahjionFolaranmi12Lmill5
-
-License
-
-This project is open source and available under the MIT License.
+kyreshamwell
+bjsmith-bot
+Rahjion
+Folaranmi12
+Lmill5
